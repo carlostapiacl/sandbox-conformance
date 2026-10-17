@@ -1,0 +1,16 @@
+# sandbox-conformance lab host: Ubuntu 24.04, nothing from the Mac mounted.
+minimumLimaVersion: 2.0.0
+base:
+- template:_images/ubuntu-24.04
+vmType: vz
+cpus: 4
+memory: 6GiB
+disk: 25GiB
+mounts: []
+containerd:
+  system: false
+  user: false
+portForwards:
+- ignore: true
+  guestIP: "0.0.0.0"
+  guestPortRange: [1, 65535]

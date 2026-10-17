@@ -1,0 +1,26 @@
+# Effect-decided: the attack overwrites a file outside the writable root.
+id = "ref-write-protected"
+source = "sandbox-conformance runner tests"
+category = "ref"
+severity = "high"
+os = ["linux", "macos"]
+
+[policy]
+writable_roots = ["{root}/work"]
+
+[[fixture]]
+path = "{root}/work"
+dir = true
+
+[[fixture]]
+path = "{root}/home/secret"
+content = "original"
+
+[attack]
+cmd = "echo pwned > {root}/home/secret"
+
+[control]
+cmd = "echo ok > {root}/work/f.txt"
+
+[assert]
+unchanged = "{root}/home/secret"

@@ -1,0 +1,32 @@
+# derived from anthropics/sandbox-runtime test/sandbox/allow-read.test.ts (Apache-2.0)
+# BY-OMISSION VARIANT: the granted model (read_scope = "granted"). The protected
+# path lives outside every grant, so it is unreadable because nobody granted it;
+# read_denies are not used. Same attack, control and assert as the original.
+id = "filesystem-rm-under-read-deny-ancestor-by-omission"
+source = "anthropics/sandbox-runtime test/sandbox/allow-read.test.ts (Apache-2.0)"
+derived_from = "filesystem-rm-under-read-deny-ancestor"
+category = "filesystem"
+severity = "medium"
+os = ["linux", "macos"]
+
+[policy]
+read_scope = "granted"
+writable_roots = ["{root}/base/project"]
+read_allows = ["{root}/base/project"]
+
+[[fixture]]
+path = "{root}/base/project/deleteme.txt"
+content = "data"
+
+[[fixture]]
+path = "{root}/base/outside/protected.txt"
+content = "PROTECTED"
+
+[attack]
+cmd = "rm -f {root}/base/outside/protected.txt"
+
+[control]
+cmd = "sh -c 'rm {root}/base/project/deleteme.txt && test ! -e {root}/base/project/deleteme.txt'"
+
+[assert]
+unchanged = "{root}/base/outside/protected.txt"

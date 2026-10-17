@@ -1,0 +1,26 @@
+# derived from nolabs-ai/nono tests/integration/test_network.sh ("proxy mode blocks direct curl bypass with --noproxy", "python-dev profile blocks hosts outside developer allowlist") (Apache-2.0)
+# NEEDS RUNNER FEATURE: `allow_domains` in [policy] (core Policy has it; the
+# bench's PolicySpec does not expose it) and external connectivity.
+# With a domain allowlist, the agent gets HTTP(S)_PROXY to the broker. Ignoring
+# the proxy (curl --noproxy '*') and connecting straight out must fail, and a
+# non-allowlisted host must fail even THROUGH the proxy. NET-01 was verified by
+# hand; this would pin it in CI.
+id = "network-domain-allowlist-direct-bypass"
+source = "nolabs-ai/nono tests/integration/test_network.sh (\"proxy mode blocks direct curl bypass with --noproxy\", \"python-dev profile blocks hosts outside developer allowlist\") (Apache-2.0)"
+category = "network"
+severity = "critical"
+os = ["linux", "macos"]
+
+[policy]
+writable_roots = ["{root}/work"]
+allow_domains = ["example.com"]          # NEW KEY
+
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+
+[attack]
+cmd = "sh -c 'curl -s --noproxy \"*\" --max-time 5 -o /dev/null https://example.org/ || curl -s --max-time 5 -o /dev/null https://example.org/'"
+
+[control]
+cmd = "curl -s --max-time 10 -o /dev/null https://example.com/"

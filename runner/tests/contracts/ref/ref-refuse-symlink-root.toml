@@ -1,0 +1,27 @@
+# The correct outcome is a refusal: a writable root that is a symlink out.
+id = "ref-refuse-symlink-root"
+source = "sandbox-conformance runner tests"
+category = "ref"
+severity = "high"
+os = ["linux", "macos"]
+expect_refusal = true
+
+[policy]
+writable_roots = ["{root}/link"]
+
+[[fixture]]
+path = "{root}/outside"
+dir = true
+
+[[fixture]]
+path = "{root}/link"
+symlink_to = "{root}/outside"
+
+[attack]
+cmd = "echo x > {root}/link/planted"
+
+[control]
+cmd = "ls {root}/link"
+
+[assert]
+absent = "{root}/outside/planted"

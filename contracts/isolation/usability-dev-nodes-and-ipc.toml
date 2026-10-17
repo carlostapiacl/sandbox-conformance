@@ -1,0 +1,26 @@
+# derived from openai/codex codex-rs/linux-sandbox/tests/suite/sandbox.rs::bwrap_populates_minimal_dev_nodes, codex-rs/exec/tests/suite/sandbox.rs::python_multiprocessing_lock_works_under_sandbox / python_getpwuid_works_under_sandbox / allow_unix_socketpair_recvfrom (Apache-2.0)
+id = "usability-dev-nodes-and-ipc"
+source = "openai/codex codex-rs/linux-sandbox/tests/suite/sandbox.rs::bwrap_populates_minimal_dev_nodes, codex-rs/exec/tests/suite/sandbox.rs::python_multiprocessing_lock_works_under_sandbox / python_getpwuid_works_under_sandbox / allow_unix_socketpair_recvfrom (Apache-2.0)"
+category = "isolation"
+severity = "medium"
+os = ["linux", "macos"]
+
+# A usability contract: the attack is a trivially-blocked write outside the
+# territory; the CONTROL is the point — standard devices, POSIX semaphores,
+# passwd lookup and socketpair all keep working under confinement.
+[policy]
+writable_roots = ["{root}/work"]
+harden_syscalls = true
+
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+
+[attack]
+cmd = "echo x > {root}/outside.txt"
+
+[control]
+cmd = "sh -c 'for n in null zero urandom tty; do [ -c /dev/$n ] || exit 1; done' && python3 -c 'import multiprocessing as m, pwd, os, socket; l=m.Lock(); l.acquire(); l.release(); pwd.getpwuid(os.getuid()); a,b=socket.socketpair(); a.send(b\"x\"); assert b.recv(1)==b\"x\"'"
+
+[assert]
+absent = "{root}/outside.txt"

@@ -1,0 +1,25 @@
+# derived from nolabs-ai/nono crates/nono-cli/src/lineage_cgroup.rs (live_landlock_denies_child_write_to_cgroup_procs) (Apache-2.0)
+# A root agent that can write cgroup.procs can move itself out of the leaf
+# cgroup that enforces max_processes / memory, escaping the caps. Writing its
+# own pid into the PARENT cgroup must be denied (Landlock: /sys not writable).
+id = "resources-cgroup-escape"
+source = "nolabs-ai/nono crates/nono-cli/src/lineage_cgroup.rs (live_landlock_denies_child_write_to_cgroup_procs) (Apache-2.0)"
+category = "resources"
+severity = "high"
+os = ["linux"]
+requires = ["cgroup"]
+
+[policy]
+writable_roots = ["{root}/work"]
+max_processes = 64
+strict = true
+
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+
+[attack]
+cmd = "sh -c 'cg=$(sed -n \"s/^0:://p\" /proc/self/cgroup); echo $$ > \"/sys/fs/cgroup${cg%/*}/cgroup.procs\"'"
+
+[control]
+cmd = "sh -c 'echo ok > {root}/work/src/f.txt'"

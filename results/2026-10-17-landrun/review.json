@@ -1,0 +1,177 @@
+{
+ "_about": "Readings of the landrun re-run of 2026-10-17. A reading of the 2026-10-16 run is carried over where the result is identical; the four escapes new in this run (granted model, SC-003) get the reading nono has for the same contracts.",
+ "landrun": {
+  "filesystem-chmod-outside": [
+   "confirmed",
+   "Landlock does not mediate chmod/utime/xattr; a readable file's metadata can be changed (same gap as nono)."
+  ],
+  "filesystem-utime-outside": [
+   "confirmed",
+   "as filesystem-chmod-outside."
+  ],
+  "filesystem-xattr-outside": [
+   "confirmed",
+   "as filesystem-chmod-outside."
+  ],
+  "fs-dotdot-absent-root": [
+   "confirmed",
+   "landrun fails to apply the Landlock ruleset for a writable root spelled with '..' (control broke)."
+  ],
+  "fs-writable-root-symlink-out": [
+   "confirmed",
+   "a writable root that is a symlink pointing out is followed."
+  ],
+  "fs-writable-root-symlink-parent": [
+   "confirmed",
+   "as fs-writable-root-symlink-out."
+  ],
+  "ipc-abstract-unix-socket": [
+   "platform-dependent",
+   "abstract-socket scoping needs Landlock ABI 6; this host is ABI 4."
+  ],
+  "ipc-unix-socket-in-denied-dir-by-omission": [
+   "documented",
+   "Landlock does not mediate connect() to a pathname unix socket, so a socket in an ungranted directory stays reachable (the same as nono)."
+  ],
+  "isolation-process-info-foreign": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "isolation-seccomp-io-uring-denied": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "isolation-signal-host-process": [
+   "platform-dependent",
+   "signal scoping needs Landlock ABI 6; this host is ABI 4."
+  ],
+  "isolation-supervisor-proc-mem-denied": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "isolation-vsock-socket-denied": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "lifecycle-background-reaped-on-exit": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "lifecycle-no-host-artifacts": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "lifecycle-signal-teardown": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "network-egress-public-denied": [
+   "documented",
+   "Landlock mediates only TCP (ABI 4): UDP, ICMP, netlink, AF_VSOCK and other socket families are not blocked, so the attack's non-TCP leg succeeds."
+  ],
+  "network-icmp-denied": [
+   "documented",
+   "Landlock mediates only TCP (ABI 4): UDP, ICMP, netlink, AF_VSOCK and other socket families are not blocked, so the attack's non-TCP leg succeeds."
+  ],
+  "network-other-socket-families-denied": [
+   "documented",
+   "Landlock mediates only TCP (ABI 4): UDP, ICMP, netlink, AF_VSOCK and other socket families are not blocked, so the attack's non-TCP leg succeeds."
+  ],
+  "network-socket-domain-high-bits": [
+   "documented",
+   "Landlock mediates only TCP (ABI 4): UDP, ICMP, netlink, AF_VSOCK and other socket families are not blocked, so the attack's non-TCP leg succeeds."
+  ],
+  "network-vsock-denied": [
+   "documented",
+   "Landlock mediates only TCP (ABI 4): UDP, ICMP, netlink, AF_VSOCK and other socket families are not blocked, so the attack's non-TCP leg succeeds."
+  ],
+  "read-allow-symlink-into-deny-by-omission": [
+   "design",
+   "The granted read path is itself a symlink into the protected area. Landlock resolves a rule's path when the rule is made, so granting the link grants its target and the secret is read (the same as nono)."
+  ],
+  "read-allow-symlink-no-reopen-by-omission": [
+   "design",
+   "The granted read path is itself a symlink into the protected area. Landlock resolves a rule's path when the rule is made, so granting the link grants its target and the secret is read (the same as nono)."
+  ],
+  "seccomp-io-uring-denied": [
+   "documented",
+   "landrun has no seccomp; io_uring is not blocked (Landlock does not cover syscalls)."
+  ],
+  "secrets-env-loader-injection-inherit": [
+   "contract-assumption",
+   "the policy asked to inherit the whole environment, so LD_PRELOAD passed, as expected."
+  ],
+  "secrets-read-allow-symlink-into-deny-by-omission": [
+   "design",
+   "The granted read path is itself a symlink into the protected area. Landlock resolves a rule's path when the rule is made, so granting the link grants its target and the secret is read (the same as nono)."
+  ],
+  "trust-handoff-claude-agents": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "trust-handoff-editor-dirs": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "trust-handoff-git-config": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "trust-handoff-git-config-move-aside": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "trust-handoff-git-dir-replace": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "trust-handoff-git-exchange-rename": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "trust-handoff-gitdir-pointer": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "trust-handoff-gitignored-repo": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "trust-handoff-gitmodules": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "trust-handoff-hooks-dir-absent": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "trust-handoff-repo-created-in-run": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "trust-handoff-root-inside-hooks": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "trust-handoff-shell-rc": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "trust-handoff-symlinked-claude-dir": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "trust-handoff-tool-rc": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "trust-handoff-unreadable-at-compile": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ],
+  "trust-handoff-worktree-gitfile": [
+   "design",
+   "landrun is a filesystem and TCP tool (pure Landlock): no name-based trust-handoff protection, no namespaces or seccomp, no process teardown. It does not claim this guarantee."
+  ]
+ }
+}

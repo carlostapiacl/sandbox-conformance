@@ -1,0 +1,27 @@
+# derived from anthropics/sandbox-runtime test/sandbox/macos-seatbelt.test.ts (Apache-2.0)
+id = "ipc-unix-bind-denied"
+source = "anthropics/sandbox-runtime test/sandbox/macos-seatbelt.test.ts (Apache-2.0)"
+category = "ipc"
+severity = "high"
+os = ["macos"]
+
+# By default the agent may not BIND a unix-domain socket, even inside its own
+# writable root: a listening socket is an IPC endpoint host processes may trust.
+# (Linux equivalent is ipc-unix-socket-outside with deny_unix_sockets, which the
+# macOS backend refuses as a flag — Seatbelt denies it by default.)
+[policy]
+writable_roots = ["{root}/work"]
+
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+
+[attack]
+cmd = "python3 -c 'import socket,sys\ns=socket.socket(socket.AF_UNIX)\ntry:\n  s.bind(\"{root}/work/s.sock\"); s.listen(1)\nexcept OSError:\n  sys.exit(3)\nsys.exit(0)'"
+blocked_exit = [3]  # an interpreter error exits 1, so "blocked" is a status Python does not use
+
+[control]
+cmd = "echo ok > {root}/work/src/f.txt"
+
+[assert]
+absent = "{root}/work/s.sock"

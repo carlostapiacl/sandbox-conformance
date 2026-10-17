@@ -1,0 +1,6 @@
+abi <abi/4.0>,
+include <tunables/global>
+# Loaded only into the kernel (apparmor_parser -r -W), removed after the run.
+profile sc-lab flags=(unconfined) {
+  userns,
+}

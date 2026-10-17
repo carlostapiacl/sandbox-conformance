@@ -1,0 +1,27 @@
+# Exit-decided: reading leaves the file unchanged, so the exit status decides.
+id = "ref-read-protected"
+source = "sandbox-conformance runner tests"
+category = "ref"
+severity = "critical"
+os = ["linux", "macos"]
+
+[policy]
+writable_roots = ["{root}/work"]
+read_denies = ["{root}/home/.netrc"]
+
+[[fixture]]
+path = "{root}/work"
+dir = true
+
+[[fixture]]
+path = "{root}/home/.netrc"
+content = "machine x login y password hunter2"
+
+[attack]
+cmd = "grep -q hunter2 {root}/home/.netrc"
+
+[control]
+cmd = "echo ok > {root}/work/f.txt"
+
+[assert]
+unchanged = "{root}/home/.netrc"

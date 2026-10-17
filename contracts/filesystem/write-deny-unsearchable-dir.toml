@@ -1,0 +1,31 @@
+# derived from anthropics/sandbox-runtime test/sandbox/literal-path-entries.test.ts (Apache-2.0)
+# and test/sandbox/rules-through-links-on-every-runtime.test.ts (Apache-2.0)
+id = "write-deny-unsearchable-dir"
+source = "anthropics/sandbox-runtime test/sandbox/literal-path-entries.test.ts (Apache-2.0)"
+category = "filesystem"
+severity = "high"
+os = ["linux", "macos"]
+requires = ["non-root"]
+
+# The write-deny's folder is chmod 000 when the sandbox starts, so the policy
+# compiler can't look inside it. The agent (same uid) undoes the chmod and then
+# writes the denied file. The deny must still hold.
+[policy]
+writable_roots = ["{root}"]
+write_denies = ["{root}/locked/keep"]
+
+[[fixture]]
+path = "{root}/locked/keep/file"
+content = "original"
+[[fixture]]
+path = "{root}/src"
+dir = true
+
+[attack]
+cmd = "chmod 755 {root}/locked; echo tampered > {root}/locked/keep/file"
+
+[control]
+cmd = "echo ok > {root}/src/f.txt"
+
+[assert]
+unchanged = "{root}/locked/keep/file"

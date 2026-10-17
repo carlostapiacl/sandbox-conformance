@@ -1,0 +1,24 @@
+# derived from nolabs-ai/nono tests/integration/test_gpu.sh ("/proc/self/task/<tid>/comm write denied without --allow-gpu") (Apache-2.0)
+# procfs writes are kernel-config writes. A root agent must not write
+# /proc/sys (sysctl). The attack writes the CURRENT hostname back (idempotent,
+# harmless if it slips through); exit 0 = the write was permitted.
+# Meaningful only as root (non-root: DAC blocks it) — needs `requires = ["root"]`.
+id = "isolation-proc-sys-write-denied"
+source = "nolabs-ai/nono tests/integration/test_gpu.sh (\"/proc/self/task/<tid>/comm write denied without --allow-gpu\") (Apache-2.0)"
+category = "isolation"
+severity = "high"
+os = ["linux"]
+requires = ["landlock"]
+
+[policy]
+writable_roots = ["{root}/work"]
+
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+
+[attack]
+cmd = "sh -c 'v=$(cat /proc/sys/kernel/hostname) && printf %s \"$v\" > /proc/sys/kernel/hostname'"
+
+[control]
+cmd = "sh -c 'cat /proc/sys/kernel/hostname >/dev/null && echo ok > {root}/work/src/f.txt'"

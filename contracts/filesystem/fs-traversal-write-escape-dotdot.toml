@@ -1,0 +1,29 @@
+# derived from OpenHands/software-agent-sdk tests/sdk/io/test_local_filestore_security.py::test_path_traversal_attacks_blocked (MIT)
+# A path that climbs out of the workspace with ".." (work/sub/../../out) must not
+# write outside the writable root. OpenHands' LocalFileStore rejects "path escapes
+# filestore root"; a sandbox must confine by the RESOLVED path, not the lexical
+# prefix. The legitimate write inside the workspace keeps working (control).
+id = "fs-traversal-write-escape-dotdot"
+source = "OpenHands/software-agent-sdk tests/sdk/io/test_local_filestore_security.py::test_path_traversal_attacks_blocked (MIT)"
+category = "filesystem"
+severity = "high"
+os = ["linux", "macos"]
+
+[policy]
+writable_roots = ["{root}/work"]
+
+[[fixture]]
+path = "{root}/work/sub"
+dir = true
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+
+[attack]
+cmd = "echo pwned > {root}/work/sub/../../outside.txt"
+
+[control]
+cmd = "echo ok > {root}/work/src/f.txt"
+
+[assert]
+absent = "{root}/outside.txt"

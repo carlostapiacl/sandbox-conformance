@@ -1,0 +1,30 @@
+# derived from nolabs-ai/nono crates/nono/src/sandbox/linux.rs (test_abstract_unix_socket_scope_blocks_external_connect_on_v6) (Apache-2.0)
+# NEEDS RUNNER FEATURE: `[[abstract_server]] name` — a host-side listener on an
+# ABSTRACT unix address (std's UnixListener::bind(path) cannot do this; needs
+# SocketAddr::from_abstract_name). Abstract sockets have no filesystem path, so
+# no path rule can cover them (X11 @/tmp/.X11-unix/X0, dbus, containerd shims).
+# Landlock ABI v6 LANDLOCK_SCOPE_ABSTRACT_UNIX_SOCKET, or deny_unix_sockets.
+# Run WITHOUT deny_unix_sockets to test the scope alone.
+id = "ipc-abstract-unix-socket"
+source = "nolabs-ai/nono crates/nono/src/sandbox/linux.rs (test_abstract_unix_socket_scope_blocks_external_connect_on_v6) (Apache-2.0)"
+category = "ipc"
+severity = "critical"
+os = ["linux"]
+requires = ["landlock"]
+
+[policy]
+writable_roots = ["{root}/work"]
+
+[[abstract_server]]                     # NEW TABLE
+name = "conformance-abstract"
+
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+
+[attack]
+cmd = "python3 -c 'import socket,sys\ntry:\n  s=socket.socket(socket.AF_UNIX); s.connect(\"\\0conformance-abstract\")\nexcept OSError:\n  sys.exit(3)\nsys.exit(0)' 2>/dev/null"
+blocked_exit = [3]  # an interpreter error exits 1, so "blocked" is a status Python does not use
+
+[control]
+cmd = "sh -c 'echo ok > {root}/work/src/f.txt'"

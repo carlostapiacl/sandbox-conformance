@@ -1,0 +1,27 @@
+# The control checks something only the sandbox provides, declared beforehand.
+id = "ref-control-needs-sandbox"
+source = "sandbox-conformance runner tests"
+category = "ref"
+severity = "medium"
+os = ["linux", "macos"]
+control_requires_sandbox = "the control checks SC_REF_SANDBOX, which only the reference sandboxes set"
+
+[policy]
+writable_roots = ["{root}/work"]
+
+[[fixture]]
+path = "{root}/work"
+dir = true
+
+[[fixture]]
+path = "{root}/home/secret"
+content = "original"
+
+[attack]
+cmd = "echo pwned > {root}/home/secret"
+
+[control]
+cmd = "test -n \"$SC_REF_SANDBOX\""
+
+[assert]
+unchanged = "{root}/home/secret"

@@ -1,0 +1,15 @@
+sandbox-conformance
+Copyright 2026 Carlos Tapia
+
+This product includes conformance contracts derived from the guarantees asserted
+in the public test suites of other projects. Each contract credits its origin in
+its `source` field and in SOURCES.md. The derived works are original expressions
+of the guarantee under test, not copies of the upstream test code.
+
+Upstream projects and their licenses:
+- @anthropic-ai/sandbox-runtime (github.com/anthropics/sandbox-runtime) — Apache-2.0
+- nono (github.com/nolabs-ai/nono) — Apache-2.0
+- Codex CLI (github.com/openai/codex) — Apache-2.0
+- bubblewrap (github.com/containers/bubblewrap) — LGPL-2.1-or-later (guarantee
+  described only; no source text was copied)
+- OpenHands/software-agent-sdk (github.com/OpenHands/software-agent-sdk) — MIT

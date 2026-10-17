@@ -1,0 +1,31 @@
+# derived from nolabs-ai/nono tests/integration/test_exec_strategy.sh ("SIGTERM forwarded to child (nono exited after signal)") (Apache-2.0)
+# NEEDS RUNNER FEATURE: `[signal] after_secs, sig` — the runner signals the
+# LAUNCHER mid-run. When the launcher is terminated, the whole sandboxed tree
+# must die with it: nothing may survive to act later (marker must stay absent).
+# lifecycle-timeout covers the timeout path only, not an external SIGTERM.
+id = "lifecycle-signal-teardown"
+source = "nolabs-ai/nono tests/integration/test_exec_strategy.sh (\"SIGTERM forwarded to child (nono exited after signal)\") (Apache-2.0)"
+category = "lifecycle"
+severity = "high"
+os = ["linux", "macos"]
+
+[policy]
+writable_roots = ["{root}/work"]
+
+[signal]                                # NEW TABLE
+after_secs = 1
+sig = "TERM"
+
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+
+[attack]
+cmd = "sh -c 'trap \"\" TERM; (sleep 3; echo dirty > {root}/work/marker) & sleep 30'"
+
+[control]
+cmd = "sh -c 'echo ok > {root}/work/src/f.txt'"
+
+[assert]
+absent = "{root}/work/marker"
+settle_secs = 4

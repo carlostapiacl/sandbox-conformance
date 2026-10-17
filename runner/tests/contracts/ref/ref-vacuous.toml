@@ -1,0 +1,19 @@
+# The attack does nothing even without a sandbox.
+id = "ref-vacuous"
+source = "sandbox-conformance runner tests"
+category = "ref"
+severity = "medium"
+os = ["linux", "macos"]
+
+[policy]
+writable_roots = ["{root}/work"]
+
+[[fixture]]
+path = "{root}/work"
+dir = true
+
+[attack]
+cmd = "false"
+
+[control]
+cmd = "echo ok > {root}/work/f.txt"

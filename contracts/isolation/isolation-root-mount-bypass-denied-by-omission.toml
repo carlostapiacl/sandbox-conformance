@@ -1,0 +1,33 @@
+# derived from anthropics/sandbox-runtime test/docker-weak-sandbox.test.ts (Apache-2.0)
+# BY-OMISSION VARIANT: the granted model (read_scope = "granted"). The protected
+# path lives outside every grant, so it is unreadable because nobody granted it;
+# read_denies are not used. Same attack, control and assert as the original.
+id = "isolation-root-mount-bypass-denied-by-omission"
+source = "anthropics/sandbox-runtime test/docker-weak-sandbox.test.ts (Apache-2.0)"
+derived_from = "isolation-root-mount-bypass-denied"
+category = "isolation"
+severity = "critical"
+os = ["linux"]
+requires = ["landlock", "root"]
+
+[policy]
+read_scope = "granted"
+writable_roots = ["{root}/work"]
+
+[[fixture]]
+path = "{root}/vault/key"
+content = "TOPSECRET"
+
+[[fixture]]
+path = "{root}/work/mnt"
+dir = true
+
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+
+[attack]
+cmd = "sh -c 'mount --bind {root}/vault {root}/work/mnt 2>/dev/null && exit 0; cat {root}/work/mnt/key 2>/dev/null | grep -q TOPSECRET && exit 0; mount -o remount,rw / 2>/dev/null && exit 0; python3 -c \"import ctypes,sys; l=ctypes.CDLL(None,use_errno=True); sys.exit(0 if l.umount2(b\\\"/\\\",2)==0 else 1)\" && exit 0; exit 1'"
+
+[control]
+cmd = "sh -c 'echo ok > {root}/work/src/f.txt'"

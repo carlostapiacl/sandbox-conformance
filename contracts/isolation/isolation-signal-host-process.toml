@@ -1,0 +1,31 @@
+# derived from nolabs-ai/nono crates/nono/src/sandbox/linux.rs (test_signal_scope_blocks_external_kill_on_v6) (Apache-2.0)
+# NEEDS RUNNER FEATURE: `[[host_process]] cmd` started by the runner OUTSIDE the
+# sandbox, its pid substituted as {host_pid}, plus `[assert] alive = "{host_pid}"`.
+# Without a PID namespace the agent can see host pids; it must still not be
+# able to signal them (kill your editor, the supervisor, the broker). Landlock
+# ABI v6 LANDLOCK_SCOPE_SIGNAL / Seatbelt (signal (target same-sandbox)).
+# `kill -0` is a permission probe and is enough to prove the check is missing.
+id = "isolation-signal-host-process"
+source = "nolabs-ai/nono crates/nono/src/sandbox/linux.rs (test_signal_scope_blocks_external_kill_on_v6) (Apache-2.0)"
+category = "isolation"
+severity = "critical"
+os = ["linux", "macos"]
+
+[policy]
+writable_roots = ["{root}/work"]
+
+[[host_process]]                        # NEW TABLE
+cmd = "sleep 60"
+
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+
+[attack]
+cmd = "kill -TERM {host_pid}"
+
+[control]
+cmd = "sh -c 'sleep 30 & kill -TERM $!'"
+
+[assert]
+alive = "{host_pid}"                    # NEW KEY

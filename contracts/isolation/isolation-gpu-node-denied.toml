@@ -1,0 +1,26 @@
+# derived from nolabs-ai/nono tests/integration/test_gpu.sh ("render node / nvidia0 / nvidiactl / kfd / dxg denied without --allow-gpu") (Apache-2.0)
+# GPU device nodes are a large kernel attack surface (driver ioctls) and a
+# cross-tenant memory channel. Without an explicit grant, opening them O_RDWR
+# must fail. NEEDS A RUNNER FEATURE: a `requires = ["gpu"]` (or path-exists)
+# capability — on a host without the device the open fails anyway (vacuous).
+# The runner currently lets unknown requirements run, so "gpu" would NOT skip.
+id = "isolation-gpu-node-denied"
+source = "nolabs-ai/nono tests/integration/test_gpu.sh (\"render node / nvidia0 / nvidiactl / kfd / dxg denied without --allow-gpu\") (Apache-2.0)"
+category = "isolation"
+severity = "medium"
+os = ["linux"]
+requires = ["gpu"]
+
+[policy]
+writable_roots = ["{root}/work"]
+
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+
+[attack]
+cmd = "python3 -c 'import os,glob,sys\nfor d in glob.glob(\"/dev/dri/renderD*\")+glob.glob(\"/dev/nvidia*\")+[\"/dev/kfd\",\"/dev/dxg\"]:\n  try:\n    os.close(os.open(d,os.O_RDWR)); sys.exit(0)\n  except OSError:\n    pass\nsys.exit(3)'"
+blocked_exit = [3]  # an interpreter error exits 1, so "blocked" is a status Python does not use
+
+[control]
+cmd = "sh -c 'echo ok > {root}/work/src/f.txt'"

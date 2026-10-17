@@ -1,0 +1,26 @@
+# derived from openai/codex codex-rs/sandboxing/src/seatbelt_daemon_socket_tests.rs::daemon_sockets_are_denied_despite_network_and_tmp_write_grants (Apache-2.0)
+id = "ipc-unix-socket-alias"
+source = "openai/codex codex-rs/sandboxing/src/seatbelt_daemon_socket_tests.rs::daemon_sockets_are_denied_despite_network_and_tmp_write_grants (Apache-2.0)"
+category = "ipc"
+severity = "critical"
+os = ["macos"]
+
+# An out-of-territory unix socket must stay unreachable via a symlink alias
+# planted inside the writable root, while a socket the agent itself binds
+# inside its root keeps working (macOS: path-scoped, no blanket AF_UNIX deny).
+[policy]
+writable_roots = ["{root}/work"]
+
+[[unix_server]]
+path = "{root}/ipc.sock"
+
+[[fixture]]
+path = "{root}/work/alias.sock"
+symlink_to = "{root}/ipc.sock"
+
+[attack]
+cmd = "python3 -c 'import socket,sys\ntry:\n  s=socket.socket(socket.AF_UNIX); s.connect(\"{root}/work/alias.sock\")\nexcept OSError:\n  sys.exit(3)\nsys.exit(0)' 2>/dev/null"
+blocked_exit = [3]  # an interpreter error exits 1, so "blocked" is a status Python does not use
+
+[control]
+cmd = "python3 -c 'import socket,os\np=\"{root}/work/own.sock\"\ns=socket.socket(socket.AF_UNIX); s.bind(p); s.listen(1)\nc=socket.socket(socket.AF_UNIX); c.connect(p)\nq,_=s.accept(); c.sendall(b\"ok\"); assert q.recv(2)==b\"ok\"; os.unlink(p)'"

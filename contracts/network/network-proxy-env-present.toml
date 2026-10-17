@@ -1,0 +1,28 @@
+# derived from anthropics/sandbox-runtime test/sandbox/proxy-env-vars.test.ts (Apache-2.0)
+id = "network-proxy-env-present"
+source = "anthropics/sandbox-runtime test/sandbox/proxy-env-vars.test.ts (Apache-2.0)"
+category = "network"
+severity = "medium"
+os = ["linux", "macos"]
+
+# With scoped egress the agent is told where its proxy is (HTTP(S)_PROXY survive the
+# env scrub) — otherwise every tool fails closed and agents route around it. The
+# attack is ordinary direct egress to a non-granted port, which must stay blocked.
+control_requires_sandbox = "the control checks HTTPS_PROXY and HTTP_PROXY, which only a sandbox with an egress proxy sets"
+
+[policy]
+writable_roots = ["{root}/work"]
+allow_domains = ["example.com"]   # NOT exposed by PolicySpec today
+
+[[server]]
+port = 19670
+
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+
+[attack]
+cmd = "curl -s -o /dev/null --max-time 4 --noproxy '*' http://127.0.0.1:19670/"
+
+[control]
+cmd = "sh -c 'test -n \"$HTTPS_PROXY\" && test -n \"$HTTP_PROXY\" && echo ok > {root}/work/src/f.txt'"

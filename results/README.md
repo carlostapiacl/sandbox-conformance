@@ -1,0 +1,9 @@
+Published runs go here, one folder per date, with raw output and host stamps.
+
+| run | sandboxes | host |
+|---|---|---|
+| [2026-10-15](2026-10-15/README.md) | sandbox-runtime 0.0.79, nono 0.80.0, Codex CLI 0.162.1 | Linux 6.8, Ubuntu 24.04, x86_64 ([comparison](2026-10-15/comparison.md)) |
+| [2026-10-15-by-omission](2026-10-15-by-omission/README.md) | sandbox-runtime 0.0.79, nono 0.80.0, Codex CLI 0.162.1 | Linux 6.8, Ubuntu 24.04, x86_64 — nono measured in its own (granted) model |
+| [2026-10-15-four-sandboxes](2026-10-15-four-sandboxes/README.md) | + landrun 0.1.17 (pure Landlock) | Linux 6.8 — four-column comparison on the full contract set |
+| [2026-10-16](2026-10-16/README.md) | the same four, same versions | Linux 6.8 — first run judged by [`spec/verdicts.md`](../spec/verdicts.md); reproduces 2026-10-15 with the old runner, then 5 results change, each explained |
+| [2026-10-17-landrun](2026-10-17-landrun/README.md) | landrun 0.1.17 | Linux 6.8 — landrun re-measured in the granted read model (SC-003): 22 unsupported become measured |

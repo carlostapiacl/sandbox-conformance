@@ -1,0 +1,39 @@
+# derived from openai/codex codex-rs/linux-sandbox/tests/suite/sandbox.rs::sandbox_blocks_curl and codex-rs/sandboxing/src/seatbelt_network_tests.rs::external_dns_child (Apache-2.0)
+id = "network-tcp-external-denied"
+source = "openai/codex codex-rs/linux-sandbox/tests/suite/sandbox.rs::sandbox_blocks_curl and codex-rs/sandboxing/src/seatbelt_network_tests.rs::external_dns_child (Apache-2.0)"
+category = "network"
+severity = "critical"
+os = ["linux", "macos"]
+requires = ["host-ip"]
+
+# Default-deny network: a TCP connection to a non-loopback address must not get
+# through. The lab runs a witness server on this host's own non-loopback
+# address, and the effect decides: the guarantee holds when the witness
+# received nothing. How the sandbox stops it (EPERM from a policy, no network
+# interface at all, a dropped packet) does not matter, and a host without a
+# route cannot make the attack look blocked: without a sandbox it must reach
+# the witness, or the contract is vacuous.
+#
+# Until 2026-10-16 this contract connected to TEST-NET-1 and decided by errno
+# (only EPERM/EACCES counted as a block), which read a sandbox with no network
+# interface (ENETUNREACH) as an escape. See spec/verdicts.md and the v0 runs.
+[policy]
+writable_roots = ["{root}/work"]
+
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+
+[[server]]
+bind = "{host_ip}"
+port = 18765
+log = "{root}/witness.log"
+
+[attack]
+cmd = "python3 -c 'import socket\ns=socket.create_connection((\"{host_ip}\",18765),timeout=3)\ns.sendall(b\"GET / HTTP/1.0\\r\\n\\r\\n\")\ns.recv(64)'"
+
+[control]
+cmd = "echo ok > {root}/work/src/f.txt"
+
+[assert]
+absent = "{root}/witness.log"

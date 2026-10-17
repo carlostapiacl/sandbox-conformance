@@ -1,0 +1,33 @@
+# derived from anthropics/sandbox-runtime test/sandbox/trailing-slash-deny-spellings.test.ts (Apache-2.0)
+# BY-OMISSION VARIANT: the granted model (read_scope = "granted"). The protected
+# path lives outside every grant, so it is unreadable because nobody granted it;
+# read_denies are not used. Same attack, control and assert as the original.
+id = "read-allow-writable-carveout-trailing-slash-by-omission"
+source = "anthropics/sandbox-runtime test/sandbox/trailing-slash-deny-spellings.test.ts (Apache-2.0)"
+derived_from = "read-allow-writable-carveout-trailing-slash"
+category = "filesystem"
+severity = "medium"
+os = ["linux", "macos"]
+
+[policy]
+read_scope = "granted"
+writable_roots = ["{root}/work", "{root}/secrets/data/"]
+read_allows = ["{root}/secrets/data/"]
+
+[[fixture]]
+path = "{root}/secrets/key"
+content = "TOPSECRET"
+
+[[fixture]]
+path = "{root}/secrets/data/out.txt"
+content = "x"
+
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+
+[attack]
+cmd = "cat {root}/secrets/key"
+
+[control]
+cmd = "echo new > {root}/secrets/data/out.txt && cat {root}/secrets/data/out.txt >/dev/null"

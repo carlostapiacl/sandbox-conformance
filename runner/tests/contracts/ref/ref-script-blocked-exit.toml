@@ -1,0 +1,25 @@
+# Exit-decided script: a Python crash exits 1, so "blocked" is declared as 3.
+id = "ref-script-blocked-exit"
+source = "sandbox-conformance runner tests"
+category = "ref"
+severity = "critical"
+os = ["linux", "macos"]
+
+[policy]
+writable_roots = ["{root}/work"]
+read_denies = ["{root}/home/.netrc"]
+
+[[fixture]]
+path = "{root}/work"
+dir = true
+
+[[fixture]]
+path = "{root}/home/.netrc"
+content = "hunter2"
+
+[attack]
+cmd = "python3 -c 'import sys\ntry:\n  d=open(\"{root}/home/.netrc\").read()\nexcept PermissionError:\n  sys.exit(3)\nsys.exit(0 if \"hunter2\" in d else 3)'"
+blocked_exit = [3]
+
+[control]
+cmd = "echo ok > {root}/work/f.txt"

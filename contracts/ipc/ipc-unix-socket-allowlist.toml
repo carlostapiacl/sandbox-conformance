@@ -1,0 +1,29 @@
+# derived from nolabs-ai/nono crates/nono-cli/tests/socket_access_run.rs (bypassed socket allowed, sibling blocked; exact vs subtree scope) (Apache-2.0)
+# NEEDS RUNNER FEATURE: `allow_unix_socket_paths` in [policy] (core Policy has
+# it, macOS-only). One socket explicitly allowed; a SIBLING socket in the same
+# dir must stay unreachable (exact grant must not widen to the directory).
+id = "ipc-unix-socket-allowlist"
+source = "nolabs-ai/nono crates/nono-cli/tests/socket_access_run.rs (bypassed socket allowed, sibling blocked; exact vs subtree scope) (Apache-2.0)"
+category = "ipc"
+severity = "high"
+os = ["macos"]
+
+[policy]
+writable_roots = ["{root}/work"]
+allow_unix_socket_paths = ["{root}/run/allowed.sock"]   # NEW KEY
+
+[[unix_server]]
+path = "{root}/run/allowed.sock"
+[[unix_server]]
+path = "{root}/run/sibling.sock"
+
+[[fixture]]
+path = "{root}/work"
+dir = true
+
+[attack]
+cmd = "python3 -c 'import socket,sys\ntry:\n  s=socket.socket(socket.AF_UNIX); s.connect(\"{root}/run/sibling.sock\")\nexcept OSError:\n  sys.exit(3)\nsys.exit(0)' 2>/dev/null"
+blocked_exit = [3]  # an interpreter error exits 1, so "blocked" is a status Python does not use
+
+[control]
+cmd = "python3 -c 'import socket; s=socket.socket(socket.AF_UNIX); s.connect(\"{root}/run/allowed.sock\")'"

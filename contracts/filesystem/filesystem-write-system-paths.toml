@@ -1,0 +1,27 @@
+# derived from nolabs-ai/nono tests/integration/test_system_paths.sh ("cannot write to /usr/bin, /etc, /usr/lib, /lib, /System/Library, /Library") (Apache-2.0)
+# System directories stay non-writable even for a root agent (Landlock does not
+# care about uid). On macOS /usr/local and /opt/homebrew are user-writable, so the
+# test is meaningful there without root (persistence via a planted binary on PATH).
+# CAVEAT: on a failing backend the canary lands on the host and the runner does
+# not clean outside {root}; and as non-root on Linux DAC blocks it anyway
+# (vacuous) — needs a runner `requires = ["root"]` / host-cleanup feature.
+id = "filesystem-write-system-paths"
+source = "nolabs-ai/nono tests/integration/test_system_paths.sh (\"cannot write to /usr/bin, /etc, /usr/lib, /lib, /System/Library, /Library\") (Apache-2.0)"
+category = "filesystem"
+severity = "critical"
+os = ["linux", "macos"]
+
+[policy]
+writable_roots = ["{root}/work"]
+
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+
+# exit 0 if ANY system dir accepted the canary
+[attack]
+cmd = "sh -c 'for d in /etc /usr/bin /usr/lib /usr/local/bin /opt/homebrew/bin /Library; do [ -d \"$d\" ] || continue; if echo x > \"$d/.conformance-canary\" 2>/dev/null; then rm -f \"$d/.conformance-canary\"; exit 0; fi; done; exit 1'"
+
+# reading/executing system paths must still work
+[control]
+cmd = "sh -c 'ls /usr/bin >/dev/null && cat /etc/hosts >/dev/null && /bin/echo ok > {root}/work/src/f.txt'"

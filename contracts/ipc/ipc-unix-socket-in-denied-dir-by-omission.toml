@@ -1,0 +1,28 @@
+# derived from nolabs-ai/nono crates/nono-cli/tests/socket_access_run.rs (filesystem_directory_deny_blocks_nested_unix_socket_connect_on_macos) (Apache-2.0)
+# BY-OMISSION VARIANT: the granted model (read_scope = "granted"). The protected
+# path lives outside every grant, so it is unreadable because nobody granted it;
+# read_denies are not used. Same attack, control and assert as the original.
+id = "ipc-unix-socket-in-denied-dir-by-omission"
+source = "nolabs-ai/nono crates/nono-cli/tests/socket_access_run.rs (filesystem_directory_deny_blocks_nested_unix_socket_connect_on_macos) (Apache-2.0)"
+derived_from = "ipc-unix-socket-in-denied-dir"
+category = "ipc"
+severity = "critical"
+os = ["linux", "macos"]
+
+[policy]
+read_scope = "granted"
+writable_roots = ["{root}/work"]
+
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+
+[[unix_server]]
+path = "{root}/home/.gnupg/S.agent"
+
+[attack]
+cmd = "python3 -c 'import socket,sys\ntry:\n  s=socket.socket(socket.AF_UNIX); s.connect(\"{root}/home/.gnupg/S.agent\")\nexcept OSError:\n  sys.exit(3)\nsys.exit(0)' 2>/dev/null"
+blocked_exit = [3]  # an interpreter error exits 1, so "blocked" is a status Python does not use
+
+[control]
+cmd = "echo ok > {root}/work/src/f.txt"

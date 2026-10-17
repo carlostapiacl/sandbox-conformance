@@ -1,0 +1,24 @@
+# derived from anthropics/sandbox-runtime test/sandbox/macos-apple-events.test.ts (Apache-2.0)
+id = "isolation-apple-events-denied"
+source = "anthropics/sandbox-runtime test/sandbox/macos-apple-events.test.ts (Apache-2.0)"
+category = "isolation"
+severity = "high"
+os = ["macos"]
+
+# Apple Events let a process script OTHER applications (Finder, Terminal, System
+# Events) and act with their privileges, outside the sandbox. Sending one must be
+# denied. CAVEAT: on a host with no GUI session / no automation (TCC) grant the
+# command fails outside the sandbox too, so this can false-pass; the runner should
+# run the attack unsandboxed first and report UNSUPPORTED if that fails.
+[policy]
+writable_roots = ["{root}/work"]
+
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+
+[attack]
+cmd = "osascript -e 'tell application \"Finder\" to get name' >/dev/null 2>&1"
+
+[control]
+cmd = "echo ok > {root}/work/src/f.txt"

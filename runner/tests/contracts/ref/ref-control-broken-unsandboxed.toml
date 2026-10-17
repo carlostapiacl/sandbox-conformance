@@ -1,0 +1,26 @@
+# The control fails without a sandbox and nothing declares why: the contract is broken.
+id = "ref-control-broken-unsandboxed"
+source = "sandbox-conformance runner tests"
+category = "ref"
+severity = "medium"
+os = ["linux", "macos"]
+
+[policy]
+writable_roots = ["{root}/work"]
+
+[[fixture]]
+path = "{root}/work"
+dir = true
+
+[[fixture]]
+path = "{root}/home/secret"
+content = "original"
+
+[attack]
+cmd = "echo pwned > {root}/home/secret"
+
+[control]
+cmd = "cat {root}/work/missing-file"
+
+[assert]
+unchanged = "{root}/home/secret"

@@ -1,0 +1,231 @@
+{
+ "_about": "Manual review of the 4-sandbox run, checked against raw output. landrun is a pure-Landlock FS+TCP tool; most of its escapes are built-in guarantees it does not provide (trust-handoff, process isolation, lifecycle) or Landlock limits (non-TCP network, file metadata), marked below. The sandbox-runtime, nono and codex notes are carried over from ../2026-10-15/review.json and ../2026-10-15-by-omission/review.json: each applies to a contract whose result is identical in this run (checked contract by contract on 2026-10-16). They were left out of this file when the run was first published.",
+ "sandbox-runtime": {
+  "isolation-process-info-foreign": [
+   "contract-assumption",
+   "/proc/1 inside srt is the sandbox's own init in its private PID namespace, not a host process."
+  ],
+  "isolation-root-mount-bypass-denied-by-omission": [
+   "vacuous",
+   "mount fails in the container without a sandbox; nothing is proven here."
+  ],
+  "isolation-vsock-socket-denied": [
+   "confirmed",
+   "Same as network-vsock-denied."
+  ],
+  "network-egress-public-denied": [
+   "interface",
+   "A granted loopback port is reachable only through srt's proxy (measured: HTTP 200 with curl --noproxy ''). The control connects directly, and srt sets NO_PROXY=127.0.0.1, so it fails; the attack was contained."
+  ],
+  "network-local-bind-denied": [
+   "contract-assumption",
+   "The listener is bound inside srt's own empty network namespace, which no host process can reach; the contract's concern (an inbound channel from the host) does not arise. The control failed for the same proxy reason as network-egress-public-denied."
+  ],
+  "network-other-socket-families-denied": [
+   "confirmed",
+   "AF_NETLINK/AF_VSOCK sockets can be created. In srt's empty network namespace netlink only sees that namespace; AF_VSOCK is not namespaced. Whether vsock reaches anything on this host: (por confirmar)."
+  ],
+  "network-socket-domain-high-bits": [
+   "confirmed",
+   "Socket creation with high bits set in the domain argument is not refused by srt's filter (which targets AF_UNIX)."
+  ],
+  "network-tcp-external-denied": [
+   "contract-assumption",
+   "The contract counts any error other than EPERM/EACCES as success. Under srt the process has no network interface at all (ENETUNREACH); nothing can leave the host."
+  ],
+  "network-vsock-denied": [
+   "confirmed",
+   "AF_VSOCK socket creation allowed; reachability on this host (por confirmar)."
+  ],
+  "read-deny-bracket-dir": [
+   "confirmed",
+   "srt exits before running anything: 'Invalid regular expression ... [user-id] ... Range out of order'. Fails closed."
+  ],
+  "read-deny-link-dotdot": [
+   "confirmed",
+   "The deny is resolved lexically: here/up -> link/../file is folded to here/file, so here/file is denied (control fails) and the real target elsewhere/file is read (attack printed TOPSECRET)."
+  ],
+  "secrets-env-loader-injection-inherit": [
+   "contract-assumption",
+   "The policy asks to inherit the launcher's whole environment, and the sandbox did exactly that (LD_PRELOAD/BASH_ENV passed). The contract's own comment calls stripping loader variables even under inherit-all a design decision still to be made, not an established guarantee."
+  ],
+  "write-deny-dangling-link-target": [
+   "confirmed",
+   "Writing through the denied dangling link created its eventual target elsewhere/made."
+  ],
+  "write-deny-link-dotdot": [
+   "confirmed",
+   "srt hung until the runner's 60 s timeout (exit 137) for both attack and control; fails closed, but unusable."
+  ]
+ },
+ "nono": {
+  "filesystem-chmod-outside": [
+   "confirmed",
+   "Measured with a read grant on the test tree (the neutral read-everything baseline). Landlock does not mediate chmod/utime/xattr, so a readable file's metadata can be changed. Under nono's own idiom (no grant at all) the file would be unreachable."
+  ],
+  "filesystem-utime-outside": [
+   "confirmed",
+   "As filesystem-chmod-outside."
+  ],
+  "filesystem-xattr-outside": [
+   "confirmed",
+   "As filesystem-chmod-outside."
+  ],
+  "fs-writable-root-symlink-out": [
+   "confirmed",
+   "A writable root that is itself a symlink pointing outside the other roots was followed, so its target became writable. The contract pins a policy decision (refuse such a root); the sandbox does not make it."
+  ],
+  "fs-writable-root-symlink-parent": [
+   "confirmed",
+   "A writable root that is itself a symlink pointing outside the other roots was followed, so its target became writable. The contract pins a policy decision (refuse such a root); the sandbox does not make it."
+  ],
+  "ipc-abstract-unix-socket": [
+   "kernel-dependent",
+   "Abstract-socket scoping needs Landlock ABI 6 (kernel 6.12+); this host has ABI 4 and nono logs it as unavailable."
+  ],
+  "ipc-unix-socket-in-denied-dir-by-omission": [
+   "documented",
+   "Landlock does not mediate connect() to a pathname unix socket, so a socket in an ungranted directory stays reachable. This is the gap the original contract already documents; it holds in the granted model too."
+  ],
+  "isolation-root-mount-bypass-denied-by-omission": [
+   "vacuous",
+   "mount operations fail in the container even without a sandbox (no CAP_SYS_ADMIN), so the attack proves nothing on this host."
+  ],
+  "isolation-signal-host-process": [
+   "kernel-dependent",
+   "Signal scoping needs Landlock ABI 6 (kernel 6.12+); this host has ABI 4."
+  ],
+  "lifecycle-background-reaped-on-exit": [
+   "confirmed",
+   "A background child outlived the sandboxed command and wrote the marker."
+  ],
+  "lifecycle-signal-teardown": [
+   "confirmed",
+   "SIGTERM to the launcher ended it (143), but the sandboxed tree survived and wrote the marker."
+  ],
+  "read-allow-symlink-into-deny-by-omission": [
+   "design",
+   "The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. srt grants the link name only and contains it; codex refuses to build the sandbox."
+  ],
+  "read-allow-symlink-no-reopen-by-omission": [
+   "design",
+   "The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. srt grants the link name only and contains it; codex refuses to build the sandbox."
+  ],
+  "secrets-read-allow-symlink-into-deny-by-omission": [
+   "design",
+   "The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. srt grants the link name only and contains it; codex refuses to build the sandbox."
+  ]
+ },
+ "codex": {
+  "fs-writable-root-symlink-out": [
+   "confirmed",
+   "A writable root that is itself a symlink pointing outside the other roots was followed, so its target became writable. The contract pins a policy decision (refuse such a root); the sandbox does not make it."
+  ],
+  "fs-writable-root-symlink-parent": [
+   "confirmed",
+   "A writable root that is itself a symlink pointing outside the other roots was followed, so its target became writable. The contract pins a policy decision (refuse such a root); the sandbox does not make it."
+  ],
+  "isolation-process-info-foreign": [
+   "contract-assumption",
+   "/proc/1 inside codex's sandbox is its own init in a private PID namespace, not a host process."
+  ],
+  "isolation-root-mount-bypass-denied-by-omission": [
+   "vacuous",
+   "mount fails in the container without a sandbox; nothing is proven here."
+  ],
+  "lifecycle-signal-teardown": [
+   "confirmed",
+   "After SIGTERM to `codex sandbox`, the sandboxed tree kept running and wrote the marker."
+  ],
+  "read-allow-symlink-into-deny-by-omission": [
+   "interface",
+   "codex refuses to build the sandbox when a read grant resolves through a symlink ('cannot enforce sandbox read-only path'): the attack is stopped and so is the control."
+  ],
+  "read-allow-symlink-no-reopen-by-omission": [
+   "interface",
+   "codex refuses to build the sandbox when a read grant resolves through a symlink: fails closed, control broke too."
+  ],
+  "read-deny-symlink-entry": [
+   "confirmed",
+   "Fails closed: bwrap cannot mount over a deny entry that is a symlink, so nothing runs."
+  ],
+  "secrets-env-loader-injection-inherit": [
+   "contract-assumption",
+   "The policy asks to inherit the launcher's whole environment, and the sandbox did exactly that (LD_PRELOAD/BASH_ENV passed). The contract's own comment calls stripping loader variables even under inherit-all a design decision still to be made, not an established guarantee."
+  ],
+  "secrets-read-allow-symlink-into-deny-by-omission": [
+   "interface",
+   "codex refuses to build the sandbox when a read grant resolves through a symlink: fails closed, control broke too."
+  ],
+  "write-deny-covers-nested-root": [
+   "confirmed",
+   "A writable root nested inside a write-denied directory stayed writable; codex resolves overlapping entries by the most specific path."
+  ]
+ },
+ "landrun": {
+  "network-egress-public-denied": [
+   "documented",
+   "Landlock mediates only TCP (ABI 4): UDP, ICMP, netlink, AF_VSOCK and other socket families are not blocked, so the attack's non-TCP leg succeeds."
+  ],
+  "network-icmp-denied": [
+   "documented",
+   "Landlock mediates only TCP (ABI 4): UDP, ICMP, netlink, AF_VSOCK and other socket families are not blocked, so the attack's non-TCP leg succeeds."
+  ],
+  "network-other-socket-families-denied": [
+   "documented",
+   "Landlock mediates only TCP (ABI 4): UDP, ICMP, netlink, AF_VSOCK and other socket families are not blocked, so the attack's non-TCP leg succeeds."
+  ],
+  "network-vsock-denied": [
+   "documented",
+   "Landlock mediates only TCP (ABI 4): UDP, ICMP, netlink, AF_VSOCK and other socket families are not blocked, so the attack's non-TCP leg succeeds."
+  ],
+  "network-socket-domain-high-bits": [
+   "documented",
+   "Landlock mediates only TCP (ABI 4): UDP, ICMP, netlink, AF_VSOCK and other socket families are not blocked, so the attack's non-TCP leg succeeds."
+  ],
+  "seccomp-io-uring-denied": [
+   "documented",
+   "landrun has no seccomp; io_uring is not blocked (Landlock does not cover syscalls)."
+  ],
+  "filesystem-chmod-outside": [
+   "confirmed",
+   "Landlock does not mediate chmod/utime/xattr; a readable file's metadata can be changed (same gap as nono)."
+  ],
+  "filesystem-utime-outside": [
+   "confirmed",
+   "as filesystem-chmod-outside."
+  ],
+  "filesystem-xattr-outside": [
+   "confirmed",
+   "as filesystem-chmod-outside."
+  ],
+  "fs-writable-root-symlink-out": [
+   "confirmed",
+   "a writable root that is a symlink pointing out is followed."
+  ],
+  "fs-writable-root-symlink-parent": [
+   "confirmed",
+   "as fs-writable-root-symlink-out."
+  ],
+  "ipc-abstract-unix-socket": [
+   "kernel-dependent",
+   "abstract-socket scoping needs Landlock ABI 6; this host is ABI 4."
+  ],
+  "isolation-signal-host-process": [
+   "kernel-dependent",
+   "signal scoping needs Landlock ABI 6; this host is ABI 4."
+  ],
+  "secrets-env-loader-injection-inherit": [
+   "contract-assumption",
+   "the policy asked to inherit the whole environment, so LD_PRELOAD passed, as expected."
+  ],
+  "fs-dotdot-absent-root": [
+   "confirmed",
+   "landrun fails to apply the Landlock ruleset for a writable root spelled with '..' (control broke)."
+  ],
+  "filesystem-writable-root-replace": [
+   "confirmed",
+   "a writable root replaced during the run; control broke."
+  ]
+ }
+}
