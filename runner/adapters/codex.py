@@ -16,10 +16,16 @@ CORE_ENV = ["PATH", "HOME", "LANG", "TERM"]
 BIN = "/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex"
 
 
+# The commit each measured release was built from (its tag). A version not listed
+# records "unknown commit" instead of borrowing another release's.
+TAG_COMMIT = {"0.162.1": "092d3acd6bec3e3a14bdc7e7a2810ab628ab759d",
+              "0.163.0": "83086188ae0614bd882818ff1aa23f3194962012"}
+
+
 def identity():
     v = subprocess.run([BIN, "--version"], capture_output=True, text=True).stdout.strip().split()[-1]
     return {"version": v, "package": "@openai/codex@" + v,
-            "commit": "092d3acd6bec3e3a14bdc7e7a2810ab628ab759d (tag rust-v" + v + ", github.com/openai/codex)",
+            "commit": TAG_COMMIT.get(v, "unknown commit") + " (tag rust-v" + v + ", github.com/openai/codex)",
             "license": "Apache-2.0",
             "artifact_sha256": tree_sha256("/usr/local/lib/node_modules/@openai/codex")}  # the package, vendored binaries included
 

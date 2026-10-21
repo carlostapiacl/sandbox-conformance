@@ -22,9 +22,14 @@ BIN = "/usr/local/bin/nono"
 CORE_ENV = ["PATH", "HOME", "LANG", "TERM"]
 
 
+# The commit each measured release was built from (its tag). A version not listed
+# records "unknown commit" instead of borrowing another release's.
+TAG_COMMIT = {"0.80.0": "8bb041356d48f771a221e58c98d9b1ff442e76fe"}
+
+
 def identity():
     v = subprocess.run([BIN, "--version"], capture_output=True, text=True).stdout.strip().split()[-1]
-    return {"version": v, "commit": "8bb041356d48f771a221e58c98d9b1ff442e76fe (tag v" + v + ", github.com/nolabs-ai/nono)",
+    return {"version": v, "commit": TAG_COMMIT.get(v, "unknown commit") + " (tag v" + v + ", github.com/nolabs-ai/nono)",
             "license": "Apache-2.0", "binary": f"nono-v{v}-x86_64-unknown-linux-gnu.tar.gz (release asset, SHA256SUMS verified)",
             "artifact_sha256": file_sha256(BIN)}
 

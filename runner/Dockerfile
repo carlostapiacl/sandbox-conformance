@@ -8,7 +8,7 @@ RUN useradd -m -u 1500 agent
 RUN cd /tmp && curl -fsSLO https://nodejs.org/dist/v22.20.0/node-v22.20.0-linux-x64.tar.xz \
     && echo "00bbd05e306ea68b6e13e17360d0e2f680b493ef95f2fea1c4296ff7437530bc  node-v22.20.0-linux-x64.tar.xz" | sha256sum -c \
     && tar -xJf node-v22.20.0-linux-x64.tar.xz -C /usr/local --strip-components=1 && rm -rf /tmp/*
-RUN npm install -g --silent @anthropic-ai/sandbox-runtime@0.0.79 @openai/codex@0.162.1
+RUN npm install -g --silent @anthropic-ai/sandbox-runtime@0.0.81 @openai/codex@0.163.0
 RUN curl -fsSL https://github.com/Zouuup/landrun/releases/download/v0.1.17/landrun-linux-amd64 -o /usr/local/bin/landrun \
     && echo "6ada66a06669e8994e174a7271af2db636308e55a0d6ec896cc7d326b46727f6  /usr/local/bin/landrun" | sha256sum -c \
     && chmod 755 /usr/local/bin/landrun
