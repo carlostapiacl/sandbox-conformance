@@ -6,8 +6,10 @@ filter that blocks io_uring and ptrace, plus network system calls when the
 network is restricted.
 
 We measured codex-cli 0.162.1 (`@openai/codex`), built from commit
-`092d3acd6bec3e3a14bdc7e7a2810ab628ab759d` (tag rust-v0.162.1), licensed
-Apache-2.0. We called its native `x86_64-unknown-linux-musl` binary directly
+`092d3acd6bec3e3a14bdc7e7a2810ab628ab759d` (tag rust-v0.162.1), and on
+2026-10-21 codex-cli 0.163.0 (commit `83086188ae0614bd882818ff1aa23f3194962012`,
+tag rust-v0.163.0), licensed Apache-2.0. Which results changed in which
+version: [`results/versions.md`](../results/versions.md). We called its native `x86_64-unknown-linux-musl` binary directly
 instead of the npm launcher. That launcher is a Node script, and a contract
 that sets `NODE_OPTIONS` in the environment would break the launcher before the
 sandbox ever started. The adapter is [`runner/adapters/codex.py`](../runner/adapters/codex.py).
@@ -37,6 +39,13 @@ Some fields have no equivalent in codex:
 - `materialize_absent_handoff`.
 - `[broker]`.
 - A log of its own that the agent could try to tamper with.
+
+## Results of 0.163.0 (2026-10-21 run)
+
+No result changed from 0.162.1: the [run](../results/2026-10-21/README.md)
+re-measured 0.162.1 on the same host, runner and contracts first, and both
+versions give the same result on all 188 contracts. Everything below holds for
+0.163.0.
 
 ## Results of the 2026-10-15 run
 

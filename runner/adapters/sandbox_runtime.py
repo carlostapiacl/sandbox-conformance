@@ -12,10 +12,16 @@ NAME = "sandbox-runtime"
 CFG = "/var/lib/sc/cfg"
 
 
+# The commit each measured release was built from (its tag). A version not listed
+# records "unknown commit" instead of borrowing another release's.
+TAG_COMMIT = {"0.0.79": "d9aac2098351ca17f3743fbaf6ecbd0051b7e00e",
+              "0.0.81": "c40cf14a65d025e3cd27f071f13a73c12b3b1f92"}
+
+
 def identity():
     v = subprocess.run(["srt", "--version"], capture_output=True, text=True).stdout.strip()
     return {"version": v, "package": "@anthropic-ai/sandbox-runtime@" + v,
-            "commit": "d9aac2098351ca17f3743fbaf6ecbd0051b7e00e (tag v" + v + ", github.com/anthropics/sandbox-runtime)",
+            "commit": TAG_COMMIT.get(v, "unknown commit") + " (tag v" + v + ", github.com/anthropics/sandbox-runtime)",
             "license": "Apache-2.0",
             "artifact_sha256": tree_sha256("/usr/local/lib/node_modules/@anthropic-ai/sandbox-runtime")}
 

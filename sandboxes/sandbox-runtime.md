@@ -6,8 +6,10 @@ and io_uring, and HTTP and SOCKS proxies on the host decide which domains can
 be reached.
 
 We measured version 0.0.79 (`@anthropic-ai/sandbox-runtime`), built from
-commit `d9aac2098351ca17f3743fbaf6ecbd0051b7e00e` (tag v0.0.79), licensed
-Apache-2.0. The adapter is
+commit `d9aac2098351ca17f3743fbaf6ecbd0051b7e00e` (tag v0.0.79), and on
+2026-10-21 version 0.0.81 (commit `c40cf14a65d025e3cd27f071f13a73c12b3b1f92`,
+tag v0.0.81), licensed Apache-2.0. Which results changed in which version:
+[`results/versions.md`](../results/versions.md). The adapter is
 [`runner/adapters/sandbox_runtime.py`](../runner/adapters/sandbox_runtime.py).
 It writes a settings file and runs `srt --settings <file> -c <cmd>`.
 
@@ -37,6 +39,34 @@ Some fields have no equivalent in srt:
 The adapter passes paths exactly as the contract spells them, with trailing
 slashes, brackets, `..` and symlinks left in. How a sandbox reads those
 spellings is part of what is under test.
+
+## Results of 0.0.81 (2026-10-21 run)
+
+Same host, kernel, runner and contracts as the re-measure of 0.0.79 that the
+[run](../results/2026-10-21/README.md) starts with, which reproduced the
+2026-10-16 results exactly. So every change below comes from the new version.
+
+| contained | escaped | control-broke | unsupported | vacuous | needs-feature | n/a |
+|---|---|---|---|---|---|---|
+| 133 | 14 | 1 | 18 | 9 | 1 | 12 |
+
+Nine results changed from 0.0.79, all to **contained**. Every change landed in
+0.0.80; 0.0.81 changes only Windows.
+
+| contract | 0.0.79 | 0.0.81 | upstream change |
+|---|---|---|---|
+| `read-deny-link-dotdot` | escaped | contained | [#689](https://github.com/anthropics/sandbox-runtime/pull/689) |
+| `write-deny-dangling-link-target` | escaped | contained | [#689](https://github.com/anthropics/sandbox-runtime/pull/689) |
+| `write-deny-link-dotdot` | control-broke | contained | probably [#689](https://github.com/anthropics/sandbox-runtime/pull/689) (por confirmar) |
+| `read-deny-bracket-dir` | control-broke | contained | [#687](https://github.com/anthropics/sandbox-runtime/pull/687) |
+| `network-vsock-denied` | escaped | contained | [#691](https://github.com/anthropics/sandbox-runtime/pull/691) |
+| `isolation-vsock-socket-denied` | escaped | contained | [#691](https://github.com/anthropics/sandbox-runtime/pull/691) |
+| `isolation-clone-newns-denied` | escaped | contained | [#588](https://github.com/anthropics/sandbox-runtime/pull/588), [#617](https://github.com/anthropics/sandbox-runtime/pull/617) |
+| `isolation-no-nested-userns` | escaped | contained | [#588](https://github.com/anthropics/sandbox-runtime/pull/588), [#617](https://github.com/anthropics/sandbox-runtime/pull/617) |
+| `seccomp-clone-newuser-denied` | escaped | contained | [#588](https://github.com/anthropics/sandbox-runtime/pull/588), [#617](https://github.com/anthropics/sandbox-runtime/pull/617) |
+
+The 14 escapes left are the same contracts, with the same readings, as in
+0.0.79. The sections below describe 0.0.79.
 
 ## Results of the 2026-10-15 run
 
@@ -121,18 +151,18 @@ with a `run --write DIR` command line, which srt does not have.
 
 ## Upstream status
 
-Checked on 2026-10-15 against srt's public pull requests and commits. Most of
-what this run found on configured rules was already fixed on `main` when we
-measured, in changes merged after the v0.0.79 release. No release carries those
-fixes yet, so the results above stay as measured until the next version is run.
+Checked on 2026-10-15 against srt's public pull requests and commits, and
+again on 2026-10-21. Most of what the 0.0.79 run found on configured rules was
+already fixed on `main` when we measured it. Those fixes shipped in v0.0.80, and
+the 2026-10-21 run measured them in 0.0.81.
 
 | finding | fixed in | reference |
 |---|---|---|
-| read-deny through a symlink with `..` resolved lexically | `main` 48a08dc, no release yet | [#689](https://github.com/anthropics/sandbox-runtime/pull/689) |
-| write through a denied dangling link creates its target | `main` 48a08dc, no release yet | [#689](https://github.com/anthropics/sandbox-runtime/pull/689) |
-| hang on a write-deny spelled with `..` | probably `main` 48a08dc (por confirmar) | [#689](https://github.com/anthropics/sandbox-runtime/pull/689) |
-| `[user-id]` directory stops the sandbox from starting | `main` 80ea0c9, no release yet | [#687](https://github.com/anthropics/sandbox-runtime/pull/687) |
-| AF_VSOCK sockets can be created | `main` 5507fb0, no release yet | [#691](https://github.com/anthropics/sandbox-runtime/pull/691) |
+| read-deny through a symlink with `..` resolved lexically | v0.0.80; contained in 0.0.81 | [#689](https://github.com/anthropics/sandbox-runtime/pull/689) |
+| write through a denied dangling link creates its target | v0.0.80; contained in 0.0.81 | [#689](https://github.com/anthropics/sandbox-runtime/pull/689) |
+| hang on a write-deny spelled with `..` | v0.0.80 (which change, por confirmar); contained in 0.0.81 | [#689](https://github.com/anthropics/sandbox-runtime/pull/689) |
+| `[user-id]` directory stops the sandbox from starting | v0.0.80; contained in 0.0.81 | [#687](https://github.com/anthropics/sandbox-runtime/pull/687) |
+| AF_VSOCK sockets can be created | v0.0.80; contained in 0.0.81 | [#691](https://github.com/anthropics/sandbox-runtime/pull/691) |
 | AF_NETLINK sockets can be created | not planned (documented deny list) | [#691](https://github.com/anthropics/sandbox-runtime/pull/691) |
 | protected names scanned from the working directory | open | [#518](https://github.com/anthropics/sandbox-runtime/pull/518), [#569](https://github.com/anthropics/sandbox-runtime/pull/569) |
 | nested repositories, gitdir pointers, worktree gitfiles | open | [#569](https://github.com/anthropics/sandbox-runtime/pull/569) |

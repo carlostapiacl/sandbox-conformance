@@ -65,5 +65,10 @@ results on a fresh host; the new one changes five, each traced to a cause. The l
 tests itself against [reference sandboxes](runner/reference/README.md) whose behaviour
 is known (`python3 -m unittest discover -s runner/tests`).
 
+The [2026-10-21 run](results/2026-10-21/README.md) measures the latest releases:
+sandbox-runtime 0.0.81 and Codex CLI 0.163.0 (nono and landrun unchanged). The
+previous versions were re-measured first and reproduced. Which results changed in which
+version is in [`results/versions.md`](results/versions.md).
+
 Next: macOS runs, [more corpora](corpus-roadmap.md) harvested from other sandboxes' test suites, and
 a site that lets you search a guarantee and see which sandbox holds it.
