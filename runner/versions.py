@@ -13,7 +13,7 @@ The runs themselves explain what their runner changed (each run's README).
 """
 import glob, json, os, re, sys
 
-ORDER = ["sandbox-runtime", "nono", "codex", "landrun"]
+ORDER = ["sandbox-runtime", "nono", "codex", "landrun", "tartaros"]
 COUNTED = ["contained", "escaped", "control-broke", "unsupported", "vacuous", "inconclusive"]
 
 

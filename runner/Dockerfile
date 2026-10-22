@@ -1,5 +1,10 @@
 # Throwaway lab image: the sandboxes measured, pinned. Every download is checked
 # against a fixed hash; the adapters record the sha256 of what actually ran.
+# TartarOS has no release binary for Linux: built from the tagged commit.
+FROM rust:1.99.1@sha256:4f327d0ce6c758e49cd474bf0266f6f3c8e88e623cec9af521883367cc884968 AS tartaros
+RUN git clone -q https://github.com/carlostapiacl/tartaros /src && cd /src \
+    && git checkout -q 57ceab2f91a326fdfd0c7ed876a30831912bb2fd && test "$(git rev-parse HEAD)" = "$(git rev-parse v0.1.0-alpha.11^{commit})" \
+    && cargo build --release -q --locked -p tartaros-cli && install -m755 target/release/tartaros /tartaros
 FROM ubuntu:24.04@sha256:ac3a3d13e90c660a1cb3e89ec695533399f7378dc1ae5fbdc28eb5781d561594
 RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -y -qq --no-install-recommends \
       bubblewrap python3 curl ca-certificates socat ripgrep git procps iproute2 netcat-openbsd xz-utils attr \
@@ -17,3 +22,4 @@ RUN cd /tmp && curl -fsSLO https://github.com/nolabs-ai/nono/releases/download/v
     && grep x86_64-unknown-linux-gnu.tar.gz SHA256SUMS.txt | sha256sum -c \
     && tar -xzf nono-v0.80.0-x86_64-unknown-linux-gnu.tar.gz \
     && find /tmp -name nono -type f -exec install -m755 {} /usr/local/bin/nono \; && rm -rf /tmp/*
+COPY --from=tartaros /tartaros /usr/local/bin/tartaros

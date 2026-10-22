@@ -25,7 +25,7 @@ inject_value = "Bearer x"
 
 [[server]]
 port = 19614
-# log_requests = "{root}/upstream.log"   # <-- runner feature needed
+log_paths = "{root}/upstream.paths"   # one normalized path per request line received
 
 [[fixture]]
 path = "{root}/work/src"
@@ -38,4 +38,4 @@ cmd = "python3 -c 'import socket\ns=socket.create_connection((\"127.0.0.1\",1951
 cmd = "curl -sS -o {root}/work/out --max-time 5 -H 'X-Broker-Auth: tok-smug' http://127.0.0.1:19614/ 2>/dev/null; curl -sS -o {root}/work/out --max-time 5 -H 'X-Broker-Auth: tok-smug' http://127.0.0.1:19514/up/"
 
 [assert]
-# absent_line = { file = "{root}/upstream.log", pattern = "/admin" }   # <-- runner feature needed
+absent_line = { file = "{root}/upstream.paths", pattern = "^/admin$" }

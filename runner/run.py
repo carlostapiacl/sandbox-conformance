@@ -17,9 +17,11 @@ spec/verdicts.md; runner/verdict.py implements that procedure. This file only
 observes: it runs the phases and records what happened.
 """
 import argparse, ctypes, glob, hashlib, importlib, json, os, platform, pwd, shutil
-import signal, socket, socketserver, subprocess, sys, threading, time, tomllib
+import posixpath, re, signal, socket, socketserver, subprocess, sys, threading, time, tomllib
+import urllib.parse
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import reference_broker  # noqa: E402
 import verdict  # noqa: E402
 
 AGENT = os.environ.get("SC_AGENT", "agent")
@@ -123,11 +125,11 @@ TOP_FIELDS = {"id", "source", "derived_from", "category", "severity", "os", "req
               "policy", "fixture", "late_fixture", "attack", "control", "assert",
               "broker", "server", "unix_server", "abstract_server", "signal",
               "canary_process", "host_process", "launcher_env", "expect_refusal",
-              "control_requires_sandbox", "repeat"}
+              "control_requires_sandbox", "repeat", "host_alias"}
 REQUIRED_FIELDS = ("id", "category", "severity", "os", "policy", "attack", "control")
 ATTACK_FIELDS = {"cmd", "expect_exit", "blocked_exit"}
 CONTROL_FIELDS = {"cmd", "expect_exit"}
-ASSERT_FIELDS = {"unchanged", "absent", "alive", "settle_secs"}
+ASSERT_FIELDS = {"unchanged", "absent", "alive", "absent_line", "settle_secs"}
 POLICY_FIELDS = {"writable_roots", "read_scope", "write_denies", "read_denies", "read_allows",
                  "glob_read_denies", "glob_denies", "local_ports", "allow_domains",
                  "allow_unix_socket_paths", "isolate_process_info", "isolate_pids",
@@ -243,9 +245,25 @@ class _Srv(socketserver.ThreadingTCPServer):
     daemon_threads = True
 
 
+REQUEST_LINE = re.compile(rb"^([A-Z]+) (\S+) HTTP/1\.[01]\r?$", re.M)
+
+
+def normalized_path(target):
+    """The path an ordinary server would serve for this request target: the
+    authority of an absolute-form target dropped, percent-escapes undone, dot
+    segments resolved (as a server does before routing)."""
+    t = target.decode("latin-1")
+    if "://" in t:
+        t = "/" + t.split("://", 1)[1].partition("/")[2]
+    t = urllib.parse.unquote(t.split("?", 1)[0])
+    return posixpath.normpath("/" + t.lstrip("/")).replace("//", "/")
+
+
 def start_tcp_server(spec):
     respond = spec.get("respond", "HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\nok")
     log = spec.get("log") or spec.get("log_requests")
+    log_paths = spec.get("log_paths")
+    echo = spec.get("echo_headers")
 
     class H(socketserver.BaseRequestHandler):
         def handle(self):
@@ -263,8 +281,18 @@ def start_tcp_server(spec):
                 with open(log, "ab") as fh:
                     fh.write(data + b"\n")
                 os.chmod(log, 0o644)
+            if log_paths:
+                # every request line in what arrived, a pipelined one included
+                with open(log_paths, "a") as fh:
+                    for _, target in REQUEST_LINE.findall(data):
+                        fh.write(normalized_path(target) + "\n")
+                os.chmod(log_paths, 0o644)
+            out = respond.encode()
+            if echo:
+                body = data.split(b"\r\n\r\n", 1)[0]
+                out = b"HTTP/1.1 200 OK\r\nContent-Length: %d\r\nConnection: close\r\n\r\n" % len(body) + body
             try:
-                self.request.sendall(respond.encode())
+                self.request.sendall(out)
             except OSError:
                 pass
 
@@ -305,12 +333,24 @@ def start_unix_server(path=None, abstract=None):
 class World:
     """Everything outside the sandbox a contract asks the runner to provide."""
 
-    def __init__(self, c, m, root_user):
-        self.c, self.m, self.root_user = c, m, root_user
+    def __init__(self, c, m, root_user, sandboxed=True):
+        self.c, self.m, self.root_user, self.sandboxed = c, m, root_user, sandboxed
         self.stops, self.procs = [], []
+        self.hosts_before = None
 
     def __enter__(self):
         c = self.c
+        if c.get("host_alias"):
+            # names the contract needs resolved (lookalike domains), for this case only
+            with open("/etc/hosts") as fh:
+                self.hosts_before = fh.read()
+            with open("/etc/hosts", "a") as fh:
+                for h in c["host_alias"]:
+                    fh.write(f"\n{h['ip']} {h['name']}")
+                fh.write("\n")
+        if c.get("broker") and not self.sandboxed:
+            # the baseline's broker: the reference one, without defences
+            self.stops += reference_broker.start(sub(c["broker"], self.m))
         for sp in c.get("server", []):
             self.stops += start_tcp_server(sub(sp, self.m))
         for sp in c.get("unix_server", []):
@@ -343,6 +383,9 @@ class World:
                 f()
             except Exception:
                 pass
+        if self.hosts_before is not None:
+            with open("/etc/hosts", "w") as fh:
+                fh.write(self.hosts_before)
 
 
 def base_env():
@@ -410,6 +453,14 @@ def effect_evidence(c, before, m):
     for p in as_list(sub(a.get("alive", []), m)):
         if not pid_alive(p):
             bad.append(f"dead:{p}")
+    for al in as_list(sub(a.get("absent_line", []), m)):
+        try:
+            with open(al["file"]) as fh:
+                hit = [ln.rstrip("\n") for ln in fh if re.search(al["pattern"], ln)]
+        except OSError:
+            hit = []
+        if hit:
+            bad.append(f"line:{al['file']}:{hit[0]}")
     return bad
 
 
@@ -439,7 +490,9 @@ def phase(c, adapter, sandboxed, root_user, workdir):
         owner = pwd.getpwnam("root") if root_user else agent_pw()
         chown_tree(root, owner.pw_uid, owner.pw_gid)
     out = {"root": root}
-    with World(c, m, root_user) as w:
+    # The reference broker stands in for the sandbox's in the baseline, and in a
+    # sandboxed phase too for a reference sandbox with no broker of its own.
+    with World(c, m, root_user, sandboxed and not getattr(adapter, "REFERENCE_BROKER", False)) as w:
         m = w.m
         env = base_env()
         env.update(dict(x.split("=", 1) for x in c.get("launcher_env", [])))

@@ -13,7 +13,7 @@ NOT_MEASURED = ("unsupported", "not-applicable", "vacuous")                # §3
 LAB_FAULTS = ("invalid-contract", "invalid-baseline", "needs-feature", "harness-error")  # §3.3
 RESULTS = MEASURED + NOT_MEASURED + LAB_FAULTS
 
-ASSERT_KEYS = ("unchanged", "absent", "alive")
+ASSERT_KEYS = ("unchanged", "absent", "alive", "absent_line")
 # A process killed by SIGSYS was stopped by a syscall filter (seccomp's kill
 # action): that is a block, not a crash. Every other signal is unclear.
 SIGSYS_EXIT = 128 + int(signal.SIGSYS)
