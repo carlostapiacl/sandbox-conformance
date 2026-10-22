@@ -41,8 +41,9 @@ each re-expressed in the neutral format and credited in
 [`SOURCES.md`](SOURCES.md) and its own `source` field.
 
 Maintained by the author of TartarOS, a competing sandbox. That is why the
-contracts come from the other projects' test suites. TartarOS will be measured
-in a later run, with its results published the same way.
+contracts come from the other projects' test suites. TartarOS is measured like
+the others since the [2026-10-22 run](results/2026-10-22-tartaros/README.md), and
+its [page](sandboxes/tartaros.md) and result file record the conflict of interest.
 
 First results in: [`results/2026-10-15/`](results/2026-10-15/README.md) measures
 sandbox-runtime 0.0.79, nono 0.80.0 and Codex CLI 0.162.1 on Linux (kernel 6.8),
@@ -69,6 +70,13 @@ The [2026-10-21 run](results/2026-10-21/README.md) measures the latest releases:
 sandbox-runtime 0.0.81 and Codex CLI 0.163.0 (nono and landrun unchanged). The
 previous versions were re-measured first and reproduced. Which results changed in which
 version is in [`results/versions.md`](results/versions.md).
+
+The [2026-10-22 run](results/2026-10-22-tartaros/README.md) adds TartarOS 0.1.0-alpha.10,
+on the same host, contracts and lab tools as the 2026-10-21 run. The
+[alpha.11 run](results/2026-10-22-tartaros-alpha11/README.md) the same day measures the
+`[broker]` contracts for the first time: their baseline now runs against a
+[reference broker](spec/format.md#the-broker-table) with no defences, the same for every
+sandbox.
 
 Next: macOS runs, [more corpora](corpus-roadmap.md) harvested from other sandboxes' test suites, and
 a site that lets you search a guarantee and see which sandbox holds it.

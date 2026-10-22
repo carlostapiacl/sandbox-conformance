@@ -3,6 +3,7 @@ from common import basis
 
 NAME = "ref-allow-all"
 SANDBOX_ENV = {"SC_REF_SANDBOX": "1"}  # what a control with control_requires_sandbox checks
+REFERENCE_BROKER = True  # its broker is the runner's reference one, with no defences
 
 
 def identity():

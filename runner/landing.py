@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
-"""Rebuild the data block of the landing page (index.html) from one published run.
+"""Rebuild the data block of the landing page (index.html) from published runs.
 
-  landing.py <results/RUN> [index.html]
+  landing.py <results/RUN> [<results/RUN> ...] [index.html]
+
+Each run adds the sandboxes it measured; a later run does not replace an
+earlier one's columns (a sandbox measured in two of them takes the later).
 
 The page shows the same results and the same marks as that run's comparison.md:
 `*` built-in guarantee, and the review marks (‡, §) from its review.json. Review
@@ -14,17 +17,24 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from report import DEFAULT_BASIS, MARK, ORDER
 
 KIND = {"sandbox-runtime": "bubblewrap + seccomp + proxy", "nono": "Landlock + proxy + supervisor",
-        "codex": "bubblewrap + seccomp", "landrun": "pure Landlock"}
+        "codex": "bubblewrap + seccomp", "landrun": "pure Landlock",
+        "tartaros": "Landlock + seccomp + namespaces + proxy"}
 BLOCK = re.compile(r'(<script id="data" type="application/json">)(.*?)(</script>)', re.S)
 
 
-def build(run_dir):
-    present = [f[:-5] for f in os.listdir(run_dir) if f.endswith(".json") and f != "review.json"
-               and f != "upstream.json"]
-    names = [n for n in ORDER if n in present] + sorted(n for n in present if n not in ORDER)
-    runs = {n: json.load(open(os.path.join(run_dir, n + ".json"))) for n in names}
-    rv_path = os.path.join(run_dir, "review.json")
-    review = json.load(open(rv_path)) if os.path.exists(rv_path) else {}
+def build(*run_dirs):
+    runs, review, where = {}, {}, {}
+    for run_dir in run_dirs:
+        present = [f[:-5] for f in os.listdir(run_dir) if f.endswith(".json") and f != "review.json"
+                   and f != "upstream.json"]
+        for n in present:
+            runs[n] = json.load(open(os.path.join(run_dir, n + ".json")))
+            where[n] = run_dir
+        rv_path = os.path.join(run_dir, "review.json")
+        for n, v in (json.load(open(rv_path)) if os.path.exists(rv_path) else {}).items():
+            if not n.startswith("_") and n in present:
+                review[n] = v
+    names = [n for n in ORDER if n in runs] + sorted(n for n in runs if n not in ORDER)
     by = {n: {c["id"]: c for c in d["contracts"]} for n, d in runs.items()}
     first = {}
     for n in names:
@@ -60,20 +70,24 @@ def build(run_dir):
     kernel = ".".join(any_run["host"]["kernel"].split(".")[:2])
     return {
         "sandboxes": names,
-        "versions": {n: runs[n]["version"] for n in names},
+        # the version number, out of a longer --version string ("tartaros 0.1.0-alpha.10 (linux/…)")
+        "versions": {n: (re.search(r"\d+\.\d+[0-9A-Za-z.\-]*", runs[n]["version"]) or [runs[n]["version"]])[0]
+                     for n in names},
         "kind": {n: KIND.get(n, "") for n in names},
         "counts": {n: runs[n]["counts"] for n in names},
         # results the review reads as "counted as an attack, not a breach" (‡), per sandbox
         "not_breach": {n: v for n, v in marked.items() if v},
         "categories": sorted({r["cat"] for r in rows}),
         "rows": rows,
-        "meta": {"run": os.path.basename(os.path.normpath(run_dir))[:10], "contracts": len(rows),
+        "meta": {"run": max(os.path.basename(os.path.normpath(where[n]))[:10] for n in names), "contracts": len(rows),
                  "kernel": f"Linux {kernel}, Landlock ABI {abi}"},
     }
 
 
-def main(run_dir, page="index.html"):
-    data = json.dumps(build(run_dir), separators=(",", ":"), ensure_ascii=False)
+def main(*args):
+    page = args[-1] if args and args[-1].endswith(".html") else "index.html"
+    run_dirs = [a for a in args if not a.endswith(".html")]
+    data = json.dumps(build(*run_dirs), separators=(",", ":"), ensure_ascii=False)
     s = open(page).read()
     if not BLOCK.search(s):
         sys.exit(f"{page}: no data block")

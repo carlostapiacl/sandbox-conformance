@@ -7,6 +7,22 @@ first measured.
 
 ## After `corpus-2026-10-16`
 
+- **2026-10-22. The broker contracts become measurable.** The 13 contracts with a
+  `[broker]` were `unsupported` for every sandbox: their attack could not be shown
+  to work without a sandbox. The baseline now runs them against a reference broker
+  with no defences ([`spec/format.md`](../spec/format.md), "The `[broker]` table").
+  Four of them carried their assert or witness only as a comment, waiting for a
+  runner feature; with `log_paths`, `echo_headers`, `absent_line` and
+  `[[host_alias]]` in the runner they now state it:
+  `network-broker-no-request-smuggling` and `network-broker-path-dot-segments`
+  (no request outside the capability reaches the upstream),
+  `credentials-broker-injected-header-not-overridable` (the upstream echoes what it
+  got) and `network-broker-allowlist-lookalike` (the allow-list and the names it
+  needs). The attacks and controls are unchanged. Prompted by adding a broker to
+  TartarOS's CLI, maintained by this lab's author; no result existed for any
+  sandbox on these contracts. `credentials-broker-no-redirect-follow` and
+  `credentials-broker-token-not-forwarded` changed only by losing a stale comment.
+
 - **2026-10-17. Nine contracts gain a `{root}/work` fixture**:
   `filesystem-write-reallow-inside-deny` (and `-by-omission`),
   `ipc-unix-socket-allowlist`, `read-deny-around-nested-root` (and `-by-omission`),

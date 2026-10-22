@@ -10,8 +10,6 @@ os = ["linux", "macos"]
 # a userinfo trick `allowed.test@evil.test`, and the trailing-dot form of a
 # denied sibling. The allowed name (and its trailing-dot and upper-case
 # spellings) must still pass.
-# allowed_hosts = [".allowed.test"]        # <-- runner feature needed (BrokerSpec)
-# allow_internal_for_test = true           # <-- so names resolving to loopback can be dialled
 [policy]
 writable_roots = ["{root}/work"]
 local_ports = [19516]
@@ -19,6 +17,19 @@ local_ports = [19516]
 [broker]
 port = 19516
 token = "tok-dom"
+allowed_hosts = [".allowed.test"]
+allow_internal = true   # the test names resolve to loopback, where the fake upstream listens
+
+# The names resolve to the fake upstream, for this case only.
+[[host_alias]]
+name = "api.allowed.test"
+ip = "127.0.0.1"
+[[host_alias]]
+name = "evilallowed.test"
+ip = "127.0.0.1"
+[[host_alias]]
+name = "allowed.test.evil.test"
+ip = "127.0.0.1"
 
 [[server]]
 port = 19616

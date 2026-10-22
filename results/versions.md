@@ -53,3 +53,24 @@ No result changed.
 | 0.1.17 | [2026-10-21](2026-10-21/README.md) | 41 | 42 | 1 | 83 | 7 | 0 |
 
 Only one version measured.
+
+## tartaros
+
+| version | run | contained | escaped | control-broke | unsupported | vacuous | inconclusive |
+|---|---|---|---|---|---|---|---|
+| 0.1.0-alpha.10 | [2026-10-22-tartaros](2026-10-22-tartaros/README.md) | 150 | 3 | 0 | 13 | 9 | 0 |
+| 0.1.0-alpha.11 | [2026-10-22-tartaros-alpha11](2026-10-22-tartaros-alpha11/README.md) | 162 | 3 | 0 | 0 | 10 | 0 |
+
+### 0.1.0-alpha.10 → 0.1.0-alpha.11
+
+| contract | severity | 0.1.0-alpha.10 | 0.1.0-alpha.11 |
+|---|---|---|---|
+| `credentials-broker-auth-required` | critical | unsupported | **contained** |
+| `credentials-broker-method-denied` | high | unsupported | **contained** |
+| `credentials-broker-prefix-scope` | high | unsupported | **contained** |
+| `network-broker-host-header-spoof` | high | unsupported | **contained** |
+| `network-broker-internal-ip-spellings` | critical | unsupported | **contained** |
+| `network-broker-ssrf-internal` | critical | unsupported | **contained** |
+| `network-broker-survives-malformed-client` | medium | unsupported | **vacuous** |
+
+182 contracts compared; 6 not compared (the contract changed or is in only one run).

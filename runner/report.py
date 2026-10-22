@@ -8,7 +8,7 @@ raw/<sandbox>.full.json (everything the runner captured) and comparison.md.
 """
 import json, os, shutil, sys
 
-ORDER = ["sandbox-runtime", "nono", "codex", "landrun"]  # preferred column order; any other <name>.json is appended
+ORDER = ["sandbox-runtime", "nono", "codex", "landrun", "tartaros"]  # preferred column order; any other <name>.json is appended
 # Review kinds that put a mark after a result (see the legend in comparison.md).
 MARK = {"contract-assumption": "‡", "interface": "‡", "kernel-dependent": "§", "platform-dependent": "§",
         "documented": "", "design": "", "confirmed": ""}  # kernel-dependent: v0 name of platform-dependent

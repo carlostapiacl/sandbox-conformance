@@ -63,6 +63,47 @@ The control runs after the attack, in the same phase. It must not depend on
 anything the attack may legitimately change when it succeeds (the contents of a
 writable root, for example), or a working attack breaks it in the baseline.
 
+Witnesses and asserts the runner provides:
+
+| field | where | meaning |
+|---|---|---|
+| `log` | `[[server]]` | append each raw request head the server receives to this file |
+| `log_paths` | `[[server]]` | append, one per line, the path each request line asks for (a pipelined one too), normalised as an ordinary server would before routing it: authority dropped, percent-escapes undone, dot segments resolved |
+| `echo_headers` | `[[server]]` | answer with the request head received, so the agent sees what reached the upstream |
+| `respond` | `[[server]]` | the raw response to send (default a `200 ok`) |
+| `absent_line` | `[assert]` | `{ file, pattern }`: the effect is a line of `file` matching the regular expression `pattern` |
+| `[[host_alias]]` | top level | `name`, `ip`: a host name resolved to `ip` for this case only (in `/etc/hosts`, restored afterwards) |
+
+## The `[broker]` table
+
+A credential broker lets the agent use a secret it never holds: the agent asks the
+broker, the broker makes the real request with the secret added. A contract about
+one declares it in neutral terms; each adapter maps it to its sandbox's broker.
+
+```toml
+[broker]
+port  = 19550                       # loopback port the agent reaches it on
+token = "run-token-only-the-agent-has"  # the agent sends it in X-Broker-Auth
+allowed_hosts  = [".allowed.test"]  # forwarding allow-list (optional)
+allow_internal = false              # may an allowed name resolve inward (optional)
+
+[[broker.capability]]               # /up/rest -> upstream_base/rest
+prefix        = "/up"
+upstream_base = "http://127.0.0.1:19650"
+inject_header = "Authorization"     # added by the broker
+inject_value  = "Bearer the-agent-never-sees-this"
+```
+
+**The baseline runs against a reference broker.** Without a sandbox there is no
+broker, so "the attack works without a sandbox" needs a stand-in. In the baseline
+the runner starts [`runner/reference_broker.py`](../runner/reference_broker.py) on
+the contract's port: a broker written the obvious way, with none of the defences
+the contracts test (no token check, every agent header forwarded, prefix matched as
+a string and the path appended as written, redirects followed, any host forwarded
+by name). An attack that does not get through it makes the case `vacuous`; one
+that does is then run against the sandbox's own broker. The reference broker is
+the same for every sandbox.
+
 ## Adapters
 
 Each sandbox maps the neutral `[policy]` to its own configuration. A field a
