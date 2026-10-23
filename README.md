@@ -80,3 +80,5 @@ sandbox.
 
 Next: macOS runs, [more corpora](corpus-roadmap.md) harvested from other sandboxes' test suites, and
 a site that lets you search a guarantee and see which sandbox holds it.
+
+The results and what they mean are written up at [carlostapia.cl](https://carlostapia.cl/notes/sandbox-escapes-no-rule-broken/).
