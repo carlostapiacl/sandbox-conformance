@@ -44,8 +44,10 @@ published with it.
 
 ## Conflict of interest
 
-The lab is maintained by the author of TartarOS, one of the sandboxes measured. To keep
-that from shaping the results:
+TartarOS, one of the sandboxes measured, started together with this lab, by the same
+author. It is where the variants the lab finds are tried, one by one, to see whether
+each can be mitigated; the lab is what says whether it was. To keep that from shaping
+the results:
 
 - the contracts come from other projects' test suites, each credited;
 - the corpus was frozen before TartarOS was first measured, and every later change to a

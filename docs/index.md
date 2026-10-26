@@ -28,5 +28,7 @@ everything does not pass. The **assert** checks the real effect on disk or on th
 Before a contract counts against a sandbox, its attack must work with no sandbox on the
 same host ([Baseline and control](concepts/baseline.md)).
 
-The lab is maintained by the author of TartarOS, one of the sandboxes measured. The
-[methodology](methodology.md#conflict-of-interest) says what that changes.
+TartarOS, one of the sandboxes measured, started with this lab, by the same author, to
+try to mitigate each variant the lab finds. The
+[methodology](methodology.md#conflict-of-interest) says how that is kept from shaping
+the results.
