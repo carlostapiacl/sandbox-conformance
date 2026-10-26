@@ -59,21 +59,19 @@ def diff(old, new):
 
 
 def corpus_of(run, corpus=CORPUS):
-    """What a run measured: {"version", "ran", "of", "whole"} for the newest
-    version whose contracts the run ran unchanged, or None if every contract it
-    ran differs from every version (a run from before the versions)."""
+    """What a run measured: {"version", "ran", "of", "whole"}. A version counts
+    when every contract the run ran is in it unchanged. The newest version the
+    run covers whole wins (a run of all of v1.0 measured v1.0, not most of a later
+    v1.1 that adds to it); failing that, the newest it ran part of. None when no
+    version holds every contract the run ran (a run from before the versions)."""
     ran = {r["id"]: r.get("contract_sha256") for r in run.get("contracts", [])}
-    for v, m in reversed(versions(corpus)):
+    fits = []
+    for v, m in versions(corpus):
         cs = m["contracts"]
-        if any(i in cs and cs[i]["sha256"] != h for i, h in ran.items()):
-            continue
-        if not any(i in cs for i in ran):
-            continue
-        same = sum(1 for i in ran if i in cs)
-        if same < len(ran):
-            continue
-        return {"version": v, "ran": same, "of": len(cs), "whole": same == len(cs)}
-    return None
+        if ran and all(i in cs and cs[i]["sha256"] == h for i, h in ran.items()):
+            fits.append({"version": v, "ran": len(ran), "of": len(cs), "whole": len(ran) == len(cs)})
+    whole = [f for f in fits if f["whole"]]
+    return (whole or fits or [None])[-1]
 
 
 def build(version, date):

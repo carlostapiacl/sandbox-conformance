@@ -43,6 +43,13 @@ class Corpus(unittest.TestCase):
             self.assertEqual(corpus.corpus_of(run({"c": "h3"}), d),
                              {"version": "1.1", "ran": 1, "of": 3, "whole": False})
 
+    def test_a_whole_older_version_wins_over_part_of_a_newer_one(self):
+        with tempfile.TemporaryDirectory() as d:
+            manifest(d, "1.0", {"a": "h1", "b": "h2"})
+            manifest(d, "1.1", {"a": "h1", "b": "h2", "c": "h3"})
+            self.assertEqual(corpus.corpus_of(run({"a": "h1", "b": "h2"}), d),
+                             {"version": "1.0", "ran": 2, "of": 2, "whole": True})
+
     def test_a_run_with_any_contract_of_no_version_measured_none(self):
         with tempfile.TemporaryDirectory() as d:
             manifest(d, "1.0", {"a": "h1", "b": "h2"})
