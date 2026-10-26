@@ -20,6 +20,4 @@ give it a reading. State nothing that was not run. A published result is never e
 correction is a new run, or a new reading that keeps the old one.
 
 To submit a run measured elsewhere, open a pull request with the folder and the commit of
-the lab it ran. A finding about a sandbox goes to that sandbox's project first
-([repo:SECURITY.md](repo:SECURITY.md)): while a disclosure is open, nothing about it is
-published, including that it exists.
+the lab it ran. A finding about a sandbox follows the [disclosure rules](../methodology.md#disclosure).

@@ -2,8 +2,8 @@
 
 An open lab for measuring sandboxes for AI coding agents.
 
-A sandbox makes claims: the agent can't read your keys, can't reach the network, can't
-plant a git hook. This lab turns each claim into a **contract** anyone can run, runs it
+Sandboxes for coding agents say what they stop, such as reading your keys or planting a
+git hook. This lab turns each of those claims into a **contract** anyone can run, runs it
 against each sandbox through the same procedure, and publishes the result with the
 evidence of every case.
 

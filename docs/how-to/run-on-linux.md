@@ -25,4 +25,4 @@ it has to be loaded again.
 
 Add `SC_WITNESS=1` and `runner/lab-witness.sh up` for the contracts that need a
 [witness host](../concepts/witnesses.md#the-witness-host). The VM's own notes are in
-[repo:runner/lima/README.md](repo:runner/lima/README.md).
+[`runner/lima/README.md`](repo:runner/lima/README.md).

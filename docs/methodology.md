@@ -31,9 +31,8 @@ finding reads apart from a contract assumption or a known limit.
 ## Configuring each sandbox
 
 Each sandbox runs through an adapter configured the way its own documentation recommends
-for strict confinement. A field it cannot express is reported as `unsupported`, a
-capability gap, never as a vulnerability. A difference of defaults is labelled as such
-(`basis: default`).
+for strict confinement. A field it cannot express is reported as `unsupported` and kept
+apart from the measured results. A difference of defaults carries `basis: default`.
 
 ## Evidence
 
@@ -60,7 +59,7 @@ the results:
 ## Disclosure
 
 A weakness found in a sandbox goes to that project first. While a disclosure is open,
-nothing about it is published, not even that a result is withheld, because a contract is
-runnable and the mark alone would reproduce it. The contracts involved are held out of the
-published corpus and of every run until the disclosure closes
+nothing about it is published, including the fact that a result is withheld. A contract
+is runnable, so that mark alone would let anyone reproduce it. The contracts involved are
+held out of the published corpus and of every run until the disclosure closes
 ([verdicts §9](reference/verdicts.md#9-disclosure)).

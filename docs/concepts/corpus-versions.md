@@ -1,7 +1,7 @@
 # Corpus versions
 
 A corpus version is a fixed set of contract files, by hash. Each run records the hash of
-every contract it ran, so the version a run measured is checked, not claimed:
+every contract it ran, so anyone can check which version a run measured:
 
 ```sh
 python3 runner/corpus.py of results/2026-10-26-tartaros-alpha16/tartaros.json
@@ -19,6 +19,5 @@ without the next version. The rules and the list of versions are in the
 [corpus reference](../reference/corpus.md); why each contract changed is in the
 [changelog](../changelog/contracts.md).
 
-Two results are comparable contract by contract only when the contract is the same file
-in both. [What changed by version](../results/versions.md) compares versions of one
-sandbox on the contracts their runs share unchanged.
+[What changed by version](../results/versions.md) compares versions of one sandbox on the
+contracts their runs share unchanged.

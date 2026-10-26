@@ -7,8 +7,7 @@ of the [2026-10-21 run](../2026-10-21/README.md).
 > `credentials-masked-env-*` contracts were written while masked credentials were being added
 > to TartarOS ([`contracts/CHANGES.md`](../../contracts/CHANGES.md), 2026-10-26). They were
 > derived from sandbox-runtime's own tests and frozen before either sandbox was measured. The
-> result files record the conflict (`conflict_of_interest`). These counts are not a ranking
-> (spec §8).
+> result files record the conflict (`conflict_of_interest`).
 
 | | |
 |---|---|

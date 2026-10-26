@@ -2,8 +2,8 @@
 
 A corpus version is a fixed set of contracts, byte for byte: `v<version>.json` lists
 every contract's id, path and SHA-256. A run records the hash of every contract it
-ran, so which version it measured is a fact anyone can check, not a label the lab
-gives it (`python3 runner/corpus.py of <result.json>`).
+ran, so anyone can check which version it measured
+(`python3 runner/corpus.py of <result.json>`).
 
 Two results are comparable contract by contract only when the contract is the same
 file in both. Results across sandboxes or versions of one sandbox are compared on
