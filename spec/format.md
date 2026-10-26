@@ -72,7 +72,7 @@ Witnesses and asserts the runner provides:
 | `echo_headers` | `[[server]]` | answer with the request head received, so the agent sees what reached the upstream |
 | `respond` | `[[server]]` | the raw response to send (default a `200 ok`) |
 | `absent_line` | `[assert]` | `{ file, pattern }`: the effect is a line of `file` matching the regular expression `pattern` |
-| `[[host_alias]]` | top level | `name`, `ip`: a host name resolved to `ip` for this case only (in `/etc/hosts`, restored afterwards) |
+| `[[host_alias]]` | top level | `name`, `ip`: a host name resolved to `ip` for this case only (in `/etc/hosts`, restored afterwards). A contract that uses it declares `requires = ["hosts-file"]`: where `/etc/hosts` is not writable the case is not applicable |
 
 ## The `[broker]` table
 
