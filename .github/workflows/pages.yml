@@ -1,0 +1,68 @@
+name: pages
+
+# The site: the landing page at the root and the documentation (MkDocs) under /docs/.
+on:
+  pull_request:
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - "index.html"
+      - "corpus/**"
+      - ".github/workflows/pages.yml"
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - "index.html"
+      - "spec/**"
+      - "sandboxes/**"
+      - "corpus/**"
+      - "contracts/**"
+      - "results/**"
+      - "runner/README.md"
+      - "runner/corpus.py"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
+        with:
+          python-version: "3.12"
+      - run: pip install "mkdocs-material==9.6.23"
+      - run: python runner/corpus.py check
+      - run: mkdocs build --strict
+      - name: assemble the site
+        run: |
+          mkdir -p _site
+          cp index.html .nojekyll _site/
+          cp -r build/docs _site/docs
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9  # v5.0.0
+        with:
+          path: _site
+  deploy:
+    # The pull request only checks that the site builds; main publishes it.
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346  # v5.0.1

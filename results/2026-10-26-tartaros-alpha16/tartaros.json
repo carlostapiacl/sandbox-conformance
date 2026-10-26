@@ -26,6 +26,12 @@
   "escaped": 3,
   "needs-feature": 1
  },
+ "corpus": {
+  "version": "1.0",
+  "ran": 194,
+  "of": 194,
+  "whole": true
+ },
  "contracts": [
   {
    "id": "credentials-broker-auth-required",

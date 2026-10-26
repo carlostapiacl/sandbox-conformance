@@ -1,0 +1,81 @@
+site_name: sandbox-conformance
+site_description: An open lab for measuring sandboxes for AI coding agents
+site_url: https://carlostapiacl.github.io/sandbox-conformance/docs/
+repo_url: https://github.com/carlostapiacl/sandbox-conformance
+repo_name: carlostapiacl/sandbox-conformance
+edit_uri: edit/main/docs/
+docs_dir: docs
+site_dir: build/docs
+strict: true
+
+theme:
+  name: material
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - navigation.footer
+    - content.code.copy
+    - search.highlight
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle: { icon: material/brightness-7, name: Dark mode }
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle: { icon: material/brightness-4, name: Light mode }
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc: { permalink: true }
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.details
+
+extra_css:
+  - stylesheets/extra.css
+
+hooks:
+  - docs/hooks.py
+
+nav:
+  - Home: index.md
+  - Get started:
+      - Quickstart: get-started/quickstart.md
+      - FAQ: get-started/faq.md
+      - Citing: get-started/citing.md
+  - Concepts:
+      - Contracts: concepts/contracts.md
+      - Baseline and control: concepts/baseline.md
+      - Results and readings: concepts/results.md
+      - Policy and read models: concepts/policy.md
+      - Witnesses: concepts/witnesses.md
+      - Adapters and profiles: concepts/adapters.md
+      - Corpus versions: concepts/corpus-versions.md
+  - How-to:
+      - Write a contract: how-to/write-a-contract.md
+      - Add a sandbox: how-to/add-a-sandbox.md
+      - Run the lab on Linux: how-to/run-on-linux.md
+      - Publish a run: how-to/publish-a-run.md
+  - Methodology: methodology.md
+  - Results:
+      - All runs: results/index.md
+      - What changed by version: results/versions.md
+  - Contracts:
+      - Catalog: contracts/index.md
+  - Sandboxes:
+      - sandboxes/index.md
+      - sandbox-runtime: sandboxes/sandbox-runtime.md
+      - nono: sandboxes/nono.md
+      - Codex CLI: sandboxes/codex.md
+      - landrun: sandboxes/landrun.md
+      - TartarOS: sandboxes/tartaros.md
+  - Reference:
+      - Contract format: reference/format.md
+      - Verdicts: reference/verdicts.md
+      - Corpus versioning: reference/corpus.md
+      - Runner files: reference/runner.md
+  - Changelog:
+      - Contracts: changelog/contracts.md

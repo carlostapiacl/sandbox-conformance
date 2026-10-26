@@ -10,11 +10,15 @@ sandbox, so you can compare them on the same tests, with the evidence attached.
 It is not tied to any one sandbox. Add a contract, measure your sandbox, publish
 the result.
 
+**Documentation:** [carlostapiacl.github.io/sandbox-conformance/docs](https://carlostapiacl.github.io/sandbox-conformance/docs/):
+quickstart, concepts, how-to guides, methodology, every run and the contract catalog.
+
 ## What's here
 
 | folder | what |
 |---|---|
 | `contracts/` | the tests, one TOML file each, grouped by topic, each crediting its source |
+| `corpus/` | the corpus versions: the exact contract files of each, by hash |
 | `spec/` | the [contract format](spec/format.md), explained for people who want to write one, and [what a result means](spec/verdicts.md) (draft) |
 | `sandboxes/` | one page per sandbox: how a contract maps to its configuration, and its results by version |
 | `results/` | published runs with their raw evidence, and the generated comparison table |
@@ -34,11 +38,11 @@ sandbox on the same host. Otherwise a "blocked" result would prove nothing.
 
 ## Status
 
-First contracts in. `contracts/` holds 166 guarantees harvested from the public
-test suites of other sandboxes — sandbox-runtime (114), nono (32), Codex (17),
-bubblewrap (1) and OpenHands (2) — plus 22 by-omission variants derived from them,
-each re-expressed in the neutral format and credited in
-[`SOURCES.md`](SOURCES.md) and its own `source` field.
+The corpus is versioned: **v1.0** (2026-10-26) is 194 contracts, harvested from the
+public test suites of sandbox-runtime, nono, Codex, bubblewrap and OpenHands, with
+by-omission variants and six masked-credential contracts, each re-expressed in the
+neutral format and credited in [`SOURCES.md`](SOURCES.md) and its own `source` field.
+Which contracts a version is, and when it moves, is in [`corpus/`](corpus/README.md).
 
 Maintained by the author of TartarOS, a competing sandbox. That is why the
 contracts come from the other projects' test suites. TartarOS is measured like
@@ -81,7 +85,6 @@ The [2026-10-26 run](results/2026-10-26-tartaros-alpha16/README.md) measures Tar
 0.1.0-alpha.16 and sandbox-runtime 0.0.81 on six new masked-credential contracts: both
 contain all six on Linux.
 
-Next: macOS runs, [more corpora](corpus-roadmap.md) harvested from other sandboxes' test suites, and
-a site that lets you search a guarantee and see which sandbox holds it.
+Next: macOS runs and [more corpora](corpus-roadmap.md) harvested from other sandboxes' test suites.
 
 The results and what they mean are written up at [carlostapia.cl](https://carlostapia.cl/notes/sandbox-escapes-no-rule-broken/).
