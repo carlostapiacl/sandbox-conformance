@@ -32,6 +32,8 @@ def identity():
 
 def check(c):
     p, unsupported, notes = c["policy"], [], []
+    if c.get("masked_env"):
+        unsupported.append("masked_env: no masked credential (a sentinel in the agent's variable, swapped for the real value on egress); codex can only pass or drop a variable")
     if c.get("broker"):
         unsupported.append("broker: no capability broker with per-prefix upstreams and injected headers")
     if p.get("local_ports"):
