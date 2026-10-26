@@ -108,6 +108,8 @@ def host_has(req, abi):
         return host_ip() is not None
     if req == "gpu":
         return bool(glob.glob("/dev/dri/renderD*"))
+    if req == "hosts-file":
+        return os.access("/etc/hosts", os.W_OK)  # host_alias appends to it for the case
     return False
 
 
