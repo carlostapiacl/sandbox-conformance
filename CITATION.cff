@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use these contracts or results, please cite this repository."
+title: "sandbox-conformance: an open lab for measuring sandboxes for AI coding agents"
+type: dataset
+authors:
+  - family-names: Tapia
+    given-names: Carlos
+repository-code: "https://github.com/carlostapiacl/sandbox-conformance"
+url: "https://carlostapiacl.github.io/sandbox-conformance/"
+license: Apache-2.0
+date-released: 2026-10-22
+keywords:
+  - ai-agents
+  - sandbox
+  - conformance
+  - benchmark
+  - security
