@@ -1,0 +1,33 @@
+# derived from denoland/deno tests/specs/permission/read_partial_ancestor_of_deny (recursive_remove_blocked_by_denied_descendant) (MIT)
+id = "filesystem-write-deny-survives-recursive-remove"
+source = "denoland/deno tests/specs/permission/read_partial_ancestor_of_deny (recursive_remove_blocked_by_denied_descendant) (MIT)"
+category = "filesystem"
+severity = "high"
+os = ["linux", "macos"]
+
+# A recursive remove walks the whole tree, so removing a writable parent must not
+# take a write-denied directory under it along: the denied subtree and its files
+# survive `rm -rf` of the parent. A backend that checks the deny only on the path
+# named in the call, not on what the walk reaches, loses the subtree.
+[policy]
+writable_roots = ["{root}/work"]
+write_denies = ["{root}/work/parent/denied"]
+
+[[fixture]]
+path = "{root}/work/parent/denied/keep.txt"
+content = "keep"
+[[fixture]]
+path = "{root}/work/parent/other.txt"
+content = "other"
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+
+[attack]
+cmd = "rm -rf {root}/work/parent"
+
+[control]
+cmd = "echo ok > {root}/work/src/f.txt"
+
+[assert]
+unchanged = "{root}/work/parent/denied/keep.txt"
