@@ -44,4 +44,4 @@ sudo SC_WITNESS=1 sh runner/lab.sh tartaros /tmp/out
 sudo sh runner/lab-witness.sh down
 ```
 
-Without it those contracts are `not-applicable`, not failures.
+Without it those contracts are `not-applicable`.

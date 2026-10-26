@@ -15,16 +15,16 @@ def wrap(policy, m, contract, env):   # the argv that runs a phase under the san
     ...
 ```
 
-The shared policy vocabulary is in [repo:runner/adapters/common.py](repo:runner/adapters/common.py),
-and the existing adapters are the best examples: [repo:runner/adapters/sandbox_runtime.py](repo:runner/adapters/sandbox_runtime.py)
-maps to a settings file, [repo:runner/adapters/landrun.py](repo:runner/adapters/landrun.py) to flags.
+The shared policy vocabulary is in [`runner/adapters/common.py`](repo:runner/adapters/common.py),
+and the existing adapters are the best examples: [`runner/adapters/sandbox_runtime.py`](repo:runner/adapters/sandbox_runtime.py)
+maps to a settings file, [`runner/adapters/landrun.py`](repo:runner/adapters/landrun.py) to flags.
 
 Configure the sandbox the way its own documentation recommends for strict confinement.
-An adapter that cannot express a field reports it, it does not approximate it: a policy
-applied partly is a weaker test that reads as a pass.
+An adapter that cannot express a field reports it in `check()`. A policy applied in part
+would be a weaker test that reads as a pass.
 
-Then install the sandbox in [repo:runner/Dockerfile](repo:runner/Dockerfile), pinned by
+Then install the sandbox in [`runner/Dockerfile`](repo:runner/Dockerfile), pinned by
 version and checked by hash, run it ([Quickstart](../get-started/quickstart.md)), and
 write its page in `sandboxes/<name>.md`: what was measured, how each policy field maps,
 and what it cannot express. A refusal to start needs a signature the adapter declares,
-so a refused policy reads as a refusal and not as a contained attack.
+so the lab can tell a refused policy from a contained attack.

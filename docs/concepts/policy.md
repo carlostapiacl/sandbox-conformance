@@ -18,6 +18,6 @@ granted area has no meaning there.
 
 The same attack can be written in both models, and the corpus has *by-omission* variants
 of the read-deny contracts in the granted model, so a capability sandbox is measured on
-the guarantee and not on a model it does not speak. A guarantee that only one model can
+the guarantee in its own model. A guarantee that only one model can
 state, such as a secret file in the middle of a writable workspace, is a capability gap,
 recorded as such.

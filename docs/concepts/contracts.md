@@ -32,7 +32,7 @@ unchanged = "{root}/home/.netrc"
 loudly instead of passing as a weaker policy.
 
 Every contract comes from another project's public test suite and names it in `source`.
-It re-expresses the guarantee; it does not copy the test. The
+The contract states the guarantee in its own words. The
 [catalog](../contracts/index.md) lists the current ones and the
 [format reference](../reference/format.md) every field.
 

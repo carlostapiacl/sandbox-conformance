@@ -1,6 +1,6 @@
 # Witnesses
 
-Some effects happen on the wire, not on disk. The runner starts witness servers for a
+Some effects happen on the wire. The runner starts witness servers for a
 contract (`[[server]]`) and the assert reads what they received.
 
 - A witness can log each request head, the paths asked for (normalised as a server would
@@ -20,8 +20,8 @@ it would trust a site-local one.
 ## The witness host
 
 A sandbox's egress proxy may refuse names that resolve to the sandbox's own host, or to
-internal addresses, which is a defence of its own and not what a contract about
-credentials tests. So those contracts reach their witness through a second container on a
+internal addresses. That defence would decide a credentials contract before the policy
+it tests. So those contracts reach their witness through a second container on a
 lab network in TEST-NET-2 (`198.51.100.0/24`), an address range no such guard treats as
 internal, which forwards to the runner. They declare `requires = ["witness-host"]` and are
 `not-applicable` on a host without it ([Quickstart](../get-started/quickstart.md#3-the-contracts-that-need-a-witness-host)).

@@ -13,9 +13,9 @@ used:
 }
 ```
 
-GitHub reads [repo:CITATION.cff](repo:CITATION.cff) and offers the same as APA or BibTeX.
+GitHub reads [`CITATION.cff`](repo:CITATION.cff) and offers the same as APA or BibTeX.
 A result is cited with its run folder (`results/<date>`), the sandbox version and the
 corpus version in its row of [All runs](../results/index.md).
 
 The contracts re-express guarantees from other projects' tests. Their sources are in
-[repo:SOURCES.md](repo:SOURCES.md) and in each contract's `source` field.
+[`SOURCES.md`](repo:SOURCES.md) and in each contract's `source` field.

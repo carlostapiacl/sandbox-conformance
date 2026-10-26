@@ -1,6 +1,6 @@
 # Adapters and profiles
 
-An adapter is one module in [repo:runner/adapters](repo:runner/adapters) that translates a
+An adapter is one module in [`runner/adapters`](repo:runner/adapters) that translates a
 contract's neutral policy into one sandbox's configuration and command line. It never
 reads the attack. It does three things:
 
