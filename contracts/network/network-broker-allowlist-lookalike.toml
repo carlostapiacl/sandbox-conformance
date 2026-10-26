@@ -4,6 +4,7 @@ source = "anthropics/sandbox-runtime test/sandbox/domain-pattern.test.ts and tes
 category = "network"
 severity = "critical"
 os = ["linux", "macos"]
+requires = ["hosts-file"]   # host_alias writes /etc/hosts
 
 # With egress scoped to `.allowed.test`, a lookalike must be refused before any
 # dial: `evilallowed.test`, `allowed.test.evil.test`, `ALLOWED.test.evil.test`,
