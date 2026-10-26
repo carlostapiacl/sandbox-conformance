@@ -36,6 +36,8 @@ def identity():
 
 def check(c):
     p, unsupported, notes = c["policy"], [], []
+    if c.get("masked_env"):
+        unsupported.append("masked_env: not mapped; nono's credential proxy (--credential/--allow-endpoint) is a reverse proxy the tool is pointed at, not a sentinel swapped on egress to the real host")
     if c.get("broker"):
         unsupported.append("broker: nono's credential proxy (--credential/--allow-endpoint) is a reverse proxy "
                            "with its own routes and phantom tokens, not the contract's port/token/prefix interface")

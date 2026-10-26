@@ -13,7 +13,7 @@ It was exit 2 until 0.1.0-alpha.6; the change was made after seeing the
 the same code for a refusal and a start failure), and is recorded as such.
 """
 import json, os, subprocess, tempfile
-from common import basis, needs_placeholders
+from common import basis, masked_settings, needs_placeholders
 
 NAME = "tartaros"
 BIN = "/usr/local/bin/tartaros"
@@ -109,6 +109,21 @@ def wrap(policy, m, c, env):
             fh.write(broker_config(b, env))
         os.chmod(path, 0o644)
         base += ["--config", path]
+    masked = {}
+    if c.get("masked_env"):
+        # Masked credentials exist only in tartaros's sandbox-runtime schema
+        # (`--settings`), next to the flags above; the network list goes with them,
+        # since tartaros checks each credential's hosts against it.
+        allow = list(policy.get("allow_domains", []))
+        masked = masked_settings(c, allow)
+    if masked:
+        doc = {"network": {"allowedDomains": allow, "tlsTerminate": masked["tlsTerminate"]},
+               "credentials": masked["credentials"]}
+        fd, path = tempfile.mkstemp(prefix="sc-tartaros-", suffix=".json")
+        with os.fdopen(fd, "w") as fh:
+            json.dump(doc, fh, indent=1)
+        os.chmod(path, 0o644)
+        base += ["--settings", path]
     return {"argv": lambda cmd: base + ["--", "/bin/sh", "-c", cmd], "env": env}
 
 

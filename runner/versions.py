@@ -5,7 +5,8 @@
 
 Reads every <sandbox>.json of the runs judged by the spec (those that record
 spec_version) under the given folders (default: results/), keeps the latest run
-of each sandbox version (a run's baseline/ re-measure included), and compares
+of each sandbox version (a run's baseline/ re-measure included; a partial run
+does not replace a larger one of the same version), and compares
 consecutive versions contract by contract.
 A contract is compared only when both records have the same contract_sha256:
 a result that changed because the contract changed is not a change of version.
@@ -44,7 +45,9 @@ def load(parents):
             m = re.search(r"\d+\.\d+[0-9A-Za-z.\-]*", d["version"])
             v = m.group(0) if m else d["version"]
             prev = runs.setdefault(d["sandbox"], {}).get(v)
-            if prev is None or run > prev[0]:
+            # A run of a few contracts (--only) does not stand in for a whole run
+            # of the same version: the later of two runs wins only if it is as large.
+            if prev is None or (run > prev[0] and len(d["contracts"]) >= len(prev[1]["contracts"])):
                 runs[d["sandbox"]][v] = (run, d)
     return runs
 

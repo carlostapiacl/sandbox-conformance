@@ -5,15 +5,22 @@
 # profile loaded (runner/sc-lab.apparmor): it only adds `userns`, so the
 # sandboxes can create user namespaces on Ubuntu 24.04 without touching the
 # host-wide kernel.apparmor_restrict_unprivileged_userns sysctl.
+# SC_WITNESS=1 runs it on the witness network (runner/lab-witness.sh up first),
+# so the contracts that require a witness host apply.
 set -eu
 SANDBOX=$1; OUT=$2; shift 2
 HERE=$(cd "$(dirname "$0")/.." && pwd)
 mkdir -p "$OUT"
 OPTS="--init --cpus 1 --memory 1g --pids-limit 512 --security-opt seccomp=unconfined --security-opt apparmor=sc-lab --security-opt systempaths=unconfined"
+WITNESS_ENV=
+if [ "${SC_WITNESS:-}" = 1 ]; then
+  OPTS="$OPTS --network sc-lab-testnet --ip 198.51.100.10"
+  WITNESS_ENV="-e SC_WITNESS_IP=198.51.100.200"
+fi
 # The commit being measured: from git when the tree is a checkout, else from SC_COMMIT.
 COMMIT=${SC_COMMIT:-$(git -C "$HERE" rev-parse HEAD 2>/dev/null || true)}
 docker run --rm --name "sc-$SANDBOX" $OPTS \
-  -e SC_COMMIT="$COMMIT" \
+  -e SC_COMMIT="$COMMIT" $WITNESS_ENV \
   -e SC_CONTAINER_STAMP="docker $(docker version --format '{{.Server.Version}}'); $OPTS; image sc-lab:tools $(docker image inspect -f '{{.Id}}' sc-lab:tools)" \
   -v "$HERE/runner:/lab/runner:ro" -v "$HERE/contracts:/lab/contracts:ro" -v "$OUT:/out" \
   sc-lab:tools python3 /lab/runner/run.py --sandbox "$SANDBOX" --contracts /lab/contracts \

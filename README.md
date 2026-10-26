@@ -77,6 +77,9 @@ on the same host, contracts and lab tools as the 2026-10-21 run. The
 `[broker]` contracts for the first time: their baseline now runs against a
 [reference broker](spec/format.md#the-broker-table) with no defences, the same for every
 sandbox.
+The [2026-10-26 run](results/2026-10-26-tartaros-alpha16/README.md) measures TartarOS
+0.1.0-alpha.16 and sandbox-runtime 0.0.81 on six new masked-credential contracts: both
+contain all six on Linux.
 
 Next: macOS runs, [more corpora](corpus-roadmap.md) harvested from other sandboxes' test suites, and
 a site that lets you search a guarantee and see which sandbox holds it.
