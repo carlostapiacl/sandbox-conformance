@@ -5,6 +5,15 @@ reader can tell a fix from a change made to suit a result. The corpus was frozen
 at tag `corpus-2026-10-16` before TartarOS, maintained by this lab's author, was
 first measured.
 
+## Corpus versions
+
+From 2026-10-26 the contracts are versioned ([`corpus/`](../corpus/README.md)): a
+version is the exact set of contract files, by hash, and every change to a contract
+comes with the next version. **v1.0** (2026-10-26) is the 194 contracts in this
+folder: the 188 of the runs up to 2026-10-22 as they stand after the fixes below,
+and the six masked-credential contracts. Entries from here on name the version they
+went into.
+
 ## After `corpus-2026-10-16`
 
 - **2026-10-26. Six masked-credential contracts are added** (`credentials-masked-env-*`),
