@@ -1,0 +1,87 @@
+site_name: sandbox-conformance
+site_description: Un laboratorio abierto para medir sandboxes de agentes de código
+site_url: https://carlostapiacl.github.io/sandbox-conformance/docs/es/
+repo_url: https://github.com/carlostapiacl/sandbox-conformance
+repo_name: carlostapiacl/sandbox-conformance
+edit_uri: edit/main/docs-es/
+docs_dir: docs-es
+site_dir: build/docs/es
+strict: true
+
+theme:
+  name: material
+  language: es
+  features:
+    - navigation.sections
+    - navigation.top
+    - navigation.indexes
+    - navigation.footer
+    - content.code.copy
+    - search.highlight
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle: { icon: material/brightness-7, name: Modo oscuro }
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle: { icon: material/brightness-4, name: Modo claro }
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - tables
+  - toc: { permalink: true }
+  - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.details
+
+extra:
+  alternate:
+    - { name: English, link: /sandbox-conformance/docs/, lang: en }
+    - { name: Español, link: /sandbox-conformance/docs/es/, lang: es }
+
+extra_css:
+  - stylesheets/extra.css
+
+hooks:
+  - docs/hooks.py
+
+nav:
+  - Inicio: index.md
+  - Primeros pasos:
+      - Quickstart: get-started/quickstart.md
+      - Preguntas frecuentes: get-started/faq.md
+      - Cómo citar: get-started/citing.md
+  - Conceptos:
+      - Contracts: concepts/contracts.md
+      - Baseline y control: concepts/baseline.md
+      - Resultados y readings: concepts/results.md
+      - Policy y read models: concepts/policy.md
+      - Witnesses: concepts/witnesses.md
+      - Adapters y profiles: concepts/adapters.md
+      - Versiones del corpus: concepts/corpus-versions.md
+  - Guías:
+      - Escribir un contract: how-to/write-a-contract.md
+      - Agregar un sandbox: how-to/add-a-sandbox.md
+      - Correr el lab en Linux: how-to/run-on-linux.md
+      - Publicar un run: how-to/publish-a-run.md
+  - Metodología: methodology.md
+  - Resultados:
+      - Todos los runs: results/index.md
+      - Qué cambió por versión: results/versions.md
+  - Contracts:
+      - Catálogo: contracts/index.md
+  - Sandboxes:
+      - sandboxes/index.md
+      - sandbox-runtime: sandboxes/sandbox-runtime.md
+      - nono: sandboxes/nono.md
+      - Codex CLI: sandboxes/codex.md
+      - landrun: sandboxes/landrun.md
+      - TartarOS: sandboxes/tartaros.md
+  - Referencia:
+      - Formato del contract: reference/format.md
+      - Verdicts: reference/verdicts.md
+      - Cómo se versiona el corpus: reference/corpus.md
+      - Archivos del runner: reference/runner.md
+  - Changelog:
+      - Contracts: changelog/contracts.md

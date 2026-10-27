@@ -1,19 +1,29 @@
 name: pages
 
-# The site: the landing page at the root and the documentation (MkDocs) under /docs/.
+# The site: the landing page at the root, the documentation (MkDocs) under /docs/ and its
+# Spanish translation under /docs/es/.
 on:
   pull_request:
     paths:
       - "docs/**"
       - "mkdocs.yml"
+      - "docs-es/**"
+      - "mkdocs.es.yml"
+      - "i18n/**"
       - "index.html"
+      - "spec/**"
+      - "sandboxes/**"
       - "corpus/**"
+      - "runner/README.md"
       - ".github/workflows/pages.yml"
   push:
     branches: [main]
     paths:
       - "docs/**"
       - "mkdocs.yml"
+      - "docs-es/**"
+      - "mkdocs.es.yml"
+      - "i18n/**"
       - "index.html"
       - "spec/**"
       - "sandboxes/**"
@@ -46,6 +56,8 @@ jobs:
       - run: pip install "mkdocs-material==9.6.23"
       - run: python runner/corpus.py check
       - run: mkdocs build --strict
+      # After the English site: its build empties build/docs, this one only build/docs/es.
+      - run: mkdocs build --strict -f mkdocs.es.yml
       - name: assemble the site
         run: |
           mkdir -p _site
