@@ -48,10 +48,14 @@ by-omission variants and six masked-credential contracts, each re-expressed in t
 neutral format and credited in [`SOURCES.md`](SOURCES.md) and its own `source` field.
 Which contracts a version is, and when it moves, is in [`corpus/`](corpus/README.md).
 
-Maintained by the author of TartarOS, a competing sandbox. That is why the
-contracts come from the other projects' test suites. TartarOS is measured like
-the others since the [2026-10-22 run](results/2026-10-22-tartaros/README.md), and
-its [page](sandboxes/tartaros.md) and result file record the conflict of interest.
+Maintained by the author of TartarOS. TartarOS is where I try each escape the lab
+finds, to see whether it can be mitigated, so it is built against these contracts and
+its column should be read that way. That is also why the contracts come from the other
+projects' test suites. TartarOS is measured like the others since the
+[2026-10-22 run](results/2026-10-22-tartaros/README.md), and its
+[page](sandboxes/tartaros.md) and result file record the conflict of interest.
+
+Contracts and adapters are welcome: see [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 First results in: [`results/2026-10-15/`](results/2026-10-15/README.md) measures
 sandbox-runtime 0.0.79, nono 0.80.0 and Codex CLI 0.162.1 on Linux (kernel 6.8),
