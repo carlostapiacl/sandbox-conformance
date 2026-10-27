@@ -34,6 +34,11 @@ markdown_extensions:
   - pymdownx.highlight
   - pymdownx.details
 
+extra:
+  alternate:
+    - { name: English, link: /sandbox-conformance/docs/, lang: en }
+    - { name: Español, link: /sandbox-conformance/docs/es/, lang: es }
+
 extra_css:
   - stylesheets/extra.css
 
