@@ -1,6 +1,6 @@
 # Comparison, run of 2026-10-22
 
-Each cell is the result of one contract against one sandbox, set up through its adapter (`runner/adapters/`) as strictly as that sandbox's documentation allows. Only results we actually measured are listed. The host and the method are described in `README.md`.
+Each cell is the result of one contract against one sandbox, set up through its adapter (`runner/adapters/`) as strictly as that sandbox's documentation allows. Only results I actually measured are listed. The host and the method are described in `README.md`.
 
 | result | meaning |
 |---|---|
@@ -231,7 +231,7 @@ Not applicable on this host for every sandbox (12): `ipc-unix-bind-denied`, `ipc
 
 ## Review notes
 
-We read the raw output (`raw/`) for every result other than `contained`. These notes explain a result; they never change it.
+I read the raw output (`raw/`) for every result other than `contained`. These notes explain a result; they never change it.
 
 ### tartaros
 

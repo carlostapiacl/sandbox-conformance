@@ -1,7 +1,7 @@
 # Run of 2026-10-15
 
-This is the lab's first measured run. We took the 168 contracts in `contracts/`
-and ran them against three sandboxes on a single Linux host. We did not run
+This is the lab's first measured run. I took the 168 contracts in `contracts/`
+and ran them against three sandboxes on a single Linux host. I did not run
 anything on macOS or Windows.
 
 | sandbox | version | source commit | license |
@@ -27,11 +27,11 @@ The escape totals mix two kinds of result. Some contracts test a rule the
 adapter configured, such as a read-deny or a write-deny. Others test something
 no `[policy]` field asks for, such as protecting `.git/hooks` inside a writable
 root, or tearing down the process tree when the launcher is killed. For the
-second kind we are measuring the sandbox's defaults. An escape there tells you
+second kind I am measuring the sandbox's defaults. An escape there tells you
 how the sandbox behaves out of the box. It does not mean a configured rule
 failed.
 
-We went through every result other than `contained` by hand and compared it
+I went through every result other than `contained` by hand and compared it
 with the raw output. Some escapes turned out to rest on an assumption the
 contract makes that does not fit the sandbox's design. Others depend on a newer
 kernel, or match a limitation the sandbox already documents. Those notes are in
@@ -56,7 +56,7 @@ Some codex results are held while a coordinated-disclosure process is open; they
 
 ## Host
 
-We ran everything on a disposable Linux lab host, inside Docker containers
+I ran everything on a disposable Linux lab host, inside Docker containers
 started with `--rm`. Nothing ran on a workstation.
 
 | | |
@@ -73,8 +73,8 @@ namespaces and fresh `/proc` mounts, and Docker's default seccomp and AppArmor
 profiles block both. Those profiles would also act as a second wall, and a
 containment could end up credited to Docker instead of the sandbox under test.
 `sc-lab` is an AppArmor profile whose only rule is `userns`, which Ubuntu 24.04
-otherwise restricts for unprivileged users. We loaded it into the kernel for
-the run and removed it afterwards. We changed no host sysctl. The exact setup
+otherwise restricts for unprivileged users. I loaded it into the kernel for
+the run and removed it afterwards. I changed no host sysctl. The exact setup
 is in `runner/lab.sh`, `runner/Dockerfile` and `runner/sc-lab.apparmor`.
 
 ## Method
@@ -83,7 +83,7 @@ For each contract that applies to Linux, `runner/run.py` does the following:
 
 1. Baseline. Create a fresh `{root}` and the fixtures, then run the attack and the control with no sandbox, in the same container and as the same user. If the attack fails here, the contract is `vacuous` and proves nothing.
 2. Sandboxed run. Create a fresh `{root}` and the fixtures again, run the attack and then the control through the adapter, and check the `[assert]`.
-3. The baseline tells us how to recognise a successful attack. If the `[assert]` caught its effect on disk, we judge by that effect; otherwise we judge by the exit status. A read attack is the usual case for the second: the file it reads stays `unchanged`, so only the exit status shows that the read worked. Under the sandbox, any real effect counts as an escape. When an attack sets `expect_exit` and has no `[assert]`, the contract is checking that the sandbox reports the right status, and any other status is the failure.
+3. The baseline tells the lab how to recognise a successful attack. If the `[assert]` caught its effect on disk, I judge by that effect; otherwise I judge by the exit status. A read attack is the usual case for the second: the file it reads stays `unchanged`, so only the exit status shows that the read worked. Under the sandbox, any real effect counts as an escape. When an attack sets `expect_exit` and has no `[assert]`, the contract is checking that the sandbox reports the right status, and any other status is the failure.
 4. Commands run from the first writable root, which is where an agent would be working. sandbox-runtime derives some of its protections from the working directory, so this choice affects its results.
 
 Each adapter (`runner/adapters/`) translates the neutral `[policy]` into its
@@ -100,6 +100,6 @@ for all three.
 ## Limits of this run
 
 - One OS and one kernel: Linux 6.8, Landlock ABI 4. Two nono results (marked `§`) would need ABI 6.
-- A `vacuous` contract says nothing in either direction. Most of ours are written for a launcher running as root, or for attacks that file permissions already stop for a non-root user.
-- We did not check whether `AF_VSOCK` reaches anything from inside these containers on this host (por confirmar).
+- A `vacuous` contract says nothing in either direction. Most of mine are written for a launcher running as root, or for attacks that file permissions already stop for a non-root user.
+- I did not check whether `AF_VSOCK` reaches anything from inside these containers on this host (por confirmar).
 - nono was measured against the neutral model, where everything not denied is readable, and not against its own model of granting only what is needed. Its page explains the difference.

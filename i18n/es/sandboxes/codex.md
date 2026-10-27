@@ -5,11 +5,11 @@ de filesystem, PID, IPC y red, define `no_new_privs` y aplica un filtro seccomp
 que bloquea io_uring y ptrace, más las llamadas al sistema de red cuando la
 red está restringida.
 
-Medimos codex-cli 0.162.1 (`@openai/codex`), compilado desde el commit
+Medí codex-cli 0.162.1 (`@openai/codex`), compilado desde el commit
 `092d3acd6bec3e3a14bdc7e7a2810ab628ab759d` (tag rust-v0.162.1), y el
 2026-10-21 codex-cli 0.163.0 (commit `83086188ae0614bd882818ff1aa23f3194962012`,
 tag rust-v0.163.0), con licencia Apache-2.0. Qué resultados cambiaron en qué
-versión: [`results/versions.md`](../results/versions.md). Llamamos directamente a su binario nativo `x86_64-unknown-linux-musl`
+versión: [`results/versions.md`](../results/versions.md). Llamé directamente a su binario nativo `x86_64-unknown-linux-musl`
 en vez del launcher de npm. Ese launcher es un script de Node, y un contract
 que define `NODE_OPTIONS` en el entorno rompería el launcher antes de que el
 sandbox llegara a arrancar. El adapter es [`runner/adapters/codex.py`](../runner/adapters/codex.py).
@@ -61,7 +61,7 @@ Linux 6.8. El método y los detalles del host están en [el README del run](../r
 | 74 | 24 | 27 | 18 | 8 | 1 | 12 |
 
 codex se configuró tan estricto como su documentación lo permite. De los escapes, tres
-rompieron una regla que habíamos configurado.
+rompieron una regla que yo había configurado.
 
 ### Escapes en reglas configuradas {#escapes-on-configured-rules}
 
@@ -89,7 +89,7 @@ sandbox rechace un root así. codex lo acepta.
   - `/proc/1` se puede leer. Pertenece al propio init del sandbox, no a un proceso del host.
 - Ciclo de vida (2).
   - `.mcp.json` no está en la lista de archivos protegidos de codex.
-  - Después de que le enviamos SIGTERM a `codex sandbox`, los procesos de adentro siguieron corriendo y escribieron el archivo marcador.
+  - Después de que le envié SIGTERM a `codex sandbox`, los procesos de adentro siguieron corriendo y escribieron el archivo marcador.
 
 ### Otros resultados {#other-results}
 

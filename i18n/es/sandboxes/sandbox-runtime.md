@@ -5,7 +5,7 @@ namespaces de filesystem, PID y red. Un filtro seccomp bloquea la creación de
 sockets AF_UNIX y io_uring, y proxies HTTP y SOCKS en el host deciden a qué
 dominios se puede llegar.
 
-Medimos la versión 0.0.79 (`@anthropic-ai/sandbox-runtime`), compilada desde el
+Medí la versión 0.0.79 (`@anthropic-ai/sandbox-runtime`), compilada desde el
 commit `d9aac2098351ca17f3743fbaf6ecbd0051b7e00e` (tag v0.0.79), y el
 2026-10-21 la versión 0.0.81 (commit `c40cf14a65d025e3cd27f071f13a73c12b3b1f92`,
 tag v0.0.81), con licencia Apache-2.0. Qué resultados cambiaron en qué versión:
@@ -82,7 +82,7 @@ Linux 6.8. El método y los detalles del host están en [el README del run](../r
 | 99 | 22 | 4 | 18 | 8 | 1 | 12 |
 
 srt se configuró tan estricto como su documentación lo permite. De 22 escapes, 5
-rompieron una regla que habíamos configurado.
+rompieron una regla que yo había configurado.
 
 ### Escapes en reglas configuradas {#escapes-on-configured-rules}
 
@@ -103,7 +103,7 @@ cuyo destino todavía no existe. Agregar contenido a `here/new` creó
 `network-vsock-denied`, `network-socket-domain-high-bits`). El agente pudo
 crear sockets AF_NETLINK y AF_VSOCK, y sockets con bits altos activados en el
 argumento de dominio. Dentro del namespace de red vacío de srt, netlink solo ve
-ese namespace. AF_VSOCK no está atado a un namespace de red. No revisamos
+ese namespace. AF_VSOCK no está atado a un namespace de red. No revisé
 si llega a algo en este host (por confirmar).
 
 ### Escapes con una nota {#escapes-with-a-note}
@@ -135,12 +135,12 @@ si llega a algo en este host (por confirmar).
 
 `control-broke` (4):
 
-- `write-deny-link-dotdot`: srt se colgó hasta nuestro timeout de 60 segundos cuando un write-deny estaba escrito con `..` a través de symlinks.
+- `write-deny-link-dotdot`: srt se colgó hasta el timeout de 60 segundos del lab cuando un write-deny estaba escrito con `..` a través de symlinks.
 - `read-deny-bracket-dir`: srt terminó antes de ejecutar nada porque un directorio llamado `[user-id]` produjo una expresión regular inválida.
-- Un puerto de loopback permitido por la policy solo se alcanza a través del proxy de srt. Con `curl --noproxy ''` obtuvimos HTTP 200. El control del contract se conecta directo, y srt define `NO_PROXY=127.0.0.1`, así que la conexión directa falla.
+- Un puerto de loopback permitido por la policy solo se alcanza a través del proxy de srt. Con `curl --noproxy ''` obtuve HTTP 200. El control del contract se conecta directo, y srt define `NO_PROXY=127.0.0.1`, así que la conexión directa falla.
 - Un contract reemplaza un writable root durante el run.
 
-También vimos algo que los conteos no incluyen. srt encuentra los archivos que
+También vi algo que los conteos no incluyen. srt encuentra los archivos que
 protege escaneando desde el directorio de trabajo. Con el directorio de trabajo
 un nivel por encima del writable root, se pudo escribir `.git/config` dentro
 del root. Con el directorio de trabajo dentro del root, quedó protegido. Por eso
@@ -153,7 +153,7 @@ con una línea de comandos `run --write DIR`, que srt no tiene.
 
 Revisado el 2026-10-15 contra los pull requests y commits públicos de srt, y
 de nuevo el 2026-10-21. Casi todo lo que el run de 0.0.79 encontró en reglas
-configuradas ya estaba arreglado en `main` cuando lo medimos. Esos arreglos salieron en v0.0.80, y
+configuradas ya estaba arreglado en `main` cuando lo medí. Esos arreglos salieron en v0.0.80, y
 el run del 2026-10-21 los midió en 0.0.81.
 
 | hallazgo | arreglado en | referencia |

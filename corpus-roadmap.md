@@ -1,12 +1,12 @@
 # Corpus roadmap
 
-Where the contracts come from now, and the sandboxes whose public test suites we
+Where the contracts come from now, and the sandboxes whose public test suites I
 could harvest next. A contract is never a copy of upstream test code: it
 re-expresses the guarantee under test in the neutral format and credits its
 `source`. Licenses are listed for attribution, not because code is copied.
 
 Status: **harvested** = contracts are in `contracts/`; **candidate** = a public
-test suite we have assessed but not yet harvested.
+test suite I have assessed but not yet harvested.
 
 Model fit: **fits** = process / filesystem / network policy with a real on-disk
 or on-the-wire effect to assert (the lab's model); **cap** = a capability /
