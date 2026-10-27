@@ -14,6 +14,14 @@ folder: the 188 of the runs up to 2026-10-22 as they stand after the fixes below
 and the six masked-credential contracts. Entries from here on name the version they
 went into.
 
+- **v1.1 (2026-10-26). Two contracts from Deno's permission tests** (MIT), the
+  first from that project: `secrets-read-deny-via-proc-self-root` (a read-deny must
+  hold when the path is spelled through `/proc/self/root`, Linux) and
+  `filesystem-write-deny-survives-recursive-remove` (`rm -rf` of a writable parent
+  must leave its write-denied subdirectory). Checked against the reference
+  sandboxes before any sandbox was measured on them: the allow-all one escapes
+  both, the deny-all one breaks both controls. No result prompted them.
+
 ## After `corpus-2026-10-16`
 
 - **2026-10-26. Six masked-credential contracts are added** (`credentials-masked-env-*`),

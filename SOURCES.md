@@ -7,15 +7,14 @@ tested*, credited below and in each file's `source` field.
 
 | project | license | contracts |
 |---|---|---|
-| [anthropics/sandbox-runtime](https://github.com/anthropics/sandbox-runtime) | Apache-2.0 | 114 |
-| [nolabs-ai/nono](https://github.com/nolabs-ai/nono) | Apache-2.0 | 32 |
-| [openai/codex](https://github.com/openai/codex) | Apache-2.0 | 17 |
+| [anthropics/sandbox-runtime](https://github.com/anthropics/sandbox-runtime) | Apache-2.0 | 135 |
+| [nolabs-ai/nono](https://github.com/nolabs-ai/nono) | Apache-2.0 | 38 |
+| [openai/codex](https://github.com/openai/codex) | Apache-2.0 | 18 |
 | [containers/bubblewrap](https://github.com/containers/bubblewrap) | LGPL-2.1+ (guarantee only, no code) | 1 |
 | [OpenHands/software-agent-sdk](https://github.com/OpenHands/software-agent-sdk) | MIT | 2 |
+| [denoland/deno](https://github.com/denoland/deno) | MIT | 2 |
 
-Total: 166 contracts, plus 22 by-omission variants derived from them. Maintained by the author of TartarOS, a competing sandbox;
-that is why the contracts come from the other projects' test suites. TartarOS will
-be measured in a later run, with its results published the same way.
+Total: 196 contracts, 22 of them by-omission variants of another contract (counted under its source). The lab is maintained by the author of TartarOS, one of the sandboxes measured; that is why the contracts come from the other projects' test suites ([methodology](https://carlostapiacl.github.io/sandbox-conformance/docs/methodology/#conflict-of-interest)).
 
 ## Per contract
 
@@ -27,6 +26,13 @@ be measured in a later run, with its results published the same way.
 - `credentials/credentials-broker-no-redirect-follow` — anthropics/sandbox-runtime test/sandbox/credential-mask.test.ts (Apache-2.0)
 - `credentials/credentials-broker-prefix-scope` — anthropics/sandbox-runtime test/sandbox/proxy-only.test.ts (Apache-2.0)
 - `credentials/credentials-broker-token-not-forwarded` — anthropics/sandbox-runtime test/sandbox/credential-mask.test.ts (Apache-2.0)
+- `credentials/credentials-masked-env-agent-holds-sentinel` — anthropics/sandbox-runtime test/sandbox/credential-mask.test.ts (Apache-2.0)
+- `credentials/credentials-masked-env-body-scoped` — anthropics/sandbox-runtime test/sandbox/credential-mask-env.test.ts (Apache-2.0)
+- `credentials/credentials-masked-env-no-laundering` — anthropics/sandbox-runtime test/sandbox/credential-mask.test.ts (Apache-2.0)
+- `credentials/credentials-masked-env-not-in-process-records` — anthropics/sandbox-runtime test/sandbox/credential-mask.test.ts (Apache-2.0)
+- `credentials/credentials-masked-env-not-sent-to-other-host` — anthropics/sandbox-runtime test/sandbox/credential-mask.test.ts (Apache-2.0)
+- `credentials/credentials-masked-env-plain-http-not-swapped` — anthropics/sandbox-runtime test/sandbox/credential-mask.test.ts (Apache-2.0)
+- `filesystem/filesystem-rm-under-read-deny-ancestor-by-omission` — anthropics/sandbox-runtime test/sandbox/allow-read.test.ts (Apache-2.0)
 - `filesystem/filesystem-rm-under-read-deny-ancestor` — anthropics/sandbox-runtime test/sandbox/allow-read.test.ts (Apache-2.0)
 - `filesystem/filesystem-write-deny-absent-path` — anthropics/sandbox-runtime test/sandbox/deny-path-made-meanwhile.test.ts (Apache-2.0)
 - `filesystem/filesystem-write-deny-rename-bypass` — anthropics/sandbox-runtime test/sandbox/macos-seatbelt.test.ts (Apache-2.0)
@@ -40,6 +46,7 @@ be measured in a later run, with its results published the same way.
 - `filesystem/fs-symlink-rename-out` — anthropics/sandbox-runtime test/sandbox/write-through-links.test.ts (Apache-2.0)
 - `filesystem/fs-writable-root-symlink-out` — anthropics/sandbox-runtime test/sandbox/symlink-write-path.test.ts (Apache-2.0)
 - `filesystem/fs-writable-root-symlink-parent` — anthropics/sandbox-runtime test/sandbox/symlink-boundary.test.ts (Apache-2.0)
+- `filesystem/read-allow-writable-carveout-trailing-slash-by-omission` — anthropics/sandbox-runtime test/sandbox/trailing-slash-deny-spellings.test.ts (Apache-2.0)
 - `filesystem/read-allow-writable-carveout-trailing-slash` — anthropics/sandbox-runtime test/sandbox/trailing-slash-deny-spellings.test.ts (Apache-2.0)
 - `filesystem/write-deny-absent-deep` — anthropics/sandbox-runtime test/sandbox/mandatory-deny-paths.test.ts (Apache-2.0)
 - `filesystem/write-deny-backslash-absent` — anthropics/sandbox-runtime test/sandbox/names-with-a-backslash.test.ts (Apache-2.0)
@@ -64,6 +71,7 @@ be measured in a later run, with its results published the same way.
 - `isolation/isolation-proc-mem-launcher-denied` — anthropics/sandbox-runtime test/sandbox/pid-namespace-isolation.test.ts (Apache-2.0)
 - `isolation/isolation-process-info-environ` — anthropics/sandbox-runtime test/sandbox/pid-namespace-isolation.test.ts (Apache-2.0)
 - `isolation/isolation-ptrace-launcher-denied` — anthropics/sandbox-runtime test/sandbox/pid-namespace-isolation.test.ts (Apache-2.0)
+- `isolation/isolation-root-mount-bypass-denied-by-omission` — anthropics/sandbox-runtime test/docker-weak-sandbox.test.ts (Apache-2.0)
 - `isolation/isolation-root-mount-bypass-denied` — anthropics/sandbox-runtime test/docker-weak-sandbox.test.ts (Apache-2.0)
 - `isolation/isolation-supervisor-proc-mem-denied` — anthropics/sandbox-runtime test/docker-weak-sandbox.test.ts (Apache-2.0)
 - `isolation/isolation-vsock-socket-denied` — anthropics/sandbox-runtime test/docker-weak-sandbox.test.ts (Apache-2.0)
@@ -86,15 +94,24 @@ be measured in a later run, with its results published the same way.
 - `network/network-vsock-denied` — anthropics/sandbox-runtime test/sandbox/seccomp-vsock-block.test.ts (Apache-2.0)
 - `network/seccomp-io-uring-denied` — anthropics/sandbox-runtime test/sandbox/pid-namespace-isolation.test.ts (Apache-2.0)
 - `secrets/read-allow-inside-deny-writable-ancestor` — anthropics/sandbox-runtime test/sandbox/allow-read.test.ts (Apache-2.0)
+- `secrets/read-allow-symlink-into-deny-by-omission` — anthropics/sandbox-runtime test/sandbox/linux-mount-plan-record.test.ts (Apache-2.0)
 - `secrets/read-allow-symlink-into-deny` — anthropics/sandbox-runtime test/sandbox/linux-mount-plan-record.test.ts (Apache-2.0)
+- `secrets/read-allow-symlink-no-reopen-by-omission` — anthropics/sandbox-runtime test/sandbox/read-deny-glob.test.ts, test/sandbox/read-list-precedence.test.ts (Apache-2.0)
 - `secrets/read-allow-symlink-no-reopen` — anthropics/sandbox-runtime test/sandbox/read-deny-glob.test.ts, test/sandbox/read-list-precedence.test.ts (Apache-2.0)
 - `secrets/read-allow-trailing-slash-nested-deny` — anthropics/sandbox-runtime test/sandbox/trailing-slash-deny-spellings.test.ts (Apache-2.0)
+- `secrets/read-deny-alt-spelling-by-omission` — anthropics/sandbox-runtime test/sandbox/linux-one-mount-per-destination.test.ts (Apache-2.0)
 - `secrets/read-deny-alt-spelling` — anthropics/sandbox-runtime test/sandbox/linux-one-mount-per-destination.test.ts (Apache-2.0)
+- `secrets/read-deny-around-nested-root-by-omission` — anthropics/sandbox-runtime test/sandbox/readonly-deny-dir-binds.test.ts (Apache-2.0)
 - `secrets/read-deny-around-nested-root` — anthropics/sandbox-runtime test/sandbox/readonly-deny-dir-binds.test.ts (Apache-2.0)
+- `secrets/read-deny-backslash-name-by-omission` — anthropics/sandbox-runtime test/sandbox/names-with-a-backslash.test.ts (Apache-2.0)
 - `secrets/read-deny-backslash-name` — anthropics/sandbox-runtime test/sandbox/names-with-a-backslash.test.ts (Apache-2.0)
+- `secrets/read-deny-bracket-dir-by-omission` — anthropics/sandbox-runtime test/sandbox/brackets-that-spell-no-set.test.ts (Apache-2.0)
 - `secrets/read-deny-bracket-dir` — anthropics/sandbox-runtime test/sandbox/brackets-that-spell-no-set.test.ts (Apache-2.0)
+- `secrets/read-deny-given-via-symlink-by-omission` — anthropics/sandbox-runtime test/sandbox/read-list-precedence.test.ts, test/sandbox/read-deny-glob.test.ts (Apache-2.0)
 - `secrets/read-deny-given-via-symlink` — anthropics/sandbox-runtime test/sandbox/read-list-precedence.test.ts, test/sandbox/read-deny-glob.test.ts (Apache-2.0)
+- `secrets/read-deny-link-dotdot-by-omission` — anthropics/sandbox-runtime test/sandbox/rules-through-links-on-every-runtime.test.ts (Apache-2.0)
 - `secrets/read-deny-link-dotdot` — anthropics/sandbox-runtime test/sandbox/rules-through-links-on-every-runtime.test.ts (Apache-2.0)
+- `secrets/read-deny-not-reopened-by-nested-writable-by-omission` — anthropics/sandbox-runtime test/sandbox/default-write-paths.test.ts (Apache-2.0)
 - `secrets/read-deny-not-reopened-by-nested-writable` — anthropics/sandbox-runtime test/sandbox/default-write-paths.test.ts (Apache-2.0)
 - `secrets/read-deny-root-carve-out` — anthropics/sandbox-runtime test/sandbox/allow-read.test.ts (Apache-2.0)
 - `secrets/read-deny-symlink-entry` — anthropics/sandbox-runtime test/sandbox/linux-mount-plan-record.test.ts (Apache-2.0)
@@ -106,6 +123,7 @@ be measured in a later run, with its results published the same way.
 - `secrets/secrets-glob-deny-rename-out` — anthropics/sandbox-runtime test/sandbox/allow-read.test.ts (Apache-2.0)
 - `secrets/secrets-glob-read-deny` — anthropics/sandbox-runtime test/sandbox/glob-expand.test.ts (Apache-2.0)
 - `secrets/secrets-host-process-environ` — anthropics/sandbox-runtime test/sandbox/execute-only-binary.test.ts (Apache-2.0)
+- `secrets/secrets-read-allow-symlink-into-deny-by-omission` — anthropics/sandbox-runtime test/sandbox/linux-ancestor-pin.test.ts (Apache-2.0)
 - `secrets/secrets-read-allow-symlink-into-deny` — anthropics/sandbox-runtime test/sandbox/linux-ancestor-pin.test.ts (Apache-2.0)
 - `secrets/secrets-read-deny-after-chmod` — anthropics/sandbox-runtime test/sandbox/linux-ancestor-pin-errno.test.ts (Apache-2.0)
 - `secrets/secrets-read-deny-also-write-denied` — anthropics/sandbox-runtime test/sandbox/wrap-with-sandbox.test.ts (Apache-2.0)
@@ -113,15 +131,17 @@ be measured in a later run, with its results published the same way.
 - `secrets/secrets-read-deny-clonefile` — anthropics/sandbox-runtime test/sandbox/allow-read.test.ts (Apache-2.0)
 - `secrets/secrets-read-deny-firmlink` — anthropics/sandbox-runtime test/sandbox/allow-read.test.ts (Apache-2.0)
 - `secrets/secrets-read-deny-rename-out` — anthropics/sandbox-runtime test/sandbox/read-list-precedence.test.ts, test/sandbox/allow-read.test.ts (Apache-2.0)
+- `secrets/secrets-read-deny-single-file-by-omission` — anthropics/sandbox-runtime test/sandbox/credential-deny.test.ts (Apache-2.0)
 - `secrets/secrets-read-deny-single-file` — anthropics/sandbox-runtime test/sandbox/credential-deny.test.ts (Apache-2.0)
+- `secrets/secrets-read-deny-symlinked-entry-by-omission` — anthropics/sandbox-runtime test/sandbox/credential-deny.test.ts (Apache-2.0)
 - `secrets/secrets-read-deny-symlinked-entry` — anthropics/sandbox-runtime test/sandbox/credential-deny.test.ts (Apache-2.0)
 - `secrets/secrets-read-deny-under-write-denied-ancestor` — anthropics/sandbox-runtime test/sandbox/wrap-with-sandbox.test.ts (Apache-2.0)
 - `trust-handoff/trust-handoff-bracketed-root` — anthropics/sandbox-runtime test/sandbox/macos-literal-deny-brackets.test.ts (Apache-2.0)
 - `trust-handoff/trust-handoff-claude-agents` — anthropics/sandbox-runtime test/sandbox/mandatory-deny-paths.test.ts (Apache-2.0)
 - `trust-handoff/trust-handoff-claude-symlink-cycle` — anthropics/sandbox-runtime test/sandbox/symlinked-deny-paths.test.ts (Apache-2.0)
 - `trust-handoff/trust-handoff-editor-dirs` — anthropics/sandbox-runtime test/sandbox/mandatory-deny-paths.test.ts (Apache-2.0)
-- `trust-handoff/trust-handoff-git-config` — anthropics/sandbox-runtime test/sandbox/mandatory-deny-paths.test.ts (Apache-2.0)
 - `trust-handoff/trust-handoff-git-config-move-aside` — anthropics/sandbox-runtime test/sandbox/linux-nested-userns.test.ts (Apache-2.0)
+- `trust-handoff/trust-handoff-git-config` — anthropics/sandbox-runtime test/sandbox/mandatory-deny-paths.test.ts (Apache-2.0)
 - `trust-handoff/trust-handoff-git-dir-replace` — anthropics/sandbox-runtime test/sandbox/linux-ancestor-pin.test.ts (Apache-2.0)
 - `trust-handoff/trust-handoff-git-exchange-rename` — anthropics/sandbox-runtime test/sandbox/linux-ancestor-pin.test.ts (Apache-2.0)
 - `trust-handoff/trust-handoff-gitignored-repo` — anthropics/sandbox-runtime test/sandbox/mandatory-deny-paths.test.ts (Apache-2.0)
@@ -150,6 +170,7 @@ be measured in a later run, with its results published the same way.
 - `filesystem/filesystem-xattr-outside` — nolabs-ai/nono tests/integration/test_commands.sh (destructive metadata ops) (Apache-2.0)
 - `ipc/ipc-abstract-unix-socket` — nolabs-ai/nono crates/nono/src/sandbox/linux.rs (test_abstract_unix_socket_scope_blocks_external_connect_on_v6) (Apache-2.0)
 - `ipc/ipc-unix-socket-allowlist` — nolabs-ai/nono crates/nono-cli/tests/socket_access_run.rs (bypassed socket allowed, sibling blocked; exact vs subtree scope) (Apache-2.0)
+- `ipc/ipc-unix-socket-in-denied-dir-by-omission` — nolabs-ai/nono crates/nono-cli/tests/socket_access_run.rs (filesystem_directory_deny_blocks_nested_unix_socket_connect_on_macos) (Apache-2.0)
 - `ipc/ipc-unix-socket-in-denied-dir` — nolabs-ai/nono crates/nono-cli/tests/socket_access_run.rs (filesystem_directory_deny_blocks_nested_unix_socket_connect_on_macos) (Apache-2.0)
 - `isolation/isolation-gpu-node-denied` — nolabs-ai/nono tests/integration/test_gpu.sh ("render node / nvidia0 / nvidiactl / kfd / dxg denied without --allow-gpu") (Apache-2.0)
 - `isolation/isolation-nested-relaunch-no-widen` — nolabs-ai/nono tests/integration/test_child_tool_boundaries.sh ("command sandbox does not inherit session --allow directory") (Apache-2.0)
@@ -165,10 +186,15 @@ be measured in a later run, with its results published the same way.
 - `secrets/secrets-env-loader-injection-inherit` — nolabs-ai/nono tests/integration/test_env_sanitization.sh + crates/nono-cli/src/exec_strategy/env_sanitization.rs (Apache-2.0)
 - `secrets/secrets-env-loader-injection-scrub` — nolabs-ai/nono tests/integration/test_env_sanitization.sh (LD_PRELOAD, LD_LIBRARY_PATH, DYLD_INSERT_LIBRARIES, PYTHONSTARTUP, NODE_OPTIONS, PERL5OPT) (Apache-2.0)
 - `secrets/secrets-glob-deny-created-after-start` — nolabs-ai/nono crates/nono-cli/tests/glob_deny_after_start_run.rs (double_star / single_star / deleted_and_recreated) (Apache-2.0)
+- `secrets/secrets-read-allow-symlink-hop-no-widen-by-omission` — nolabs-ai/nono crates/nono-cli/tests/symlink_hop_run.rs + symlink_hop_run_linux.rs (Apache-2.0)
 - `secrets/secrets-read-allow-symlink-hop-no-widen` — nolabs-ai/nono crates/nono-cli/tests/symlink_hop_run.rs + symlink_hop_run_linux.rs (Apache-2.0)
+- `secrets/secrets-read-deny-dir-listing-by-omission` — nolabs-ai/nono tests/integration/test_sensitive_paths.sh ("~/.ssh directory blocked": ls ~/.ssh/) and test_gpu.sh (READ_DIR vs READ_FILE caveat) (Apache-2.0)
 - `secrets/secrets-read-deny-dir-listing` — nolabs-ai/nono tests/integration/test_sensitive_paths.sh ("~/.ssh directory blocked": ls ~/.ssh/) and test_gpu.sh (READ_DIR vs READ_FILE caveat) (Apache-2.0)
+- `secrets/secrets-read-deny-on-symlinked-path-by-omission` — nolabs-ai/nono crates/nono-cli/tests/symlink_hop_run.rs (symlinked grants must resolve) (Apache-2.0)
 - `secrets/secrets-read-deny-on-symlinked-path` — nolabs-ai/nono crates/nono-cli/tests/symlink_hop_run.rs (symlinked grants must resolve) (Apache-2.0)
+- `secrets/secrets-read-deny-path-special-chars-by-omission` — nolabs-ai/nono tests/integration/test_edge_cases.sh ("path with spaces", "dashes and underscores") (Apache-2.0)
 - `secrets/secrets-read-deny-path-special-chars` — nolabs-ai/nono tests/integration/test_edge_cases.sh ("path with spaces", "dashes and underscores") (Apache-2.0)
+- `secrets/secrets-read-deny-prefix-collision-by-omission` — nolabs-ai/nono tests/integration/test_sensitive_paths.sh ("Path Collision Bypass Prevention": ~/.sshfoo, ~/.awsbackup) (Apache-2.0)
 - `secrets/secrets-read-deny-prefix-collision` — nolabs-ai/nono tests/integration/test_sensitive_paths.sh ("Path Collision Bypass Prevention": ~/.sshfoo, ~/.awsbackup) (Apache-2.0)
 
 ### codex
@@ -180,6 +206,7 @@ be measured in a later run, with its results published the same way.
 - `filesystem/filesystem-writable-root-replace` — openai/codex codex-rs/sandboxing/src/seatbelt_tests.rs::seatbelt_prevents_writable_root_replacement and ::seatbelt_prevents_writable_directory_root_rename (Apache-2.0)
 - `filesystem/filesystem-write-deny-symlink-alias` — openai/codex codex-rs/exec/tests/suite/seatbelt.rs::seatbelt_blocks_protected_reads_and_writes_through_symlink_aliases (Apache-2.0)
 - `filesystem/filesystem-write-deny-truncate-unlink` — openai/codex codex-rs/exec/tests/suite/seatbelt.rs::seatbelt_deny_globs_block_writes_to_existing_and_new_files (Apache-2.0)
+- `filesystem/filesystem-write-reallow-inside-deny-by-omission` — openai/codex codex-rs/linux-sandbox/tests/suite/sandbox.rs::sandbox_reenables_writable_subpaths_under_unreadable_parents (Apache-2.0)
 - `filesystem/filesystem-write-reallow-inside-deny` — openai/codex codex-rs/linux-sandbox/tests/suite/sandbox.rs::sandbox_reenables_writable_subpaths_under_unreadable_parents (Apache-2.0)
 - `ipc/ipc-unix-socket-alias` — openai/codex codex-rs/sandboxing/src/seatbelt_daemon_socket_tests.rs::daemon_sockets_are_denied_despite_network_and_tmp_write_grants (Apache-2.0)
 - `isolation/isolation-no-capabilities` — openai/codex codex-rs/linux-sandbox/tests/suite/sandbox.rs::sandboxed_command_has_no_effective_or_permitted_capabilities; idea also in containers/bubblewrap tests/test-run.sh "we have no caps" (LGPL-2.1-or-later, idea only)
@@ -194,3 +221,13 @@ be measured in a later run, with its results published the same way.
 ### bubblewrap
 
 - `isolation/isolation-no-nested-userns` — containers/bubblewrap tests/test-run.sh "can disable nested userns" (LGPL-2.1-or-later, idea only)
+
+### OpenHands
+
+- `filesystem/fs-traversal-write-escape-dotdot` — OpenHands/software-agent-sdk tests/sdk/io/test_local_filestore_security.py::test_path_traversal_attacks_blocked (MIT)
+- `secrets/secrets-traversal-read-escape-dotdot` — OpenHands/software-agent-sdk tests/sdk/io/test_local_filestore_security.py::test_path_traversal_attacks_blocked (MIT)
+
+### Deno
+
+- `filesystem/filesystem-write-deny-survives-recursive-remove` — denoland/deno tests/specs/permission/read_partial_ancestor_of_deny (recursive_remove_blocked_by_denied_descendant) (MIT)
+- `secrets/secrets-read-deny-via-proc-self-root` — denoland/deno tests/specs/permission/special (GHSA-m87g-7g5m-wpx4, /proc/self/root) (MIT)

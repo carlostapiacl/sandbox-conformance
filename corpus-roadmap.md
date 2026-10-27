@@ -14,13 +14,18 @@ WASM runtime whose test asserts an error code or exit status, not a host effect;
 **vm** = a micro-VM / VM where only a sub-layer (jailer, seccomp) fits; **ast** =
 an in-process language restriction with no disk/wire effect.
 
-## Harvested (168 contracts)
+## Harvested (corpus v1.1: 196 contracts)
+
+Counts include the by-omission variants, under the source of the contract they vary.
+[`SOURCES.md`](SOURCES.md) lists every contract.
 
 | source | license | contracts | notes |
 |---|---|---|---|
-| [anthropics/sandbox-runtime](https://github.com/anthropics/sandbox-runtime) | Apache-2.0 | 114 | `test/sandbox/*` |
-| [nolabs-ai/nono](https://github.com/nolabs-ai/nono) | Apache-2.0 | 32 | Rust tests + integration shell |
-| [openai/codex](https://github.com/openai/codex) | Apache-2.0 | 17 | `codex-rs/linux-sandbox`, sandboxing tests |
+| [anthropics/sandbox-runtime](https://github.com/anthropics/sandbox-runtime) | Apache-2.0 | 135 | `test/sandbox/*` |
+| [nolabs-ai/nono](https://github.com/nolabs-ai/nono) | Apache-2.0 | 38 | Rust tests + integration shell |
+| [openai/codex](https://github.com/openai/codex) | Apache-2.0 | 18 | `codex-rs/linux-sandbox`, sandboxing tests |
+| [denoland/deno](https://github.com/denoland/deno) | MIT | 2 | `tests/specs/permission/`; the rest test Deno's own runtime APIs (imports, Node compatibility, prompts), not a guarantee an OS sandbox gives |
+| [OpenHands/software-agent-sdk](https://github.com/OpenHands/software-agent-sdk) | MIT | 2 | path traversal |
 | [containers/bubblewrap](https://github.com/containers/bubblewrap) | LGPL-2.1+ | 1 | one guarantee so far; `tests/` has more |
 
 ## Candidates (assessed 2026-10-15, read-only)
@@ -33,14 +38,13 @@ Ranked by harvestable count × agent-relevance × permissive license.
 |---|---|---|---|---|---|
 | [OpenHands/software-agent-sdk](https://github.com/OpenHands/software-agent-sdk) | MIT | `tests/agent_server/`, `tests/sdk/`, `tests/cross/` | many | fits | **partially harvested** (2: path traversal). Remaining agent-specific tests — credential broker, secret masking/scope, `.mcp.json` planting, approval — are agent-framework controls, not sandbox FS/net policy, so they are out of scope for a sandbox-conformance contract (noted here, not harvested) |
 | [superradcompany/microsandbox](https://github.com/superradcompany/microsandbox) | Apache-2.0 | `crates/filesystem/.../tests/`, `crates/network/` | ~60 | vm (tests fit) | FS confinement (symlink-root escape refused), **egress with a real exfil assert**, port allowlist, readonly, quota |
-| [denoland/deno](https://github.com/denoland/deno) | MIT | `tests/specs/permission/` (+ unit) | 32 | fits | deny-by-default FS/net/env/spawn; `.jsonc` args + `.out` effect ≈ a ready-made contract; deny-beats-allow; resolved-IP vs hostname |
 | [vndee/llm-sandbox](https://github.com/vndee/llm-sandbox) | MIT | `tests/` | ~several | fits | agent-domain: reverse-shell / `/etc/passwd` reads flagged, tar-traversal (symlink/device members), install-arg allowlist, MCP |
 
 ### Tier 2 — strong, or capability-model asserts
 
 | project | license | test suite | ~count | fit | fills |
 |---|---|---|---|---|---|
-| [torvalds/linux landlock selftests](https://github.com/torvalds/linux/tree/master/tools/testing/selftests/landlock) | GPL-2.0 | `tools/testing/selftests/landlock/` | ~10 files | fits | the primitive codex/srt use; **ipc abstract unix sockets + signals** (gaps today), net ports, ptrace, rename/link across domains |
+| [torvalds/linux landlock selftests](https://github.com/torvalds/linux/tree/master/tools/testing/selftests/landlock) | GPL-2.0 | `tools/testing/selftests/landlock/` | ~10 files | fits | the primitive codex/srt use. Abstract unix sockets, signals and ptrace are covered already (2026-10-26); left: rename/link across domains, net ports |
 | [opencontainers/runc](https://github.com/opencontainers/runc) | Apache-2.0 | `tests/integration/` | 61 `.bats` | fits | masked/readonly paths, seccomp errno, capabilities bounding, userns, rlimits — asserts on real effect |
 | [youki-dev/youki](https://github.com/youki-dev/youki) | Apache-2.0 | `tests/contest/.../tests/` | 59 | fits | `prohibit_symlink`, masked/readonly paths, capabilities, seccomp-notify, hooks lifecycle |
 | [google/gvisor](https://github.com/google/gvisor) | Apache-2.0 | `test/syscalls/linux/` | ~290–338 | fits | deepest syscall corpus: chroot, capabilities, bind/connect, iptables egress, rename; framed as POSIX parity, no agent cases |
@@ -71,10 +75,9 @@ Ranked by harvestable count × agent-relevance × permissive license.
 ## Priorities
 
 1. **OpenHands** — the only source of agent-specific guarantees (`.mcp.json` / git-hook / shell-rc planting, credential broker handoff, approval/trust, secret masking). This dimension is essentially uncovered everywhere else; systematizing it is what would make the lab distinctive. Verified test files include `tests/agent_server/test_credential_binding.py`, `tests/cross/test_secret_masking_tool_payloads.py`, `tests/agent_server/test_mcp_router.py`, the planting fixture `tests/fixtures/plugins/agent_plugins/wrong-locations/.mcp.json`, and `tests/sdk/io/test_local_filestore_security.py`.
-2. **runc + youki + landlock selftests** — near 1:1 mapping, permissive licenses, and they fill the ipc-abstract-socket and signal gaps.
-3. **Deno** — 32 near-ready contracts; the permission model is the closest analogue to an agent approval/deny handoff.
-4. **microsandbox + llm-sandbox** — FS confinement, egress with real exfil asserts, and more agent-domain attacks.
-5. **gVisor + wasi-testsuite** — deep veins to mine later; gVisor is heavy (C++ syscall conformance), WASI asserts are capability error codes.
+2. **microsandbox + llm-sandbox** — FS confinement, egress with real exfil asserts, and more agent-domain attacks.
+3. **runc + youki + landlock selftests**: near 1:1 mapping and permissive licenses, but most of what they add (abstract sockets, signals, ptrace, masked `/proc` paths) is covered already; what is left is rename/link across domains, net ports and rlimits.
+4. **gVisor + wasi-testsuite** — deep veins to mine later; gVisor is heavy (C++ syscall conformance), WASI asserts are capability error codes.
 
 ## A note on assert fidelity
 

@@ -33,3 +33,4 @@ recorded. Re-measuring on a newer version is a new run.
 | version | date | contracts | what |
 |---|---|---|---|
 | [1.0](v1.0.json) | 2026-10-26 | 194 | the first version: the contracts of every run up to 2026-10-26, with the six masked-credential contracts. The runs before it ran contracts that have changed since and are listed as *pre-1.0* |
+| [1.1](v1.1.json) | 2026-10-26 | 196 | two contracts from Deno's permission tests: a read-deny reached through `/proc/self/root`, and a write-denied directory that must survive `rm -rf` of its parent |
