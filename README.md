@@ -38,8 +38,8 @@ sandbox on the same host. Otherwise a "blocked" result would prove nothing.
 
 ## Status
 
-The corpus is versioned: **v1.0** (2026-10-26) is 194 contracts, harvested from the
-public test suites of sandbox-runtime, nono, Codex, bubblewrap and OpenHands, with
+The corpus is versioned: **v1.1** (2026-10-26) is 196 contracts, harvested from the
+public test suites of sandbox-runtime, nono, Codex, Deno, bubblewrap and OpenHands, with
 by-omission variants and six masked-credential contracts, each re-expressed in the
 neutral format and credited in [`SOURCES.md`](SOURCES.md) and its own `source` field.
 Which contracts a version is, and when it moves, is in [`corpus/`](corpus/README.md).

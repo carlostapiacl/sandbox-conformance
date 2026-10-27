@@ -7,8 +7,8 @@ git hook. This lab turns each of those claims into a **contract** anyone can run
 against each sandbox through the same procedure, and publishes the result with the
 evidence of every case.
 
-**Corpus v1.0**: 194 contracts, re-expressed from the public test suites of
-sandbox-runtime, nono, Codex, bubblewrap and OpenHands, each crediting its source.
+**Corpus v1.1**: 196 contracts, re-expressed from the public test suites of
+sandbox-runtime, nono, Codex, Deno, bubblewrap and OpenHands, each crediting its source.
 Measured so far: sandbox-runtime, nono, Codex CLI, landrun and TartarOS, on Linux.
 
 ## Where to start
