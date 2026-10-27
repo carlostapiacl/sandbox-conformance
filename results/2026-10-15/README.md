@@ -41,7 +41,7 @@ them changes one.
 | escaped | 22 | 33 | 24 |
 |---|---|---|---|
 | on a default (no `[policy]` field asks for it) | 14 | 27 | 20 |
-| on a configured rule, with a note (not a breach, kernel, or documented) | 4 | 1 | 1 |
+| on a configured rule, with a note (not a breach, kernel, or documented) | 3 | 1 | 1 |
 | on a configured rule, confirmed | 5 | 5 | 3 |
 
 Some codex results are held while a coordinated-disclosure process is open; they are not shown and will be published when the vendor authorizes it.
