@@ -53,6 +53,6 @@ trust-handoff protection, no namespaces or seccomp for process isolation and
 lifecycle), **8 are Landlock limits** (TCP-only network; abstract-socket and
 signal scoping need ABI 6, not this host's ABI 4), and **5 are confirmed**:
 `chmod`/`utime`/`xattr` on a readable file outside the roots, and a writable root
-that is a symlink pointing out — the same two gaps nono has. The 109 unsupported
+that is a symlink pointing out — the same two gaps nono has. The 104 unsupported
 are the cost of being allow-only: every read/write-deny contract and the
 by-omission variants. Full notes in the run's `review.json`.
