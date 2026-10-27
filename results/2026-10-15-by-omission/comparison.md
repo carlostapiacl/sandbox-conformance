@@ -22,41 +22,43 @@ Marks after a result:
 
 | result | sandbox-runtime | nono | codex |
 |---|---|---|---|
-| contained | 21 | 17 | 18 |
-| escaped | 0 | 4 | 0 |
-| control-broke | 0 | 0 | 3 |
-| unsupported | 0 | 0 | 0 |
-| vacuous | 1 | 1 | 1 |
-| needs-feature | 0 | 0 | 0 |
-| not-applicable | 0 | 0 | 0 |
-| invalid-contract | 0 | 0 | 0 |
+| contained | reported | 17 | 18 |
+| escaped | reported | 4 | 0 |
+| control-broke | reported | 0 | 3 |
+| unsupported | reported | 0 | 0 |
+| vacuous | reported | 1 | 1 |
+| needs-feature | reported | 0 | 0 |
+| not-applicable | reported | 0 | 0 |
+| invalid-contract | reported | 0 | 0 |
+
+sandbox-runtime: findings reported to the vendor; its results will be published once they are fixed.
 
 ## Per contract
 
 | contract | category | sandbox-runtime | nono | codex |
 |---|---|---|---|---|
-| `filesystem-rm-under-read-deny-ancestor-by-omission` | filesystem | contained | contained | contained |
-| `filesystem-write-reallow-inside-deny-by-omission` | filesystem | contained | contained | contained |
-| `read-allow-writable-carveout-trailing-slash-by-omission` | filesystem | contained | contained | contained |
-| `ipc-unix-socket-in-denied-dir-by-omission` | ipc | contained | escaped | contained |
-| `isolation-root-mount-bypass-denied-by-omission` | isolation | vacuous | vacuous | vacuous |
-| `read-allow-symlink-into-deny-by-omission` | secrets | contained | escaped | control-broke‡ |
-| `read-allow-symlink-no-reopen-by-omission` | secrets | contained | escaped | control-broke‡ |
-| `read-deny-alt-spelling-by-omission` | secrets | contained | contained | contained |
-| `read-deny-around-nested-root-by-omission` | secrets | contained | contained | contained |
-| `read-deny-backslash-name-by-omission` | secrets | contained | contained | contained |
-| `read-deny-bracket-dir-by-omission` | secrets | contained | contained | contained |
-| `read-deny-given-via-symlink-by-omission` | secrets | contained | contained | contained |
-| `read-deny-link-dotdot-by-omission` | secrets | contained | contained | contained |
-| `read-deny-not-reopened-by-nested-writable-by-omission` | secrets | contained | contained | contained |
-| `secrets-read-allow-symlink-hop-no-widen-by-omission` | secrets | contained | contained | contained |
-| `secrets-read-allow-symlink-into-deny-by-omission` | secrets | contained | escaped | control-broke‡ |
-| `secrets-read-deny-dir-listing-by-omission` | secrets | contained | contained | contained |
-| `secrets-read-deny-on-symlinked-path-by-omission` | secrets | contained | contained | contained |
-| `secrets-read-deny-path-special-chars-by-omission` | secrets | contained | contained | contained |
-| `secrets-read-deny-prefix-collision-by-omission` | secrets | contained | contained | contained |
-| `secrets-read-deny-single-file-by-omission` | secrets | contained | contained | contained |
-| `secrets-read-deny-symlinked-entry-by-omission` | secrets | contained | contained | contained |
+| `filesystem-rm-under-read-deny-ancestor-by-omission` | filesystem | reported | contained | contained |
+| `filesystem-write-reallow-inside-deny-by-omission` | filesystem | reported | contained | contained |
+| `read-allow-writable-carveout-trailing-slash-by-omission` | filesystem | reported | contained | contained |
+| `ipc-unix-socket-in-denied-dir-by-omission` | ipc | reported | escaped | contained |
+| `isolation-root-mount-bypass-denied-by-omission` | isolation | reported | vacuous | vacuous |
+| `read-allow-symlink-into-deny-by-omission` | secrets | reported | escaped | control-broke‡ |
+| `read-allow-symlink-no-reopen-by-omission` | secrets | reported | escaped | control-broke‡ |
+| `read-deny-alt-spelling-by-omission` | secrets | reported | contained | contained |
+| `read-deny-around-nested-root-by-omission` | secrets | reported | contained | contained |
+| `read-deny-backslash-name-by-omission` | secrets | reported | contained | contained |
+| `read-deny-bracket-dir-by-omission` | secrets | reported | contained | contained |
+| `read-deny-given-via-symlink-by-omission` | secrets | reported | contained | contained |
+| `read-deny-link-dotdot-by-omission` | secrets | reported | contained | contained |
+| `read-deny-not-reopened-by-nested-writable-by-omission` | secrets | reported | contained | contained |
+| `secrets-read-allow-symlink-hop-no-widen-by-omission` | secrets | reported | contained | contained |
+| `secrets-read-allow-symlink-into-deny-by-omission` | secrets | reported | escaped | control-broke‡ |
+| `secrets-read-deny-dir-listing-by-omission` | secrets | reported | contained | contained |
+| `secrets-read-deny-on-symlinked-path-by-omission` | secrets | reported | contained | contained |
+| `secrets-read-deny-path-special-chars-by-omission` | secrets | reported | contained | contained |
+| `secrets-read-deny-prefix-collision-by-omission` | secrets | reported | contained | contained |
+| `secrets-read-deny-single-file-by-omission` | secrets | reported | contained | contained |
+| `secrets-read-deny-symlinked-entry-by-omission` | secrets | reported | contained | contained |
 
 Not applicable on this host for every sandbox (0): .
 
@@ -64,17 +66,13 @@ Not applicable on this host for every sandbox (0): .
 
 I read the raw output (`raw/`) for every result other than `contained`. These notes explain a result; they never change it.
 
-### sandbox-runtime
-
-- `isolation-root-mount-bypass-denied-by-omission` (vacuous): mount fails in the container without a sandbox; nothing is proven here.
-
 ### nono
 
 - `ipc-unix-socket-in-denied-dir-by-omission` (documented): Landlock does not mediate connect() to a pathname unix socket, so a socket in an ungranted directory stays reachable. This is the gap the original contract already documents; it holds in the granted model too.
 - `isolation-root-mount-bypass-denied-by-omission` (vacuous): mount operations fail in the container even without a sandbox (no CAP_SYS_ADMIN), so the attack proves nothing on this host.
-- `read-allow-symlink-into-deny-by-omission` (design): The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. srt grants the link name only and contains it; codex refuses to build the sandbox.
-- `read-allow-symlink-no-reopen-by-omission` (design): The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. srt grants the link name only and contains it; codex refuses to build the sandbox.
-- `secrets-read-allow-symlink-into-deny-by-omission` (design): The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. srt grants the link name only and contains it; codex refuses to build the sandbox.
+- `read-allow-symlink-into-deny-by-omission` (design): The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. codex refuses to build the sandbox.
+- `read-allow-symlink-no-reopen-by-omission` (design): The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. codex refuses to build the sandbox.
+- `secrets-read-allow-symlink-into-deny-by-omission` (design): The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. codex refuses to build the sandbox.
 
 ### codex
 

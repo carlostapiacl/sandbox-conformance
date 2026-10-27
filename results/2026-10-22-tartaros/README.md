@@ -35,7 +35,7 @@ Full table in [`comparison.md`](comparison.md); raw evidence in `raw/`.
 **The 3 escapes, by reading** ([`review.json`](review.json)):
 
 - `isolation-process-info-foreign` — *contract-assumption*: `/proc/1` is the run's own init
-  in its private PID namespace, the reading given to sandbox-runtime and Codex on 2026-10-21.
+  in its private PID namespace, the reading given to Codex on 2026-10-21.
 - `isolation-supervisor-proc-mem-denied` — *contract-assumption*: the environ read is the
   agent's own `sh`, PID 2 of the namespace; the supervisor has no `/proc` entry in it.
 - `trust-handoff-repo-created-in-run` — *documented*: a repository created during the run is
@@ -52,7 +52,9 @@ Same host, runner contracts and lab tools; one column measured a day later. Not 
 
 | result | sandbox-runtime 0.0.81 | nono 0.80.0 | codex 0.163.0 | landrun 0.1.17 | tartaros 0.1.0-alpha.10 |
 |---|---|---|---|---|---|
-| contained | 133 | 50 | 95 | 41 | 150 |
-| escaped | 14 | 37 | 24 | 42 | 3 |
-| control-broke | 1 | 5 | 29 | 1 | 0 |
-| unsupported | 18 | 75 | 18 | 83 | 13 |
+| contained | reported | 50 | 95 | 41 | 150 |
+| escaped | reported | 37 | 24 | 42 | 3 |
+| control-broke | reported | 5 | 29 | 1 | 0 |
+| unsupported | reported | 75 | 18 | 83 | 13 |
+
+sandbox-runtime: findings reported to the vendor; its results will be published once they are fixed.

@@ -14,14 +14,16 @@ anything on macOS or Windows.
 
 | result | sandbox-runtime | nono | codex |
 |---|---|---|---|
-| contained | 99 | 31 | 74 |
-| escaped | 22 | 33 | 24 |
-| control-broke | 4 | 6 | 27 |
-| unsupported (capability gap) | 18 | 78 | 18 |
-| vacuous | 8 | 7 | 8 |
-| needs-feature | 1 | 1 | 1 |
-| not applicable (macOS-only) | 10 | 10 | 10 |
-| not applicable (host has no GPU or cgroup delegation) | 2 | 2 | 2 |
+| contained | reported | 31 | 74 |
+| escaped | reported | 33 | 24 |
+| control-broke | reported | 6 | 27 |
+| unsupported (capability gap) | reported | 78 | 18 |
+| vacuous | reported | 7 | 8 |
+| needs-feature | reported | 1 | 1 |
+| not applicable (macOS-only) | reported | 10 | 10 |
+| not applicable (host has no GPU or cgroup delegation) | reported | 2 | 2 |
+
+sandbox-runtime: findings reported to the vendor; its results will be published once they are fixed.
 
 The escape totals mix two kinds of result. Some contracts test a rule the
 adapter configured, such as a read-deny or a write-deny. Others test something
@@ -38,11 +40,11 @@ kernel, or match a limitation the sandbox already documents. Those notes are in
 `review.json` and at the end of `comparison.md`. They explain results; none of
 them changes one.
 
-| escaped | 22 | 33 | 24 |
+| escaped | sandbox-runtime | nono 33 | codex 24 |
 |---|---|---|---|
-| on a default (no `[policy]` field asks for it) | 14 | 27 | 20 |
-| on a configured rule, with a note (not a breach, kernel, or documented) | 3 | 1 | 1 |
-| on a configured rule, confirmed | 5 | 5 | 3 |
+| on a default (no `[policy]` field asks for it) | reported | 27 | 20 |
+| on a configured rule, with a note (not a breach, kernel, or documented) | reported | 1 | 1 |
+| on a configured rule, confirmed | reported | 5 | 3 |
 
 Some codex results are held while a coordinated-disclosure process is open; they are not shown and will be published when the vendor authorizes it.
 
@@ -84,7 +86,7 @@ For each contract that applies to Linux, `runner/run.py` does the following:
 1. Baseline. Create a fresh `{root}` and the fixtures, then run the attack and the control with no sandbox, in the same container and as the same user. If the attack fails here, the contract is `vacuous` and proves nothing.
 2. Sandboxed run. Create a fresh `{root}` and the fixtures again, run the attack and then the control through the adapter, and check the `[assert]`.
 3. The baseline tells the lab how to recognise a successful attack. If the `[assert]` caught its effect on disk, I judge by that effect; otherwise I judge by the exit status. A read attack is the usual case for the second: the file it reads stays `unchanged`, so only the exit status shows that the read worked. Under the sandbox, any real effect counts as an escape. When an attack sets `expect_exit` and has no `[assert]`, the contract is checking that the sandbox reports the right status, and any other status is the failure.
-4. Commands run from the first writable root, which is where an agent would be working. sandbox-runtime derives some of its protections from the working directory, so this choice affects its results.
+4. Commands run from the first writable root, which is where an agent would be working.
 
 Each adapter (`runner/adapters/`) translates the neutral `[policy]` into its
 sandbox's own configuration, in the way that sandbox's documentation suggests

@@ -3,7 +3,7 @@
  "tartaros": {
   "isolation-process-info-foreign": [
    "contract-assumption",
-   "/proc/1 inside tartaros is the sandbox's own init in its private PID namespace, not a host process (the reading given to srt and codex)."
+   "/proc/1 inside tartaros is the sandbox's own init in its private PID namespace, not a host process (the reading given to codex)."
   ],
   "isolation-supervisor-proc-mem-denied": [
    "contract-assumption",

@@ -1,59 +1,5 @@
 {
  "_about": "Manual review of every non-contained result, after the run. It never changes a measured result; it says how to read it. kind: confirmed (the contract's failure, observed as described) | contract-assumption (the contract's success signal does not mean a breach for this sandbox's design) | kernel-dependent (needs a newer Landlock ABI than this host's 4) | documented (the sandbox documents this limitation) | interface (the sandbox works differently than the contract's control assumes).",
- "sandbox-runtime": {
-  "read-deny-link-dotdot": [
-   "confirmed",
-   "The deny is resolved lexically: here/up -> link/../file is folded to here/file, so here/file is denied (control fails) and the real target elsewhere/file is read (attack printed TOPSECRET)."
-  ],
-  "write-deny-dangling-link-target": [
-   "confirmed",
-   "Writing through the denied dangling link created its eventual target elsewhere/made."
-  ],
-  "write-deny-link-dotdot": [
-   "confirmed",
-   "srt hung until the runner's 60 s timeout (exit 137) for both attack and control; fails closed, but unusable."
-  ],
-  "read-deny-bracket-dir": [
-   "confirmed",
-   "srt exits before running anything: 'Invalid regular expression ... [user-id] ... Range out of order'. Fails closed."
-  ],
-  "network-egress-public-denied": [
-   "interface",
-   "A granted loopback port is reachable only through srt's proxy (measured: HTTP 200 with curl --noproxy ''). The control connects directly, and srt sets NO_PROXY=127.0.0.1, so it fails; the attack was contained."
-  ],
-  "network-local-bind-denied": [
-   "contract-assumption",
-   "The listener is bound inside srt's own empty network namespace, which no host process can reach; the contract's concern (an inbound channel from the host) does not arise. The control failed for the same proxy reason as network-egress-public-denied."
-  ],
-  "network-tcp-external-denied": [
-   "contract-assumption",
-   "The contract counts any error other than EPERM/EACCES as success. Under srt the process has no network interface at all (ENETUNREACH); nothing can leave the host."
-  ],
-  "isolation-process-info-foreign": [
-   "contract-assumption",
-   "/proc/1 inside srt is the sandbox's own init in its private PID namespace, not a host process."
-  ],
-  "network-other-socket-families-denied": [
-   "confirmed",
-   "AF_NETLINK/AF_VSOCK sockets can be created. In srt's empty network namespace netlink only sees that namespace; AF_VSOCK is not namespaced. Whether vsock reaches anything on this host: (por confirmar)."
-  ],
-  "network-vsock-denied": [
-   "confirmed",
-   "AF_VSOCK socket creation allowed; reachability on this host (por confirmar)."
-  ],
-  "isolation-vsock-socket-denied": [
-   "confirmed",
-   "Same as network-vsock-denied."
-  ],
-  "network-socket-domain-high-bits": [
-   "confirmed",
-   "Socket creation with high bits set in the domain argument is not refused by srt's filter (which targets AF_UNIX)."
-  ],
-  "secrets-env-loader-injection-inherit": [
-   "contract-assumption",
-   "The policy asks to inherit the launcher's whole environment, and the sandbox did exactly that (LD_PRELOAD/BASH_ENV passed). The contract's own comment calls stripping loader variables even under inherit-all a design decision still to be made, not an established guarantee."
-  ]
- },
  "nono": {
   "ipc-abstract-unix-socket": [
    "kernel-dependent",

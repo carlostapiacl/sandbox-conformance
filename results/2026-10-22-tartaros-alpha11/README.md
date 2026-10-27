@@ -59,7 +59,9 @@ mapping). Not a ranking.
 
 | result | sandbox-runtime 0.0.81 | nono 0.80.0 | codex 0.163.0 | landrun 0.1.17 | tartaros 0.1.0-alpha.11 |
 |---|---|---|---|---|---|
-| contained | 133 | 50 | 95 | 41 | 162 |
-| escaped | 14 | 37 | 24 | 42 | 3 |
-| control-broke | 1 | 5 | 29 | 1 | 0 |
-| unsupported | 18 | 75 | 18 | 83 | 0 |
+| contained | reported | 50 | 95 | 41 | 162 |
+| escaped | reported | 37 | 24 | 42 | 3 |
+| control-broke | reported | 5 | 29 | 1 | 0 |
+| unsupported | reported | 75 | 18 | 83 | 0 |
+
+sandbox-runtime: findings reported to the vendor; its results will be published once they are fixed.

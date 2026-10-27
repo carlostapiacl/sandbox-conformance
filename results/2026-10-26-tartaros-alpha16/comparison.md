@@ -22,14 +22,16 @@ Marks after a result:
 
 | result | sandbox-runtime | tartaros |
 |---|---|---|
-| contained | 6 | 168 |
-| escaped | 0 | 3 |
-| control-broke | 0 | 0 |
-| unsupported | 0 | 0 |
-| vacuous | 0 | 10 |
-| needs-feature | 0 | 1 |
-| not-applicable | 0 | 12 |
-| invalid-contract | 0 | 0 |
+| contained | reported | 168 |
+| escaped | reported | 3 |
+| control-broke | reported | 0 |
+| unsupported | reported | 0 |
+| vacuous | reported | 10 |
+| needs-feature | reported | 1 |
+| not-applicable | reported | 12 |
+| invalid-contract | reported | 0 |
+
+sandbox-runtime: findings reported to the vendor; its results will be published once they are fixed.
 
 ## Escapes by reading
 
@@ -37,14 +39,14 @@ What each `escaped` means on review (spec/verdicts.md §6). Only `confirmed` is 
 
 | reading | sandbox-runtime | tartaros |
 |---|---|---|
-| confirmed | 0 | 0 |
-| documented | 0 | 1 |
-| design | 0 | 0 |
-| platform-dependent | 0 | 0 |
-| contract-assumption | 0 | 2 |
-| interface | 0 | 0 |
-| pending | 0 | 0 |
-| **escaped** | 0 | 3 |
+| confirmed | reported | 0 |
+| documented | reported | 1 |
+| design | reported | 0 |
+| platform-dependent | reported | 0 |
+| contract-assumption | reported | 2 |
+| interface | reported | 0 |
+| pending | reported | 0 |
+| **escaped** | reported | 3 |
 
 ## Per contract
 
@@ -56,12 +58,12 @@ What each `escaped` means on review (spec/verdicts.md §6). Only `confirmed` is 
 | `credentials-broker-no-redirect-follow` | credentials |  | contained |
 | `credentials-broker-prefix-scope` | credentials |  | contained |
 | `credentials-broker-token-not-forwarded` | credentials |  | contained |
-| `credentials-masked-env-agent-holds-sentinel` | credentials | contained | contained |
-| `credentials-masked-env-body-scoped` | credentials | contained | contained |
-| `credentials-masked-env-no-laundering` | credentials | contained | contained |
-| `credentials-masked-env-not-in-process-records` | credentials | contained | contained |
-| `credentials-masked-env-not-sent-to-other-host` | credentials | contained | contained |
-| `credentials-masked-env-plain-http-not-swapped` | credentials | contained | contained |
+| `credentials-masked-env-agent-holds-sentinel` | credentials | reported | contained |
+| `credentials-masked-env-body-scoped` | credentials | reported | contained |
+| `credentials-masked-env-no-laundering` | credentials | reported | contained |
+| `credentials-masked-env-not-in-process-records` | credentials | reported | contained |
+| `credentials-masked-env-not-sent-to-other-host` | credentials | reported | contained |
+| `credentials-masked-env-plain-http-not-swapped` | credentials | reported | contained |
 | `filesystem-chmod-outside` | filesystem |  | contained |
 | `filesystem-command-cwd-not-writable` | filesystem |  | contained |
 | `filesystem-deny-ancestor-rename` | filesystem |  | contained |
@@ -253,7 +255,7 @@ I read the raw output (`raw/`) for every result other than `contained`. These no
 
 ### tartaros
 
-- `isolation-process-info-foreign` (contract-assumption): /proc/1 inside tartaros is the sandbox's own init in its private PID namespace, not a host process (the reading given to srt and codex).
+- `isolation-process-info-foreign` (contract-assumption): /proc/1 inside tartaros is the sandbox's own init in its private PID namespace, not a host process (the reading given to codex).
 - `isolation-supervisor-proc-mem-denied` (contract-assumption): The process whose environ is read is the agent's own sh (PID 2 of the run's PID namespace), the parent of the attacking python; the supervisor is outside the namespace and has no /proc entry in it.
 - `trust-handoff-repo-created-in-run` (documented): tartaros documents that on Linux a repository the agent creates during the run is not protected: its hooks are new and Landlock matches inodes that exist at launch (docs/limits.md).
 
