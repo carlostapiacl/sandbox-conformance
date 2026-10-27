@@ -5,7 +5,7 @@ PID and network namespaces. A seccomp filter blocks AF_UNIX socket creation
 and io_uring, and HTTP and SOCKS proxies on the host decide which domains can
 be reached.
 
-We measured version 0.0.79 (`@anthropic-ai/sandbox-runtime`), built from
+I measured version 0.0.79 (`@anthropic-ai/sandbox-runtime`), built from
 commit `d9aac2098351ca17f3743fbaf6ecbd0051b7e00e` (tag v0.0.79), and on
 2026-10-21 version 0.0.81 (commit `c40cf14a65d025e3cd27f071f13a73c12b3b1f92`,
 tag v0.0.81), licensed Apache-2.0. Which results changed in which version:
@@ -82,7 +82,7 @@ Linux 6.8. Method and host details are in [the run's README](../results/2026-10-
 | 99 | 22 | 4 | 18 | 8 | 1 | 12 |
 
 srt was set up as strictly as its documentation allows. Out of 22 escapes, 5
-broke a rule we had configured.
+broke a rule I had configured.
 
 ### Escapes on configured rules
 
@@ -103,7 +103,7 @@ whose target does not exist yet. Appending to `here/new` created
 `network-vsock-denied`, `network-socket-domain-high-bits`). The agent could
 create AF_NETLINK and AF_VSOCK sockets, and sockets with high bits set in the
 domain argument. Inside srt's empty network namespace, netlink only sees that
-namespace. AF_VSOCK is not tied to a network namespace. We did not check
+namespace. AF_VSOCK is not tied to a network namespace. I did not check
 whether it reaches anything on this host (por confirmar).
 
 ### Escapes with a note
@@ -135,12 +135,12 @@ whether it reaches anything on this host (por confirmar).
 
 `control-broke` (4):
 
-- `write-deny-link-dotdot`: srt hung until our 60-second timeout when a write-deny was spelled with `..` through symlinks.
+- `write-deny-link-dotdot`: srt hung until the lab's 60-second timeout when a write-deny was spelled with `..` through symlinks.
 - `read-deny-bracket-dir`: srt quit before running anything because a directory named `[user-id]` produced an invalid regular expression.
-- A loopback port allowed by the policy is reachable only through srt's proxy. With `curl --noproxy ''` we got HTTP 200. The contract's control connects directly, and srt sets `NO_PROXY=127.0.0.1`, so the direct connection fails.
+- A loopback port allowed by the policy is reachable only through srt's proxy. With `curl --noproxy ''` I got HTTP 200. The contract's control connects directly, and srt sets `NO_PROXY=127.0.0.1`, so the direct connection fails.
 - One contract replaces a writable root during the run.
 
-We also saw something the counts do not include. srt finds the files it
+I also saw something the counts do not include. srt finds the files it
 protects by scanning from the working directory. With the working directory
 one level above the writable root, `.git/config` inside the root could be
 written. With the working directory inside the root, it was protected. That is
@@ -153,7 +153,7 @@ with a `run --write DIR` command line, which srt does not have.
 
 Checked on 2026-10-15 against srt's public pull requests and commits, and
 again on 2026-10-21. Most of what the 0.0.79 run found on configured rules was
-already fixed on `main` when we measured it. Those fixes shipped in v0.0.80, and
+already fixed on `main` when I measured it. Those fixes shipped in v0.0.80, and
 the 2026-10-21 run measured them in 0.0.81.
 
 | finding | fixed in | reference |
