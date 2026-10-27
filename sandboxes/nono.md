@@ -4,7 +4,7 @@ The sandbox from nolabs-ai. On Linux it combines Landlock, which covers the
 filesystem and, from ABI 4, TCP, with a seccomp filter for networking,
 `no_new_privs`, and a supervising parent process.
 
-We measured version 0.80.0 from the release asset
+I measured version 0.80.0 from the release asset
 `nono-v0.80.0-x86_64-unknown-linux-gnu.tar.gz`, after checking it against the
 release's SHA256SUMS. The source commit is
 `8bb041356d48f771a221e58c98d9b1ff442e76fe` (tag v0.80.0), and the license is
@@ -41,8 +41,8 @@ contracts assume a model where everything is readable unless denied. nono
 works the other way round: you grant the workspace and nothing else, and a
 secret stays protected because nobody granted it. In that setup most of these
 secrets would never be readable. The contracts' `[policy]` does not describe
-that setup, so we did not measure it in this run. A version of the read-deny
-contracts written for that model would let us measure it.
+that setup, so I did not measure it in this run. A version of the read-deny
+contracts written for that model would let me measure it.
 
 ## Measured in nono's own model (by-omission run)
 
@@ -71,7 +71,7 @@ Linux 6.8, Landlock ABI 4. Method and host details are in [the run's README](../
 | 31 | 33 | 6 | 74 | 7 | 1 | 12 |
 
 nono was set up as strictly as its documentation allows. Out of 33 escapes, 5
-broke a rule we had configured.
+broke a rule I had configured.
 
 ### Escapes on configured rules
 
@@ -103,7 +103,7 @@ sandbox to refuse such a root. nono accepts it.
   - On this kernel nothing stops the agent from signalling processes outside the sandbox (`isolation-signal-host-process`, `§`: needs Landlock ABI 6).
 - Lifecycle (3).
   - A child process left in the background kept running after the command exited.
-  - After we sent SIGTERM to the launcher, the processes inside the sandbox kept running and wrote the marker file.
+  - After I sent SIGTERM to the launcher, the processes inside the sandbox kept running and wrote the marker file.
   - `.mcp.json` is not protected.
 
 These are differences of defaults. Of the three groups, the lifecycle results
@@ -119,5 +119,5 @@ deserve the closest look.
 - Three controls that need system calls nono's network filter blocks: io_uring, an unusual socket domain, and multiprocessing IPC.
 
 `needs-feature` (1): `lifecycle-effect-log-tamper`. nono keeps an audit trail,
-but we did not connect the adapter to the place where a run's log is stored
+but I did not connect the adapter to the place where a run's log is stored
 (por confirmar).

@@ -76,7 +76,7 @@ def main(src, dst):
     }
     L = [f"# Comparison, run of {run_date}", "",
          "Each cell is the result of one contract against one sandbox, set up through its adapter "
-         "(`runner/adapters/`) as strictly as that sandbox's documentation allows. Only results we "
+         "(`runner/adapters/`) as strictly as that sandbox's documentation allows. Only results I "
          "actually measured are listed. The host and the method are described in `README.md`.", "",
          "| result | meaning |", "|---|---|",
          "| `contained` | the attack failed and the legitimate control still worked |",
@@ -136,7 +136,7 @@ def main(src, dst):
     na = [i for i in ids if all(by[n].get(i, {}).get("result") == "not-applicable" for n in runs)]
     L += ["", f"Not applicable on this host for every sandbox ({len(na)}): " + ", ".join(f"`{i}`" for i in na) + "."]
     L += ["", "## Review notes", "",
-          "We read the raw output (`raw/`) for every result other than `contained`. These notes explain "
+          "I read the raw output (`raw/`) for every result other than `contained`. These notes explain "
           "a result; they never change it.", ""]
     for n in runs:
         notes = review.get(n, {})

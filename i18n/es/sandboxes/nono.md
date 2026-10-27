@@ -4,7 +4,7 @@ El sandbox de nolabs-ai. En Linux combina Landlock, que cubre el
 filesystem y, desde la ABI 4, TCP, con un filtro seccomp para la red,
 `no_new_privs` y un proceso padre que supervisa.
 
-Medimos la versión 0.80.0 desde el asset del release
+Medí la versión 0.80.0 desde el asset del release
 `nono-v0.80.0-x86_64-unknown-linux-gnu.tar.gz`, después de verificarlo contra el
 SHA256SUMS del release. El commit de origen es
 `8bb041356d48f771a221e58c98d9b1ff442e76fe` (tag v0.80.0), y la licencia es
@@ -41,8 +41,8 @@ contracts suponen un modelo donde todo se puede leer salvo que esté negado. non
 funciona al revés: das acceso al workspace y a nada más, y un
 secreto queda protegido porque nadie le dio acceso. Con esa configuración la mayoría de estos
 secretos nunca se podrían leer. La `[policy]` de los contracts no describe
-esa configuración, así que no la medimos en este run. Una versión de los
-contracts de read-deny escrita para ese modelo nos permitiría medirla.
+esa configuración, así que no la medí en este run. Una versión de los
+contracts de read-deny escrita para ese modelo me permitiría medirla.
 
 ## Medido en el modelo propio de nono (run by-omission) {#measured-in-nonos-own-model-by-omission-run}
 
@@ -71,7 +71,7 @@ Linux 6.8, Landlock ABI 4. El método y los detalles del host están en [el READ
 | 31 | 33 | 6 | 74 | 7 | 1 | 12 |
 
 nono se configuró tan estricto como su documentación lo permite. De 33 escapes, 5
-rompieron una regla que habíamos configurado.
+rompieron una regla que yo había configurado.
 
 ### Escapes en reglas configuradas {#escapes-on-configured-rules}
 
@@ -103,7 +103,7 @@ sandbox rechace un root así. nono lo acepta.
   - En este kernel nada impide que el agente envíe señales a procesos fuera del sandbox (`isolation-signal-host-process`, `§`: necesita Landlock ABI 6).
 - Ciclo de vida (3).
   - Un proceso hijo dejado en segundo plano siguió corriendo después de que el comando terminó.
-  - Después de que le enviamos SIGTERM al launcher, los procesos dentro del sandbox siguieron corriendo y escribieron el archivo marcador.
+  - Después de que le envié SIGTERM al launcher, los procesos dentro del sandbox siguieron corriendo y escribieron el archivo marcador.
   - `.mcp.json` no está protegido.
 
 Son diferencias de valores por defecto. De los tres grupos, los resultados de ciclo de vida
@@ -119,5 +119,5 @@ son los que merecen la mirada más atenta.
 - Tres controls que necesitan llamadas al sistema que el filtro de red de nono bloquea: io_uring, un dominio de socket poco común y la IPC de multiprocessing.
 
 `needs-feature` (1): `lifecycle-effect-log-tamper`. nono mantiene un registro de auditoría,
-pero no conectamos el adapter al lugar donde se guarda el log de un run
+pero no conecté el adapter al lugar donde se guarda el log de un run
 (por confirmar).

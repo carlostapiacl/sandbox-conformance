@@ -57,7 +57,7 @@ results on every contract. So any difference below comes from the new versions.
 | `seccomp-clone-newuser-denied` | escaped | contained | [#588](https://github.com/anthropics/sandbox-runtime/pull/588), [#617](https://github.com/anthropics/sandbox-runtime/pull/617) |
 
 The first six are findings of the [2026-10-15 run](../2026-10-15/README.md) that were
-already fixed on `main` when we measured 0.0.79; this is the first release measured with
+already fixed on `main` when I measured 0.0.79; this is the first release measured with
 them. No escape is new, so every remaining escape keeps its reading.
 
 **codex-cli 0.163.0: no result changes.**

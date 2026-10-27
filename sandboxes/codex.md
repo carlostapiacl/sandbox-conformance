@@ -5,11 +5,11 @@ PID, IPC and network namespaces, sets `no_new_privs`, and applies a seccomp
 filter that blocks io_uring and ptrace, plus network system calls when the
 network is restricted.
 
-We measured codex-cli 0.162.1 (`@openai/codex`), built from commit
+I measured codex-cli 0.162.1 (`@openai/codex`), built from commit
 `092d3acd6bec3e3a14bdc7e7a2810ab628ab759d` (tag rust-v0.162.1), and on
 2026-10-21 codex-cli 0.163.0 (commit `83086188ae0614bd882818ff1aa23f3194962012`,
 tag rust-v0.163.0), licensed Apache-2.0. Which results changed in which
-version: [`results/versions.md`](../results/versions.md). We called its native `x86_64-unknown-linux-musl` binary directly
+version: [`results/versions.md`](../results/versions.md). I called its native `x86_64-unknown-linux-musl` binary directly
 instead of the npm launcher. That launcher is a Node script, and a contract
 that sets `NODE_OPTIONS` in the environment would break the launcher before the
 sandbox ever started. The adapter is [`runner/adapters/codex.py`](../runner/adapters/codex.py).
@@ -61,7 +61,7 @@ Linux 6.8. Method and host details are in [the run's README](../results/2026-10-
 | 74 | 24 | 27 | 18 | 8 | 1 | 12 |
 
 codex was set up as strictly as its documentation allows. Of the escapes, three
-broke a rule we had configured.
+broke a rule I had configured.
 
 ### Escapes on configured rules
 
@@ -89,7 +89,7 @@ sandbox to refuse such a root. codex accepts it.
   - `/proc/1` is readable. It belongs to the sandbox's own init, not to a host process.
 - Lifecycle (2).
   - `.mcp.json` is not on codex's list of protected files.
-  - After we sent SIGTERM to `codex sandbox`, the processes inside kept running and wrote the marker file.
+  - After I sent SIGTERM to `codex sandbox`, the processes inside kept running and wrote the marker file.
 
 ### Other results
 

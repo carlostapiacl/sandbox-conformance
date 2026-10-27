@@ -251,7 +251,7 @@ def pid_alive(pid):
     try:
         os.kill(int(pid), 0)
         if not os.path.isdir("/proc/self"):
-            return True  # no procfs (macOS): signal 0 is all we can ask
+            return True  # no procfs (macOS): signal 0 is all there is to ask
         with open(f"/proc/{pid}/stat") as fh:
             return fh.read().split()[2] != "Z"
     except (OSError, ValueError):
