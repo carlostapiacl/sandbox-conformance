@@ -23,6 +23,12 @@
  "counts": {
   "contained": 6
  },
+ "corpus": {
+  "version": "1.0",
+  "ran": 6,
+  "of": 194,
+  "whole": false
+ },
  "contracts": [
   {
    "id": "credentials-masked-env-agent-holds-sentinel",

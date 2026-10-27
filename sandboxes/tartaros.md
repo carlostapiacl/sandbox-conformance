@@ -4,10 +4,11 @@ A local sandbox for AI coding agents. On Linux it stacks Landlock (filesystem an
 TCP rules), seccomp, a private PID, mount and (with no network grant) network
 namespace, cgroup limits and an egress proxy for domain allow-lists.
 
-> **Conflict of interest.** TartarOS is maintained by the author of this lab. Its
+> **Conflict of interest.** TartarOS and this lab started together, in October 2026,
+> by the same author: TartarOS is where the variants the lab finds are tried, one by
+> one, to see whether each can be mitigated, and the lab measures whether it was. Its
 > adapter was written before its first measurement, goes through the same review as
-> the others, and every result file says so (`conflict_of_interest`). Counts are not
-> a ranking (spec §8).
+> the others, and every result file says so (`conflict_of_interest`).
 
 - Measured: **0.1.0-alpha.16**, built from the tagged commit `f245b8fd`
   (`github.com/carlostapiacl/tartaros`, Apache-2.0) in a pinned `rust:1.99.1` image
