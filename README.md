@@ -57,6 +57,18 @@ projects' test suites. TartarOS is measured like the others since the
 
 Contracts and adapters are welcome: see [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
+Reports I sent to each vendor's security program, as of 2026-10-27:
+
+| sandbox | reported | still open |
+|---|---:|---:|
+| sandbox-runtime | 4 | 1 |
+| codex | 2 | 1 |
+| nono | 0 | 0 |
+| landrun | 0 | 0 |
+
+The details of an open report are not published until the vendor fixes it
+([`SECURITY.md`](SECURITY.md)).
+
 First results in: [`results/2026-10-15/`](results/2026-10-15/README.md) measures
 sandbox-runtime 0.0.79, nono 0.80.0 and Codex CLI 0.162.1 on Linux (kernel 6.8),
 with the [runner and adapters](runner/README.md) that produced them and a page per
