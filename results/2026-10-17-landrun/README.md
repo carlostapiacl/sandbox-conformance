@@ -26,7 +26,7 @@ ungranted directory (1, `documented`).
 **Contracts.** Measuring this surfaced nine contracts that named `{root}/work` as a writable
 root without creating it; landrun refuses a grant on a missing path. They were fixed after the
 `corpus-2026-10-16` freeze and the change is logged in
-[`contracts/CHANGES.md`](../../contracts/CHANGES.md). Re-measured with the fix, nono and
+[`contracts/CHANGES.md`](../../contracts/CHANGES.md). Re-measured with the fix, srt, nono and
 codex give the same result on those nine as on 2026-10-16.
 
 Runner and contracts: the commit recorded in `raw/landrun.full.json` as `runner_commit`.

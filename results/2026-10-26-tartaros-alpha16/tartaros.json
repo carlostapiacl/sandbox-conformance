@@ -1323,7 +1323,7 @@
    "control_exit": 0,
    "review": {
     "kind": "contract-assumption",
-    "note": "/proc/1 inside tartaros is the sandbox's own init in its private PID namespace, not a host process (the reading given to codex)."
+    "note": "/proc/1 inside tartaros is the sandbox's own init in its private PID namespace, not a host process (the reading given to srt and codex)."
    }
   },
   {

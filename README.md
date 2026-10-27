@@ -74,8 +74,7 @@ omit the secret), so nono is measured where the neutral model only returned
 
 The [2026-10-16 run](results/2026-10-16/README.md) is the first judged by
 [`spec/verdicts.md`](spec/verdicts.md). The old runner reproduces the 2026-10-15
-results on a fresh host; the new one changes three results of nono, Codex and landrun,
-each traced to a cause. The lab
+results on a fresh host; the new one changes five, each traced to a cause. The lab
 tests itself against [reference sandboxes](runner/reference/README.md) whose behaviour
 is known (`python3 -m unittest discover -s runner/tests`).
 
@@ -91,10 +90,8 @@ on the same host, contracts and lab tools as the 2026-10-21 run. The
 [reference broker](spec/format.md#the-broker-table) with no defences, the same for every
 sandbox.
 The [2026-10-26 run](results/2026-10-26-tartaros-alpha16/README.md) measures TartarOS
-0.1.0-alpha.16 on the whole corpus, with six new masked-credential contracts: it contains
-all six on Linux.
-
-sandbox-runtime: findings reported to the vendor; its results will be published once they are fixed.
+0.1.0-alpha.16 and sandbox-runtime 0.0.81 on six new masked-credential contracts: both
+contain all six on Linux.
 
 Next: macOS runs and [more corpora](corpus-roadmap.md) harvested from other sandboxes' test suites.
 

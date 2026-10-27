@@ -20,28 +20,45 @@ profile `strict` (§7). 188 contracts.
 
 | result | sandbox-runtime | nono | codex | landrun |
 |---|---|---|---|---|
-| contained | reported | 50 | 95 | 41 |
-| escaped | reported | 37 | 24 | 42 |
-| control-broke | reported | 5 | 29 | 1 |
-| unsupported | reported | 75 | 18 | 83 |
-| vacuous | reported | 8 | 9 | 7 |
-| needs-feature | reported | 1 | 1 | 2 |
-| not applicable | reported | 12 | 12 | 12 |
-| inconclusive, invalid-baseline, harness-error | reported | 0 | 0 | 0 |
-
-sandbox-runtime: findings reported to the vendor; its results will be published once they are fixed.
+| contained | 133 | 50 | 95 | 41 |
+| escaped | 14 | 37 | 24 | 42 |
+| control-broke | 1 | 5 | 29 | 1 |
+| unsupported | 18 | 75 | 18 | 83 |
+| vacuous | 9 | 8 | 9 | 7 |
+| needs-feature | 1 | 1 | 1 | 2 |
+| not applicable | 12 | 12 | 12 | 12 |
+| inconclusive, invalid-baseline, harness-error | 0 | 0 | 0 | 0 |
 
 These counts are not a ranking (§8). The full table, escapes by reading and the
 review notes are in [`comparison.md`](comparison.md).
 
 ## What changed, and why
 
-**Reproduction first.** On this host and runner commit, the previous codex release was
-measured again before the new one: codex-cli 0.162.1
+**Reproduction first.** On this host and runner commit, the previous versions were
+measured again before the new ones: sandbox-runtime 0.0.79 and codex-cli 0.162.1
 (`baseline/`, recorded as runner commit `db62659`, the parent of `e10476f`: the runner
-and the contracts are the same files, only the Dockerfile pins differ). codex-cli 0.162.1 gives the 2026-10-16 result on every contract (188 of 188). nono and
+and the contracts are the same files, only the Dockerfile pins differ). Both give the 2026-10-16 result on every contract (376 of 376). nono and
 landrun, measured again at the same versions, give their 2026-10-16 and 2026-10-17
 results on every contract. So any difference below comes from the new versions.
+
+**sandbox-runtime 0.0.81: 9 results change, all to contained.** Each change shipped in
+0.0.80; 0.0.81 changes only Windows.
+
+| contract | 0.0.79 | 0.0.81 | upstream change |
+|---|---|---|---|
+| `read-deny-link-dotdot` | escaped | contained | [#689](https://github.com/anthropics/sandbox-runtime/pull/689) |
+| `write-deny-dangling-link-target` | escaped | contained | [#689](https://github.com/anthropics/sandbox-runtime/pull/689) |
+| `write-deny-link-dotdot` | control-broke | contained | probably [#689](https://github.com/anthropics/sandbox-runtime/pull/689) (por confirmar) |
+| `read-deny-bracket-dir` | control-broke | contained | [#687](https://github.com/anthropics/sandbox-runtime/pull/687) |
+| `network-vsock-denied` | escaped | contained | [#691](https://github.com/anthropics/sandbox-runtime/pull/691) |
+| `isolation-vsock-socket-denied` | escaped | contained | [#691](https://github.com/anthropics/sandbox-runtime/pull/691) |
+| `isolation-clone-newns-denied` | escaped | contained | [#588](https://github.com/anthropics/sandbox-runtime/pull/588), [#617](https://github.com/anthropics/sandbox-runtime/pull/617) |
+| `isolation-no-nested-userns` | escaped | contained | [#588](https://github.com/anthropics/sandbox-runtime/pull/588), [#617](https://github.com/anthropics/sandbox-runtime/pull/617) |
+| `seccomp-clone-newuser-denied` | escaped | contained | [#588](https://github.com/anthropics/sandbox-runtime/pull/588), [#617](https://github.com/anthropics/sandbox-runtime/pull/617) |
+
+The first six are findings of the [2026-10-15 run](../2026-10-15/README.md) that were
+already fixed on `main` when I measured 0.0.79; this is the first release measured with
+them. No escape is new, so every remaining escape keeps its reading.
 
 **codex-cli 0.163.0: no result changes.**
 
@@ -53,7 +70,7 @@ What changed in each version, for every sandbox measured more than once, is kept
 The adapters of sandbox-runtime and codex recorded the commit of the release tag they
 were first written for, whatever version ran: the files of this run first said
 `d9aac20…` (v0.0.79) and `092d3ac…` (rust-v0.162.1). The `commit` field of
-the result files and their `raw/` files was corrected after the run
+`sandbox-runtime.json`, `codex.json` and their `raw/` files was corrected after the run
 to the commits of tags v0.0.81 (`c40cf14…`) and rust-v0.163.0 (`8308618…`), and says so in
 `commit_note`. The version, `artifact_sha256` and every result are as measured. The
 adapters now take the commit from a table per version and record `unknown commit` for a
@@ -74,8 +91,8 @@ by [`runner/lab.sh`](../../runner/lab.sh) with the options recorded in every fil
 
 - `<sandbox>.json`: one line per contract, no raw output, with its review note when it has one.
 - `raw/<sandbox>.full.json`: everything the runner captured, per phase.
-- `baseline/<sandbox>.full.json`: codex-cli 0.162.1 on this host and runner commit, the
-  reproduction above.
+- `baseline/<sandbox>.full.json`: sandbox-runtime 0.0.79 and codex-cli 0.162.1 on this
+  host and runner commit, the reproduction above.
 - `comparison.md`: contract by sandbox, measured results only.
 - `review.json`: the readings (§6), carried over from the latest earlier run of each
   sandbox only where the result and the contract file are identical.

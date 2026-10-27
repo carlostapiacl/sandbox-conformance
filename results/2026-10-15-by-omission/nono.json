@@ -113,7 +113,7 @@
    "control_exit": 0,
    "review": {
     "kind": "design",
-    "note": "The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. codex refuses to build the sandbox."
+    "note": "The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. srt grants the link name only and contains it; codex refuses to build the sandbox."
    }
   },
   {
@@ -131,7 +131,7 @@
    "control_exit": 0,
    "review": {
     "kind": "design",
-    "note": "The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. codex refuses to build the sandbox."
+    "note": "The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. srt grants the link name only and contains it; codex refuses to build the sandbox."
    }
   },
   {
@@ -261,7 +261,7 @@
    "control_exit": 0,
    "review": {
     "kind": "design",
-    "note": "The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. codex refuses to build the sandbox."
+    "note": "The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. srt grants the link name only and contains it; codex refuses to build the sandbox."
    }
   },
   {

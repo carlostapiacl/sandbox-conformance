@@ -8,7 +8,8 @@ be reached.
 I measured version 0.0.79 (`@anthropic-ai/sandbox-runtime`), built from
 commit `d9aac2098351ca17f3743fbaf6ecbd0051b7e00e` (tag v0.0.79), and on
 2026-10-21 version 0.0.81 (commit `c40cf14a65d025e3cd27f071f13a73c12b3b1f92`,
-tag v0.0.81), licensed Apache-2.0. The adapter is
+tag v0.0.81), licensed Apache-2.0. Which results changed in which version:
+[`results/versions.md`](../results/versions.md). The adapter is
 [`runner/adapters/sandbox_runtime.py`](../runner/adapters/sandbox_runtime.py).
 It writes a settings file and runs `srt --settings <file> -c <cmd>`.
 
@@ -39,6 +40,133 @@ The adapter passes paths exactly as the contract spells them, with trailing
 slashes, brackets, `..` and symlinks left in. How a sandbox reads those
 spellings is part of what is under test.
 
-## Results
+## Results of 0.0.81 (2026-10-21 run)
 
-sandbox-runtime: findings reported to the vendor; its results will be published once they are fixed.
+Same host, kernel, runner and contracts as the re-measure of 0.0.79 that the
+[run](../results/2026-10-21/README.md) starts with, which reproduced the
+2026-10-16 results exactly. So every change below comes from the new version.
+
+| contained | escaped | control-broke | unsupported | vacuous | needs-feature | n/a |
+|---|---|---|---|---|---|---|
+| 133 | 14 | 1 | 18 | 9 | 1 | 12 |
+
+Nine results changed from 0.0.79, all to **contained**. Every change landed in
+0.0.80; 0.0.81 changes only Windows.
+
+| contract | 0.0.79 | 0.0.81 | upstream change |
+|---|---|---|---|
+| `read-deny-link-dotdot` | escaped | contained | [#689](https://github.com/anthropics/sandbox-runtime/pull/689) |
+| `write-deny-dangling-link-target` | escaped | contained | [#689](https://github.com/anthropics/sandbox-runtime/pull/689) |
+| `write-deny-link-dotdot` | control-broke | contained | probably [#689](https://github.com/anthropics/sandbox-runtime/pull/689) (por confirmar) |
+| `read-deny-bracket-dir` | control-broke | contained | [#687](https://github.com/anthropics/sandbox-runtime/pull/687) |
+| `network-vsock-denied` | escaped | contained | [#691](https://github.com/anthropics/sandbox-runtime/pull/691) |
+| `isolation-vsock-socket-denied` | escaped | contained | [#691](https://github.com/anthropics/sandbox-runtime/pull/691) |
+| `isolation-clone-newns-denied` | escaped | contained | [#588](https://github.com/anthropics/sandbox-runtime/pull/588), [#617](https://github.com/anthropics/sandbox-runtime/pull/617) |
+| `isolation-no-nested-userns` | escaped | contained | [#588](https://github.com/anthropics/sandbox-runtime/pull/588), [#617](https://github.com/anthropics/sandbox-runtime/pull/617) |
+| `seccomp-clone-newuser-denied` | escaped | contained | [#588](https://github.com/anthropics/sandbox-runtime/pull/588), [#617](https://github.com/anthropics/sandbox-runtime/pull/617) |
+
+The 14 escapes left are the same contracts, with the same readings, as in
+0.0.79. The sections below describe 0.0.79.
+
+## Results of the 2026-10-15 run
+
+> **Re-measured on 2026-10-16** with the runner that implements [`spec/verdicts.md`](../spec/verdicts.md)
+> ([run](../results/2026-10-16/README.md)). Same version, same kernel; two results changed: `network-tcp-external-denied` is now **contained** (the contract now uses a witness server and the effect decides, instead of reading ENETUNREACH as an escape), and `filesystem-writable-root-replace` is now **contained** (its `control-broke` was a fault of the contract). Every
+> other result below is unchanged.
+
+
+Linux 6.8. Method and host details are in [the run's README](../results/2026-10-15/README.md).
+
+| contained | escaped | control-broke | unsupported | vacuous | needs-feature | n/a |
+|---|---|---|---|---|---|---|
+| 99 | 22 | 4 | 18 | 8 | 1 | 12 |
+
+srt was set up as strictly as its documentation allows. Out of 22 escapes, 5
+broke a rule I had configured.
+
+### Escapes on configured rules
+
+**A read-deny written through a symlink with `..` protects the wrong file**
+(`read-deny-link-dotdot`). The deny names `here/up`, a symlink to
+`link/../file`, where `here/link` points to `../elsewhere/in`. Following the
+links, `here/up` is `elsewhere/file`. srt removes the `..` from the text
+instead, and ends up at `here/file`. So it blocked `here/file`, the file the
+control needed, and the attack read `elsewhere/file`. The output was
+`TOPSECRET`.
+
+**Writing through a write-denied dangling link creates its target**
+(`write-deny-dangling-link-target`). The deny covers `here/new`, a symlink
+whose target does not exist yet. Appending to `here/new` created
+`elsewhere/made`.
+
+**Some socket families can still be opened** (`network-other-socket-families-denied`,
+`network-vsock-denied`, `network-socket-domain-high-bits`). The agent could
+create AF_NETLINK and AF_VSOCK sockets, and sockets with high bits set in the
+domain argument. Inside srt's empty network namespace, netlink only sees that
+namespace. AF_VSOCK is not tied to a network namespace. I did not check
+whether it reaches anything on this host (por confirmar).
+
+### Escapes with a note
+
+- `network-tcp-external-denied`: the contract treats any error other than EPERM as a successful attack. Under srt the process has no network interface at all and gets ENETUNREACH. Nothing leaves the host.
+- `network-local-bind-denied`: the agent can open a listening socket, but it lives inside srt's own empty network namespace, where nothing on the host can reach it.
+- `secrets-env-loader-injection-inherit`: the policy asked to inherit the whole environment, and srt did. The contract's own comment calls stripping `LD_PRELOAD` in that case a design decision still to be made.
+
+### Escapes on defaults
+
+14 escapes concern behaviour no `[policy]` field asks for:
+
+- Isolation (7).
+  - srt's filter covers AF_UNIX and io_uring, not namespace creation, so the agent could create nested user and mount namespaces (3 contracts).
+  - The PID 1 of the agent's namespace runs without seccomp. srt documents it as a reaper that cannot be ptraced.
+  - The agent could open an AF_VSOCK socket.
+  - When srt is launched as root, the command keeps its effective capabilities.
+  - `/proc/1` is readable. It belongs to the sandbox's own init, not to a host process.
+- Trust handoff (7). srt protects a fixed list of files (`.git/hooks`, `.git/config`, `.claude/commands`, shell rc files, among others), found by a scan of limited depth. The contracts that got through used:
+  - a `gitdir:` pointer;
+  - a worktree gitfile;
+  - a repository created during the run;
+  - a nested repository listed in `.gitignore`;
+  - a hooks directory given as a writable root;
+  - a symlinked `.claude`;
+  - a symlink cycle.
+
+### Other results
+
+`control-broke` (4):
+
+- `write-deny-link-dotdot`: srt hung until the lab's 60-second timeout when a write-deny was spelled with `..` through symlinks.
+- `read-deny-bracket-dir`: srt quit before running anything because a directory named `[user-id]` produced an invalid regular expression.
+- A loopback port allowed by the policy is reachable only through srt's proxy. With `curl --noproxy ''` I got HTTP 200. The contract's control connects directly, and srt sets `NO_PROXY=127.0.0.1`, so the direct connection fails.
+- One contract replaces a writable root during the run.
+
+I also saw something the counts do not include. srt finds the files it
+protects by scanning from the working directory. With the working directory
+one level above the writable root, `.git/config` inside the root could be
+written. With the working directory inside the root, it was protected. That is
+why the run starts every command inside the writable root.
+
+`needs-feature` (1): `isolation-nested-relaunch-no-widen` assumes a launcher
+with a `run --write DIR` command line, which srt does not have.
+
+## Upstream status
+
+Checked on 2026-10-15 against srt's public pull requests and commits, and
+again on 2026-10-21. Most of what the 0.0.79 run found on configured rules was
+already fixed on `main` when I measured it. Those fixes shipped in v0.0.80, and
+the 2026-10-21 run measured them in 0.0.81.
+
+| finding | fixed in | reference |
+|---|---|---|
+| read-deny through a symlink with `..` resolved lexically | v0.0.80; contained in 0.0.81 | [#689](https://github.com/anthropics/sandbox-runtime/pull/689) |
+| write through a denied dangling link creates its target | v0.0.80; contained in 0.0.81 | [#689](https://github.com/anthropics/sandbox-runtime/pull/689) |
+| hang on a write-deny spelled with `..` | v0.0.80 (which change, por confirmar); contained in 0.0.81 | [#689](https://github.com/anthropics/sandbox-runtime/pull/689) |
+| `[user-id]` directory stops the sandbox from starting | v0.0.80; contained in 0.0.81 | [#687](https://github.com/anthropics/sandbox-runtime/pull/687) |
+| AF_VSOCK sockets can be created | v0.0.80; contained in 0.0.81 | [#691](https://github.com/anthropics/sandbox-runtime/pull/691) |
+| AF_NETLINK sockets can be created | not planned (documented deny list) | [#691](https://github.com/anthropics/sandbox-runtime/pull/691) |
+| protected names scanned from the working directory | open | [#518](https://github.com/anthropics/sandbox-runtime/pull/518), [#569](https://github.com/anthropics/sandbox-runtime/pull/569) |
+| nested repositories, gitdir pointers, worktree gitfiles | open | [#569](https://github.com/anthropics/sandbox-runtime/pull/569) |
+| symlinked `.claude` directory | open | [#531](https://github.com/anthropics/sandbox-runtime/pull/531) |
+
+The full table, with the contracts behind each row, is at the end of
+[`comparison.md`](../results/2026-10-15/comparison.md).

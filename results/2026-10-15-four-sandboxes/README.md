@@ -18,15 +18,13 @@ columns come from one run.
 
 | result | sandbox-runtime | nono | codex | landrun |
 |---|---|---|---|---|
-| contained | reported | 48 | 92 | 22 |
-| escaped | reported | 37 | 24 | 38 |
-| control-broke | reported | 6 | 30 | 2 |
-| unsupported | reported | 74 | 18 | 104 |
-| vacuous | reported | 8 | 9 | 6 |
-| needs-feature | reported | 1 | 1 | 2 |
-| not applicable | reported | 12 | 12 | 12 |
-
-sandbox-runtime: findings reported to the vendor; its results will be published once they are fixed.
+| contained | 120 | 48 | 92 | 22 |
+| escaped | 22 | 37 | 24 | 38 |
+| control-broke | 4 | 6 | 30 | 2 |
+| unsupported | 18 | 74 | 18 | 104 |
+| vacuous | 9 | 8 | 9 | 6 |
+| needs-feature | 1 | 1 | 1 | 2 |
+| not applicable | 12 | 12 | 12 | 12 |
 
 These counts are not a ranking. The full table is in [`comparison.md`](comparison.md);
 every non-contained result was checked against the raw output and the notes are
@@ -62,6 +60,7 @@ spelled with `..` that landrun refuses to turn into a Landlock ruleset.
 
 ## Reading the four together
 
+- **sandbox-runtime** stays the broadest (124 contained): read-everywhere-then-deny plus bubblewrap namespaces and a seccomp layer cover filesystem, network and much isolation.
 - **codex** fails closed (30 control-broke): it refuses to build the sandbox for symlinked / absent / glob deny paths rather than enforce them loosely.
 - **nono** and **landrun** are both allow-only (Landlock), so they show many `unsupported` in the neutral read model; nono adds a credential proxy, process and network machinery on top, so it holds more than bare landrun. The [by-omission run](../2026-10-15-by-omission/README.md) measures nono's read model where this neutral model only returns `unsupported`.
 

@@ -1,5 +1,103 @@
 {
  "_about": "Readings of the 2026-10-16 run (spec/verdicts.md §6). A reading of the 2026-10-15 four-sandbox run is carried over only where this run's result for the same contract and sandbox is identical; kernel-dependent is renamed platform-dependent, and readings of kind vacuous are dropped (the result already says it). Results that changed are explained in README.md. Readings of the escapes on default guarantees (no policy field asks for them) were added on 2026-10-17, from each sandbox page's analysis: confirmed where the sandbox itself claims the protection, design where it does not.",
+ "sandbox-runtime": {
+  "isolation-clone-newns-denied": [
+   "design",
+   "srt's seccomp filter targets AF_UNIX socket creation and io_uring, not namespace creation; it does not claim to block nested namespaces."
+  ],
+  "isolation-no-effective-caps": [
+   "design",
+   "launched as root, srt does not drop the command's effective capabilities; it does not claim to."
+  ],
+  "isolation-no-nested-userns": [
+   "design",
+   "srt's seccomp filter targets AF_UNIX socket creation and io_uring, not namespace creation; it does not claim to block nested namespaces."
+  ],
+  "isolation-pid1-reaper-filtered": [
+   "documented",
+   "srt documents PID 1 of the agent's namespace as a reaper that runs without the seccomp filter and cannot be ptraced."
+  ],
+  "isolation-process-info-foreign": [
+   "contract-assumption",
+   "/proc/1 inside srt is the sandbox's own init in its private PID namespace, not a host process."
+  ],
+  "isolation-vsock-socket-denied": [
+   "confirmed",
+   "Same as network-vsock-denied."
+  ],
+  "network-egress-public-denied": [
+   "interface",
+   "A granted loopback port is reachable only through srt's proxy (measured: HTTP 200 with curl --noproxy ''). The control connects directly, and srt sets NO_PROXY=127.0.0.1, so it fails; the attack was contained."
+  ],
+  "network-local-bind-denied": [
+   "contract-assumption",
+   "The listener is bound inside srt's own empty network namespace, which no host process can reach; the contract's concern (an inbound channel from the host) does not arise. The control failed for the same proxy reason as network-egress-public-denied."
+  ],
+  "network-other-socket-families-denied": [
+   "confirmed",
+   "AF_NETLINK/AF_VSOCK sockets can be created. In srt's empty network namespace netlink only sees that namespace; AF_VSOCK is not namespaced. Whether vsock reaches anything on this host: (por confirmar)."
+  ],
+  "network-socket-domain-high-bits": [
+   "confirmed",
+   "Socket creation with high bits set in the domain argument is not refused by srt's filter (which targets AF_UNIX)."
+  ],
+  "network-vsock-denied": [
+   "confirmed",
+   "AF_VSOCK socket creation allowed; reachability on this host (por confirmar)."
+  ],
+  "read-deny-bracket-dir": [
+   "confirmed",
+   "srt exits before running anything: 'Invalid regular expression ... [user-id] ... Range out of order'. Fails closed."
+  ],
+  "read-deny-link-dotdot": [
+   "confirmed",
+   "The deny is resolved lexically: here/up -> link/../file is folded to here/file, so here/file is denied (control fails) and the real target elsewhere/file is read (attack printed TOPSECRET)."
+  ],
+  "seccomp-clone-newuser-denied": [
+   "design",
+   "srt's seccomp filter targets AF_UNIX socket creation and io_uring, not namespace creation; it does not claim to block nested namespaces."
+  ],
+  "secrets-env-loader-injection-inherit": [
+   "contract-assumption",
+   "The policy asks to inherit the launcher's whole environment, and the sandbox did exactly that (LD_PRELOAD/BASH_ENV passed). The contract's own comment calls stripping loader variables even under inherit-all a design decision still to be made, not an established guarantee."
+  ],
+  "trust-handoff-claude-symlink-cycle": [
+   "confirmed",
+   "srt protects a fixed list of trust-handoff files (.git/hooks, .git/config, .claude/commands, shell rc files, among others), found by a scan of limited depth; this layout got past it."
+  ],
+  "trust-handoff-gitdir-pointer": [
+   "confirmed",
+   "srt protects a fixed list of trust-handoff files (.git/hooks, .git/config, .claude/commands, shell rc files, among others), found by a scan of limited depth; this layout got past it."
+  ],
+  "trust-handoff-gitignored-repo": [
+   "confirmed",
+   "srt protects a fixed list of trust-handoff files (.git/hooks, .git/config, .claude/commands, shell rc files, among others), found by a scan of limited depth; this layout got past it."
+  ],
+  "trust-handoff-repo-created-in-run": [
+   "confirmed",
+   "srt protects a fixed list of trust-handoff files (.git/hooks, .git/config, .claude/commands, shell rc files, among others), found by a scan of limited depth; this layout got past it."
+  ],
+  "trust-handoff-root-inside-hooks": [
+   "confirmed",
+   "srt protects a fixed list of trust-handoff files (.git/hooks, .git/config, .claude/commands, shell rc files, among others), found by a scan of limited depth; this layout got past it."
+  ],
+  "trust-handoff-symlinked-claude-dir": [
+   "confirmed",
+   "srt protects a fixed list of trust-handoff files (.git/hooks, .git/config, .claude/commands, shell rc files, among others), found by a scan of limited depth; this layout got past it."
+  ],
+  "trust-handoff-worktree-gitfile": [
+   "confirmed",
+   "srt protects a fixed list of trust-handoff files (.git/hooks, .git/config, .claude/commands, shell rc files, among others), found by a scan of limited depth; this layout got past it."
+  ],
+  "write-deny-dangling-link-target": [
+   "confirmed",
+   "Writing through the denied dangling link created its eventual target elsewhere/made."
+  ],
+  "write-deny-link-dotdot": [
+   "confirmed",
+   "srt hung until the runner's 60 s timeout (exit 137) for both attack and control; fails closed, but unusable."
+  ]
+ },
  "nono": {
   "filesystem-chmod-outside": [
    "confirmed",
@@ -67,11 +165,11 @@
   ],
   "read-allow-symlink-into-deny-by-omission": [
    "design",
-   "The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. codex refuses to build the sandbox."
+   "The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. srt grants the link name only and contains it; codex refuses to build the sandbox."
   ],
   "read-allow-symlink-no-reopen-by-omission": [
    "design",
-   "The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. codex refuses to build the sandbox."
+   "The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. srt grants the link name only and contains it; codex refuses to build the sandbox."
   ],
   "seccomp-clone-newuser-denied": [
    "design",
@@ -79,7 +177,7 @@
   ],
   "secrets-read-allow-symlink-into-deny-by-omission": [
    "design",
-   "The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. codex refuses to build the sandbox."
+   "The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. srt grants the link name only and contains it; codex refuses to build the sandbox."
   ],
   "trust-handoff-claude-agents": [
    "design",

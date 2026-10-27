@@ -155,10 +155,6 @@ def results_page():
         L.append(f"| [{r['date']}]({github('results/' + r['run'])}) | {r['sandbox']} | {r['version']} | {r['host']} | "
                  f"{r['corpus']} | {r['verdicts']} | " + " | ".join(cells) + f" | {r['other']} |")
     if LANG == "es":
-        L += ["", "sandbox-runtime: hallazgos reportados al vendor; sus resultados se publican cuando estén corregidos."]
-    else:
-        L += ["", "sandbox-runtime: findings reported to the vendor; its results will be published once they are fixed."]
-    if LANG == "es":
         L += ["", "*pre-1.0*: el run corrió contracts que cambiaron antes de que el corpus tuviera versiones. Sus",
               "resultados quedan como se publicaron, y [Qué cambió por versión](versions.md) compara los runs en",
               "los contracts que comparten sin cambios."]

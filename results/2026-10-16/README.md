@@ -20,16 +20,14 @@ the code of the 2026-10-15 runs.
 
 | result | sandbox-runtime | nono | codex | landrun |
 |---|---|---|---|---|
-| contained | reported | 50 | 95 | 24 |
-| escaped | reported | 37 | 24 | 38 |
-| control-broke | reported | 5 | 29 | 1 |
-| unsupported | reported | 75 | 18 | 105 |
-| vacuous | reported | 8 | 9 | 6 |
-| needs-feature | reported | 1 | 1 | 2 |
-| not applicable | reported | 12 | 12 | 12 |
-| inconclusive, invalid-baseline, harness-error | reported | 0 | 0 | 0 |
-
-sandbox-runtime: findings reported to the vendor; its results will be published once they are fixed.
+| contained | 124 | 50 | 95 | 24 |
+| escaped | 21 | 37 | 24 | 38 |
+| control-broke | 3 | 5 | 29 | 1 |
+| unsupported | 18 | 75 | 18 | 105 |
+| vacuous | 9 | 8 | 9 | 6 |
+| needs-feature | 1 | 1 | 1 | 2 |
+| not applicable | 12 | 12 | 12 | 12 |
+| inconclusive, invalid-baseline, harness-error | 0 | 0 | 0 | 0 |
 
 These counts are not a ranking (§8). Every escape has a reading (`comparison.md`, "Escapes by
 reading"): `confirmed` counts guarantees a sandbox **claims** and did not hold, so a sandbox that
@@ -40,21 +38,22 @@ of its own.
 ## What changed, and why
 
 **Reproduction first.** With the old runner, this host gives the same result as the
-2026-10-15 run for every contract both runs measured, in nono, codex and landrun (558 of 558
+2026-10-15 run for every contract both runs measured, in all four sandboxes (744 of 744
 comparable cells). The only additions are the
 two OpenHands contracts, which the 2026-10-15 run did not include. So any difference below
 comes from the runner and the contracts, not from the host.
 
-**Then the new runner: 3 results change, each traced to a cause.**
+**Then the new runner: 5 results change, each traced to a cause.**
 
 | contract | sandbox | 2026-10-15 | 2026-10-16 | cause |
 |---|---|---|---|---|
-| `filesystem-writable-root-replace` | nono, codex, landrun | control-broke | contained | the contract's control wrote below `work/src`, which the attack may legitimately empty; the control now writes to the writable root itself. The 2026-10-15 `control-broke` results were a fault of the contract. |
+| `filesystem-writable-root-replace` | all four | control-broke | contained | the contract's control wrote below `work/src`, which the attack may legitimately empty; the control now writes to the writable root itself. The 2026-10-15 `control-broke` results were a fault of the contract. |
+| `network-tcp-external-denied` | sandbox-runtime | escaped (‡) | contained | the contract decided by errno and read "no network interface" (ENETUNREACH) as an escape; it now uses a witness server on the host's own address, and the witness received nothing. |
 
 Contracts that changed without changing a result:
 
 - `isolation-clone-newns-denied`: its script turned a child killed by a signal into a
-  success. With that fixed, nono and codex still escape: those two
+  success. With that fixed, sandbox-runtime, nono and codex still escape: those three
   2026-10-15 results are confirmed.
 - 26 Python attacks now exit 3 when blocked and declare `blocked_exit = [3]`, so a crash
   cannot read as a block. No result changed: none of them crashed.

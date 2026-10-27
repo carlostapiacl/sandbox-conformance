@@ -35,12 +35,10 @@ express, counted as that.
 
 | result | sandbox-runtime | nono | codex |
 |---|---|---|---|
-| contained | reported | 17 | 18 |
-| escaped | reported | 4 | 0 |
-| control-broke | reported | 0 | 3 |
-| vacuous | reported | 1 | 1 |
-
-sandbox-runtime: findings reported to the vendor; its results will be published once they are fixed.
+| contained | 21 | 17 | 18 |
+| escaped | 0 | 4 | 0 |
+| control-broke | 0 | 0 | 3 |
+| vacuous | 1 | 1 | 1 |
 
 Every non-contained result was checked by hand against the raw output; the notes
 are in `review.json` and at the end of [`comparison.md`](comparison.md).
@@ -62,16 +60,18 @@ nono holds 17 of the 22 read guarantees once they are stated in its model. The
 4 escapes are honest and specific:
 
 - `ipc-unix-socket-in-denied-dir` — Landlock does not mediate `connect()` to a pathname unix socket, so a socket in an ungranted directory stays reachable. The original contract already documents this gap; it holds here too.
-- `read-allow-symlink-into-deny`, `read-allow-symlink-no-reopen`, `secrets-read-allow-symlink-into-deny` — the granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (its documented Path Resolution), so granting the link grants its target and the secret is read. codex refuses to build the sandbox (control-broke).
+- `read-allow-symlink-into-deny`, `read-allow-symlink-no-reopen`, `secrets-read-allow-symlink-into-deny` — the granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (its documented Path Resolution), so granting the link grants its target and the secret is read. sandbox-runtime grants the link name only and contains these; codex refuses to build the sandbox (control-broke).
 
 The 1 vacuous is `isolation-root-mount-bypass-denied`: mount operations fail in
 the container even without a sandbox (no `CAP_SYS_ADMIN`), so the attack proves
 nothing on this host.
 
-## codex in the granted model
+## sandbox-runtime and codex in the granted model
 
-codex can express the granted model, so it stays contained where it was:
+Both can express the granted model, so they stay contained where they were. Two
+things stand out:
 
+- **sandbox-runtime**: 21 contained, 1 vacuous (the mount test). In the neutral model two of these same originals had escaped (`read-deny-link-dotdot`, a lexical `..` resolution, fixed upstream in `main`); stated in the granted model they are contained, because the secret is simply never granted.
 - **codex**: 18 contained, 3 control-broke, 1 vacuous. The 3 control-broke are the symlink-grant cases, where codex refuses to build the sandbox rather than resolve a read grant through a symlink — it fails closed (the attack is stopped, and so is the control).
 
 ## Files

@@ -1,5 +1,119 @@
 {
  "_about": "Upstream status of what this run found, checked on 2026-10-15. Public items link the project's own issue, PR or commit. Items marked \"reported privately\" were sent to the vendor's private security program and are confidential until the vendor authorizes disclosure: no links or details are given here. Nothing in this file changes a measured result. Some codex findings are held under coordinated disclosure and are not listed here.",
+ "sandbox-runtime": [
+  {
+   "finding": "A read-deny spelled through a symlink with `..` is resolved lexically",
+   "contracts": [
+    "read-deny-link-dotdot"
+   ],
+   "status": "fixed",
+   "refs": [
+    "https://github.com/anthropics/sandbox-runtime/pull/689"
+   ],
+   "fixed_in": "main 48a08dc (merged 2026-10-14, after v0.0.79; no release yet)"
+  },
+  {
+   "finding": "Writing through a write-denied dangling link creates its target",
+   "contracts": [
+    "write-deny-dangling-link-target"
+   ],
+   "status": "fixed",
+   "refs": [
+    "https://github.com/anthropics/sandbox-runtime/pull/689"
+   ],
+   "fixed_in": "main 48a08dc (merged 2026-10-14, after v0.0.79; no release yet)"
+  },
+  {
+   "finding": "A write-deny spelled with `..` through symlinks hangs the sandbox",
+   "contracts": [
+    "write-deny-link-dotdot"
+   ],
+   "status": "likely fixed",
+   "refs": [
+    "https://github.com/anthropics/sandbox-runtime/pull/689"
+   ],
+   "fixed_in": "main 48a08dc, whose tests require this case to start; the hang itself not re-measured (por confirmar)"
+  },
+  {
+   "finding": "A directory named `[user-id]` in a read-deny stops the sandbox from starting",
+   "contracts": [
+    "read-deny-bracket-dir"
+   ],
+   "status": "fixed",
+   "refs": [
+    "https://github.com/anthropics/sandbox-runtime/pull/687"
+   ],
+   "fixed_in": "main 80ea0c9 (merged 2026-10-12, after v0.0.79; no release yet)"
+  },
+  {
+   "finding": "AF_VSOCK sockets can be created",
+   "contracts": [
+    "network-vsock-denied",
+    "isolation-vsock-socket-denied",
+    "network-other-socket-families-denied"
+   ],
+   "status": "fixed",
+   "refs": [
+    "https://github.com/anthropics/sandbox-runtime/pull/691"
+   ],
+   "fixed_in": "main 5507fb0 (merged 2026-10-10, after v0.0.79; no release yet)"
+  },
+  {
+   "finding": "AF_NETLINK sockets can be created",
+   "contracts": [
+    "network-other-socket-families-denied"
+   ],
+   "status": "by design",
+   "refs": [
+    "https://github.com/anthropics/sandbox-runtime/pull/691"
+   ],
+   "fixed_in": "not planned: the README documents a deny list of AF_UNIX and io_uring; netlink stays inside the sandbox's empty network namespace"
+  },
+  {
+   "finding": "Socket domains with high bits set are not refused",
+   "contracts": [
+    "network-socket-domain-high-bits"
+   ],
+   "status": "unclear",
+   "refs": [],
+   "fixed_in": "(por confirmar)"
+  },
+  {
+   "finding": "Nested repositories (gitignored, gitdir: pointers, worktree gitfiles) are not covered by the protected names",
+   "contracts": [
+    "trust-handoff-gitignored-repo",
+    "trust-handoff-gitdir-pointer",
+    "trust-handoff-worktree-gitfile"
+   ],
+   "status": "open",
+   "refs": [
+    "https://github.com/anthropics/sandbox-runtime/pull/569"
+   ],
+   "fixed_in": "not fixed"
+  },
+  {
+   "finding": "A symlinked .claude directory is not covered by the protected names",
+   "contracts": [
+    "trust-handoff-symlinked-claude-dir"
+   ],
+   "status": "open",
+   "refs": [
+    "https://github.com/anthropics/sandbox-runtime/pull/531"
+   ],
+   "fixed_in": "not fixed"
+  },
+  {
+   "finding": "A repository created during the run, a hooks directory given as a writable root, and a .claude symlink cycle are not covered",
+   "contracts": [
+    "trust-handoff-repo-created-in-run",
+    "trust-handoff-root-inside-hooks",
+    "trust-handoff-claude-symlink-cycle"
+   ],
+   "status": "by design",
+   "refs": [],
+   "fixed_in": "n/a: srt's README describes the protected names as defense in depth"
+  }
+ ],
  "codex": [
   {
    "finding": "An entry that is a symlink, goes through one, or names an absent path stops the sandbox from starting",
