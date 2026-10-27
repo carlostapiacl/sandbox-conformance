@@ -12,6 +12,10 @@ the result.
 
 **Documentation:** [carlostapiacl.github.io/sandbox-conformance/docs](https://carlostapiacl.github.io/sandbox-conformance/docs/):
 quickstart, concepts, how-to guides, methodology, every run and the contract catalog.
+In Spanish at [/docs/es](https://carlostapiacl.github.io/sandbox-conformance/docs/es/): the
+translations are in `docs-es/` and `i18n/es/` (glossary in `i18n/es/GLOSARIO.md`), and a page
+whose English original changed since it was translated says so until it is re-translated and
+stamped (`python3 i18n/es/stamp.py`).
 
 ## What's here
 
