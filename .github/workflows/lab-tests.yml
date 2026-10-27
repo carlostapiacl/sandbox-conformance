@@ -8,11 +8,11 @@ name: lab tests
 # (billed x10) only by hand.
 on:
   pull_request:
-    paths: ["runner/**", "contracts/**", "spec/**", ".github/workflows/lab-tests.yml"]
+    paths: ["runner/**", "contracts/**", "corpus/**", "spec/**", ".github/workflows/lab-tests.yml"]
   workflow_dispatch:
     inputs:
       macos:
-        description: "also run on macOS (billed x10)"
+        description: "also run on macOS"
         type: boolean
         default: false
 

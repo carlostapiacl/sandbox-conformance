@@ -8,6 +8,9 @@ raw/<sandbox>.full.json (everything the runner captured) and comparison.md.
 """
 import json, os, shutil, sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import corpus  # noqa: E402
+
 ORDER = ["sandbox-runtime", "nono", "codex", "landrun", "tartaros"]  # preferred column order; any other <name>.json is appended
 # Review kinds that put a mark after a result (see the legend in comparison.md).
 MARK = {"contract-assumption": "‡", "interface": "‡", "kernel-dependent": "§", "platform-dependent": "§",
@@ -48,6 +51,9 @@ def main(src, dst):
         runs[name] = d
         shutil.copy(f, os.path.join(dst, "raw", name + ".full.json"))
         out = {k: d[k] for k in d if k != "contracts"}
+        # Which corpus version the run measured, from the hashes it recorded
+        # (runner/corpus.py; null for a run from before the versions).
+        out["corpus"] = corpus.corpus_of(d)
         rv = (json.load(open(os.path.join(dst, "review.json"))) if os.path.exists(os.path.join(dst, "review.json")) else {}).get(name, {})
         out["contracts"] = [dict(slim(r), **({"review": {"kind": rv[r["id"]][0], "note": rv[r["id"]][1]}} if r["id"] in rv else {}))
                             for r in d["contracts"]]
