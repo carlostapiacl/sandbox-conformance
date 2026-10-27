@@ -35,6 +35,8 @@ def identity():
 
 def check(c):
     p, unsupported, notes = c["policy"], [], []
+    if c.get("masked_env"):
+        unsupported.append("masked_env: landrun has no credential proxy")
     if c.get("broker"):
         unsupported.append("broker: landrun has no credential proxy")
     if p.get("allow_domains"):
