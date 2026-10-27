@@ -7,6 +7,16 @@ first measured.
 
 ## After `corpus-2026-10-16`
 
+- **2026-10-26. Six masked-credential contracts are added** (`credentials-masked-env-*`),
+  from sandbox-runtime's `credential-mask*.test.ts`, with the runner features they
+  need: `[[masked_env]]`, TLS witnesses (`tls`, `name`) signed by a CA made per run,
+  `read_body` / `echo_request`, and the `witness-host` requirement (a forwarding host on a TEST-NET network). They are
+  frozen before any sandbox is measured on them, and the attacks are not changed to
+  suit a result: a fix goes here. Written by this lab's author, who also wrote
+  TartarOS's masked credentials (released in 0.1.0-alpha.16, the same day); that is
+  the conflict of interest, and why each contract states the source test it
+  re-expresses.
+
 - **2026-10-22. The broker contracts become measurable.** The 13 contracts with a
   `[broker]` were `unsupported` for every sandbox: their attack could not be shown
   to work without a sandbox. The baseline now runs them against a reference broker

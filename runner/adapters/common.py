@@ -31,6 +31,22 @@ POLICY_FIELDS = {
 IMPLICIT_CATEGORIES = {"trust-handoff", "lifecycle", "isolation"}
 
 
+def masked_settings(c, allow):
+    """A contract's [[masked_env]] as sandbox-runtime's settings schema writes it,
+    the way seisin's `key_mode = "inject"` does: each variable masked toward its own
+    hosts, and every other allowed domain excluded from TLS termination."""
+    # Only the credentials whose hosts the policy allows: the probe that checks the
+    # sandbox starts at all runs with no network, and a masked credential with no
+    # reachable host is a configuration every sandbox should refuse.
+    creds = [e for e in c.get("masked_env", []) if all(h in allow for h in e["inject_hosts"])]
+    if not creds:
+        return {}
+    targets = {h for e in creds for h in e["inject_hosts"]}
+    return {"credentials": {"envVars": [{"name": e["name"], "mode": "mask", "injectHosts": list(e["inject_hosts"])}
+                                        for e in creds]},
+            "tlsTerminate": {"excludeDomains": [d for d in allow if d not in targets]}}
+
+
 def basis(c):
     p = c["policy"]
     if c["category"] in IMPLICIT_CATEGORIES and not (p.get("write_denies") or p.get("read_denies")):

@@ -60,6 +60,7 @@ Only one version measured.
 |---|---|---|---|---|---|---|---|
 | 0.1.0-alpha.10 | [2026-10-22-tartaros](2026-10-22-tartaros/README.md) | 150 | 3 | 0 | 13 | 9 | 0 |
 | 0.1.0-alpha.11 | [2026-10-22-tartaros-alpha11](2026-10-22-tartaros-alpha11/README.md) | 162 | 3 | 0 | 0 | 10 | 0 |
+| 0.1.0-alpha.16 | [2026-10-26-tartaros-alpha16](2026-10-26-tartaros-alpha16/README.md) | 168 | 3 | 0 | 0 | 10 | 0 |
 
 ### 0.1.0-alpha.10 → 0.1.0-alpha.11
 
@@ -74,3 +75,9 @@ Only one version measured.
 | `network-broker-survives-malformed-client` | medium | unsupported | **vacuous** |
 
 182 contracts compared; 6 not compared (the contract changed or is in only one run).
+
+### 0.1.0-alpha.11 → 0.1.0-alpha.16
+
+No result changed.
+
+187 contracts compared; 7 not compared (the contract changed or is in only one run).

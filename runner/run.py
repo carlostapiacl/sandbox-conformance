@@ -16,8 +16,8 @@ The result of each case, and the procedure that assigns it, are defined in
 spec/verdicts.md; runner/verdict.py implements that procedure. This file only
 observes: it runs the phases and records what happened.
 """
-import argparse, ctypes, glob, hashlib, importlib, json, os, platform, pwd, shutil
-import posixpath, re, signal, socket, socketserver, subprocess, sys, threading, time, tomllib
+import argparse, ctypes, glob, hashlib, importlib, ipaddress, json, os, platform, pwd, shutil
+import posixpath, re, signal, socket, socketserver, ssl, subprocess, sys, threading, time, tomllib
 import urllib.parse
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -87,6 +87,26 @@ def host_ip():
     return None if ip.startswith("127.") or ip == "0.0.0.0" else ip
 
 
+# What a sandbox's SSRF guard treats as internal: loopback, RFC 1918, link-local,
+# CGNAT. A witness a sandbox must reach by name through its egress proxy is on
+# another host, at an address outside these (the lab's TEST-NET network), or the
+# guard, not the policy, decides the case.
+INTERNAL_NETS = [ipaddress.ip_network(n) for n in
+                 ("127.0.0.0/8", "10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16",
+                  "169.254.0.0/16", "100.64.0.0/10", "0.0.0.0/8")]
+
+
+def witness_ip():
+    """The address of the lab's witness host: another machine on the lab network
+    that forwards to this host's witness servers (runner/lab-witness.sh). A sandbox
+    whose guard refuses its own host's addresses reaches the witness there."""
+    return os.environ.get("SC_WITNESS_IP") or None
+
+
+def external(ip):
+    return ip is not None and not any(ipaddress.ip_address(ip) in n for n in INTERNAL_NETS)
+
+
 def host_has(req, abi):
     if req == "landlock":
         return abi >= 1
@@ -106,6 +126,8 @@ def host_has(req, abi):
             os.path.exists("/sys/fs/cgroup/cgroup.subtree_control")
     if req == "host-ip":
         return host_ip() is not None
+    if req == "witness-host":
+        return external(witness_ip())
     if req == "gpu":
         return bool(glob.glob("/dev/dri/renderD*"))
     if req == "hosts-file":
@@ -127,7 +149,7 @@ TOP_FIELDS = {"id", "source", "derived_from", "category", "severity", "os", "req
               "policy", "fixture", "late_fixture", "attack", "control", "assert",
               "broker", "server", "unix_server", "abstract_server", "signal",
               "canary_process", "host_process", "launcher_env", "expect_refusal",
-              "control_requires_sandbox", "repeat", "host_alias"}
+              "control_requires_sandbox", "repeat", "host_alias", "masked_env"}
 REQUIRED_FIELDS = ("id", "category", "severity", "os", "policy", "attack", "control")
 ATTACK_FIELDS = {"cmd", "expect_exit", "blocked_exit"}
 CONTROL_FIELDS = {"cmd", "expect_exit"}
@@ -261,46 +283,181 @@ def normalized_path(target):
     return posixpath.normpath("/" + t.lstrip("/")).replace("//", "/")
 
 
+# ------------------------------------------------------------- the lab's CA
+# A witness that speaks TLS presents a leaf for its name, signed by a CA made once
+# per runner process. The launcher trusts it the usual ways (NODE_EXTRA_CA_CERTS
+# for a sandbox's own proxy, CURL_CA_BUNDLE / SSL_CERT_FILE for the agent in the
+# baseline); a sandbox that terminates TLS replaces the agent's with its own.
+_LAB_CA = {}
+
+
+def _openssl(*args):
+    subprocess.run(["openssl", *args], check=True, capture_output=True)
+
+
+def lab_ca():
+    if "cert" not in _LAB_CA:
+        d = os.path.join(CFG, "lab-ca")
+        os.makedirs(d, exist_ok=True)
+        key, cert = os.path.join(d, "ca.key"), os.path.join(d, "ca.pem")
+        _openssl("req", "-x509", "-newkey", "rsa:2048", "-nodes", "-keyout", key, "-out", cert,
+                 "-days", "2", "-subj", "/CN=sandbox-conformance lab CA")
+        os.chmod(d, 0o755)
+        os.chmod(cert, 0o644)
+        _LAB_CA.update(dir=d, key=key, cert=cert)
+    return _LAB_CA
+
+
+def lab_leaf(name):
+    ca = lab_ca()
+    if name not in _LAB_CA:
+        stem = os.path.join(ca["dir"], re.sub(r"[^A-Za-z0-9.-]", "_", name))
+        ext = stem + ".ext"
+        with open(ext, "w") as fh:
+            fh.write(f"subjectAltName=DNS:{name}\nbasicConstraints=CA:FALSE\n"
+                     "extendedKeyUsage=serverAuth\n")
+        _openssl("req", "-newkey", "rsa:2048", "-nodes", "-keyout", stem + ".key", "-out", stem + ".csr",
+                 "-subj", f"/CN={name}")
+        _openssl("x509", "-req", "-in", stem + ".csr", "-CA", ca["cert"], "-CAkey", ca["key"],
+                 "-CAcreateserial", "-out", stem + ".pem", "-days", "2", "-extfile", ext)
+        _LAB_CA[name] = (stem + ".pem", stem + ".key")
+    return _LAB_CA[name]
+
+
+def read_request(sock, with_body):
+    """The request head, and with `with_body` its body too (Content-Length, or
+    chunked up to the last chunk), capped at 64 KiB."""
+    data = b""
+    try:
+        while b"\r\n\r\n" not in data and len(data) < 65536:
+            c = sock.recv(4096)
+            if not c:
+                return data
+            data += c
+        if not with_body:
+            return data
+        head, _, body = data.partition(b"\r\n\r\n")
+        n = re.search(rb"(?im)^content-length:\s*(\d+)\s*$", head)
+        chunked = re.search(rb"(?im)^transfer-encoding:.*chunked", head)
+        while len(data) < 65536:
+            if n and len(body) >= int(n.group(1)):
+                break
+            if chunked and body.endswith(b"0\r\n\r\n"):
+                break
+            if not n and not chunked:
+                break
+            c = sock.recv(4096)
+            if not c:
+                break
+            body += c
+            data += c
+        if chunked:
+            # as a server hands the body on: framing removed
+            data = head + b"\r\n\r\n" + dechunk(body)
+    except OSError:
+        pass
+    return data
+
+
+def dechunk(body):
+    out = b""
+    while body:
+        size, _, rest = body.partition(b"\r\n")
+        try:
+            n = int(size.split(b";")[0], 16)
+        except ValueError:
+            return out + body
+        if n == 0:
+            break
+        out += rest[:n]
+        body = rest[n + 2:]
+    return out
+
+
 def start_tcp_server(spec):
-    respond = spec.get("respond", "HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\nok")
-    log = spec.get("log") or spec.get("log_requests")
-    log_paths = spec.get("log_paths")
-    echo = spec.get("echo_headers")
 
     class H(socketserver.BaseRequestHandler):
         def handle(self):
             self.request.settimeout(2)
-            data = b""
-            try:
-                while b"\r\n\r\n" not in data and len(data) < 65536:
-                    c = self.request.recv(4096)
-                    if not c:
-                        break
-                    data += c
-            except OSError:
-                pass
-            if log:
-                with open(log, "ab") as fh:
-                    fh.write(data + b"\n")
-                os.chmod(log, 0o644)
-            if log_paths:
-                # every request line in what arrived, a pipelined one included
-                with open(log_paths, "a") as fh:
-                    for _, target in REQUEST_LINE.findall(data):
-                        fh.write(normalized_path(target) + "\n")
-                os.chmod(log_paths, 0o644)
-            out = respond.encode()
-            if echo:
-                body = data.split(b"\r\n\r\n", 1)[0]
-                out = b"HTTP/1.1 200 OK\r\nContent-Length: %d\r\nConnection: close\r\n\r\n" % len(body) + body
-            try:
-                self.request.sendall(out)
-            except OSError:
-                pass
+            data = read_request(self.request, spec.get("read_body"))
+            witness(spec, data, self.request)
 
     s = _Srv((spec.get("bind", "127.0.0.1"), int(spec["port"])), H)
     threading.Thread(target=s.serve_forever, daemon=True).start()
     return s.shutdown, s.server_close
+
+
+def witness(spec, data, sock):
+    """What a witness server does with one request: log it, answer it."""
+    respond = spec.get("respond", "HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\nok")
+    log = spec.get("log") or spec.get("log_requests")
+    log_paths = spec.get("log_paths")
+    echo = spec.get("echo_headers") or spec.get("echo_request")
+    if log:
+        with open(log, "ab") as fh:
+            fh.write(data + b"\n")
+        os.chmod(log, 0o644)
+    if log_paths:
+        # every request line in what arrived, a pipelined one included
+        with open(log_paths, "a") as fh:
+            for _, target in REQUEST_LINE.findall(data):
+                fh.write(normalized_path(target) + "\n")
+        os.chmod(log_paths, 0o644)
+    out = respond.encode()
+    if echo:
+        body = data if spec.get("echo_request") else data.split(b"\r\n\r\n", 1)[0]
+        out = b"HTTP/1.1 200 OK\r\nContent-Length: %d\r\nConnection: close\r\n\r\n" % len(body) + body
+    try:
+        sock.sendall(out)
+    except OSError:
+        pass
+
+
+def start_tls_servers(specs):
+    """The [[server]]s with `tls = true` on one address: one listener, a leaf per
+    `name` signed by the lab's CA, and each connection served by the spec whose
+    name its TLS server name asks for (an unknown name is refused)."""
+    by_name = {sp["name"]: sp for sp in specs}
+    ctxs = {}
+    for name in by_name:
+        ctx = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        ctx.load_cert_chain(*lab_leaf(name))
+        ctxs[name] = ctx
+    chosen = {}
+    front = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    front.load_cert_chain(*lab_leaf(next(iter(by_name))))
+
+    def pick(sock, server_name, _ctx):
+        if server_name not in ctxs:
+            return ssl.ALERT_DESCRIPTION_UNRECOGNIZED_NAME
+        sock.context = ctxs[server_name]
+        chosen[id(sock)] = by_name[server_name]
+        return None
+    front.sni_callback = pick
+
+    class H(socketserver.BaseRequestHandler):
+        def handle(self):
+            self.request.settimeout(2)
+            try:
+                tls = front.wrap_socket(self.request, server_side=True)
+            except (OSError, ssl.SSLError):
+                return
+            sp = chosen.pop(id(tls), None)
+            if sp is None:
+                tls.close()
+                return
+            try:
+                witness(sp, read_request(tls, sp.get("read_body")), tls)
+            finally:
+                try:
+                    tls.close()
+                except OSError:
+                    pass
+
+    first = specs[0]
+    s = _Srv((first.get("bind", "127.0.0.1"), int(first["port"])), H)
+    threading.Thread(target=s.serve_forever, daemon=True).start()
+    return [s.shutdown, s.server_close]
 
 
 def start_unix_server(path=None, abstract=None):
@@ -347,14 +504,21 @@ class World:
             with open("/etc/hosts") as fh:
                 self.hosts_before = fh.read()
             with open("/etc/hosts", "a") as fh:
-                for h in c["host_alias"]:
+                for h in sub(c["host_alias"], self.m):
                     fh.write(f"\n{h['ip']} {h['name']}")
                 fh.write("\n")
         if c.get("broker") and not self.sandboxed:
             # the baseline's broker: the reference one, without defences
             self.stops += reference_broker.start(sub(c["broker"], self.m))
+        tls = {}
         for sp in c.get("server", []):
-            self.stops += start_tcp_server(sub(sp, self.m))
+            sp = sub(sp, self.m)
+            if sp.get("tls"):
+                tls.setdefault((sp.get("bind", "127.0.0.1"), int(sp["port"])), []).append(sp)
+            else:
+                self.stops += start_tcp_server(sp)
+        for group in tls.values():
+            self.stops += start_tls_servers(group)
         for sp in c.get("unix_server", []):
             self.stops += start_unix_server(path=sub(sp["path"], self.m))
         for sp in c.get("abstract_server", []):
@@ -388,6 +552,18 @@ class World:
         if self.hosts_before is not None:
             with open("/etc/hosts", "w") as fh:
                 fh.write(self.hosts_before)
+
+
+def lab_env(c):
+    """What the launcher holds for a contract's runner-provided world: the real
+    values of its [[masked_env]] (the sandbox reads them by name; with no sandbox
+    the agent has them, which is what the baseline shows), and trust in the lab's
+    CA when a witness speaks TLS."""
+    env = {e["name"]: e["value"] for e in c.get("masked_env", [])}
+    if any(sp.get("tls") for sp in c.get("server", [])):
+        ca = lab_ca()["cert"]
+        env.update(NODE_EXTRA_CA_CERTS=ca, CURL_CA_BUNDLE=ca, SSL_CERT_FILE=ca)
+    return env
 
 
 def base_env():
@@ -481,6 +657,8 @@ def phase(c, adapter, sandboxed, root_user, workdir):
     m = {"root": root}
     if "{host_ip}" in repr(c):
         m["host_ip"] = host_ip()
+    if "{witness_ip}" in repr(c):
+        m["witness_ip"] = witness_ip()
     if hasattr(adapter, "placeholders"):
         m.update(adapter.placeholders(c))
     a = c.get("assert") or {}
@@ -498,6 +676,7 @@ def phase(c, adapter, sandboxed, root_user, workdir):
         m = w.m
         env = base_env()
         env.update(dict(x.split("=", 1) for x in c.get("launcher_env", [])))
+        env.update(lab_env(c))
         if root_user:
             env["HOME"] = "/root"
         before = {p: snapshot(p) for p in as_list(sub(a.get("unchanged", []), m))}

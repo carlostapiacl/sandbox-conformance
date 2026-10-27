@@ -9,7 +9,7 @@ namespace, cgroup limits and an egress proxy for domain allow-lists.
 > the others, and every result file says so (`conflict_of_interest`). Counts are not
 > a ranking (spec §8).
 
-- Measured: **0.1.0-alpha.11**, built from the tagged commit `57ceab2f`
+- Measured: **0.1.0-alpha.16**, built from the tagged commit `f245b8fd`
   (`github.com/carlostapiacl/tartaros`, Apache-2.0) in a pinned `rust:1.99.1` image
   ([`runner/Dockerfile`](../runner/Dockerfile)); there is no release binary for Linux.
 - Adapter: [`runner/adapters/tartaros.py`](../runner/adapters/tartaros.py) — maps the
@@ -59,5 +59,6 @@ was published. Its findings and what became of them:
 
 ## Results
 
+- 0.1.0-alpha.16: [2026-10-26-tartaros-alpha16](../results/2026-10-26-tartaros-alpha16/README.md), the masked-credential contracts measured.
 - 0.1.0-alpha.11: [2026-10-22-tartaros-alpha11](../results/2026-10-22-tartaros-alpha11/README.md), the broker contracts measured.
 - 0.1.0-alpha.10: [2026-10-22-tartaros](../results/2026-10-22-tartaros/README.md), the first measurement.

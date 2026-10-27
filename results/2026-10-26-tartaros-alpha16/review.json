@@ -1,0 +1,17 @@
+{
+ "_about": "Readings of the alpha.16 run (spec/verdicts.md \u00a76), carried over from the alpha.11 run: the same three contracts escape with the same contract files. TartarOS is maintained by the author of this lab.",
+ "tartaros": {
+  "isolation-process-info-foreign": [
+   "contract-assumption",
+   "/proc/1 inside tartaros is the sandbox's own init in its private PID namespace, not a host process (the reading given to srt and codex)."
+  ],
+  "isolation-supervisor-proc-mem-denied": [
+   "contract-assumption",
+   "The process whose environ is read is the agent's own sh (PID 2 of the run's PID namespace), the parent of the attacking python; the supervisor is outside the namespace and has no /proc entry in it."
+  ],
+  "trust-handoff-repo-created-in-run": [
+   "documented",
+   "tartaros documents that on Linux a repository the agent creates during the run is not protected: its hooks are new and Landlock matches inodes that exist at launch (docs/limits.md)."
+  ]
+ }
+}

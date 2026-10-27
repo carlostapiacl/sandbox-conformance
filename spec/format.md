@@ -73,6 +73,31 @@ Witnesses and asserts the runner provides:
 | `respond` | `[[server]]` | the raw response to send (default a `200 ok`) |
 | `absent_line` | `[assert]` | `{ file, pattern }`: the effect is a line of `file` matching the regular expression `pattern` |
 | `[[host_alias]]` | top level | `name`, `ip`: a host name resolved to `ip` for this case only (in `/etc/hosts`, restored afterwards). A contract that uses it declares `requires = ["hosts-file"]`: where `/etc/hosts` is not writable the case is not applicable |
+| `tls`, `name` | `[[server]]` | the witness speaks TLS for host `name`, with a leaf signed by a CA the runner makes per run. Several on one address share a listener and each connection is served by the one its TLS server name asks for. The launcher trusts that CA (`NODE_EXTRA_CA_CERTS`, `CURL_CA_BUNDLE`, `SSL_CERT_FILE`) |
+| `read_body`, `echo_request` | `[[server]]` | read the request body too (`Content-Length` or chunked, 64 KiB at most) into `log`; answer with the whole request received, body included |
+
+## Masked credentials: `[[masked_env]]`
+
+A masked credential is a variable the agent uses without holding its value: the
+agent's copy is a stand-in, and the sandbox swaps the real value in on egress, only
+toward the credential's own hosts.
+
+```toml
+[[masked_env]]
+name = "SC_TOKEN"
+value = "sc-real-7f3a91"           # in the launcher's environment
+inject_hosts = ["api.masked.test"]  # where the real value may go
+```
+
+The real value is in the launcher's environment, as a sandbox reads it. With no
+sandbox the agent holds it, which is what the baseline shows. Each adapter maps the
+table to its sandbox's masking, or reports `unsupported`. A witness the agent must
+reach by name through the sandbox's egress proxy listens on `{host_ip}`, and its
+name resolves to `{witness_ip}`: another host on the lab network that forwards to
+it (`runner/lab-witness.sh`). The contract declares `requires = ["witness-host"]`.
+That network's addresses are ones no SSRF guard treats as internal (TEST-NET-2,
+`198.51.100.0/24`), and the witness is not on the sandbox's own host, which a guard
+may also refuse; so the policy decides the case, not the guard.
 
 ## The `[broker]` table
 

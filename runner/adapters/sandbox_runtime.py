@@ -6,7 +6,7 @@ unless a field grants it, writes only where granted, srt's own mandatory
 protections left on (they cannot be turned off).
 """
 import json, os, shlex, subprocess, uuid
-from common import basis, needs_placeholders, tree_sha256, wants_env_scrub
+from common import basis, masked_settings, needs_placeholders, tree_sha256, wants_env_scrub
 
 NAME = "sandbox-runtime"
 CFG = "/var/lib/sc/cfg"
@@ -89,8 +89,13 @@ def settings(p):
 
 def wrap(policy, m, c, env):
     cfg = os.path.join(CFG, f"srt-{c['id']}-{uuid.uuid4().hex[:6]}.json")
+    s = settings(policy)
+    masked = masked_settings(c, s["network"]["allowedDomains"])
+    if masked:
+        s["credentials"] = masked["credentials"]
+        s["network"]["tlsTerminate"] = masked["tlsTerminate"]
     with open(cfg, "w") as fh:
-        json.dump(settings(policy), fh, indent=1)
+        json.dump(s, fh, indent=1)
     os.chmod(cfg, 0o644)
     return {"argv": lambda cmd: ["srt", "--settings", cfg, "-c", cmd],
             "env": env, "config": cfg}

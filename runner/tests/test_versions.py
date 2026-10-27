@@ -39,6 +39,13 @@ class Versions(unittest.TestCase):
             run_file(root, "2026-01-05", "1.0", [("a", "contained", "h1")])
             self.assertEqual(versions.load([root])["s"]["1.0"][0], "2026-01-05")
 
+    def test_a_partial_run_does_not_replace_a_whole_one(self):
+        with tempfile.TemporaryDirectory() as root:
+            run_file(root, "2026-01-01", "1.0", [("a", "escaped", "h1"), ("b", "contained", "h2")])
+            run_file(root, "2026-01-05", "1.0", [("c", "contained", "h3")])
+            self.assertEqual(versions.load([root])["s"]["1.0"][0], "2026-01-01")
+
+
 
 if __name__ == "__main__":
     unittest.main()

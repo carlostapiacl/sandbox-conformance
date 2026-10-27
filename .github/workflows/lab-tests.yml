@@ -3,19 +3,33 @@
 # and no attack against the host runs here (spec level A: safe CI).
 name: lab tests
 
+# Private repo, shared Actions quota: the tests run on the pull request only (not
+# again on the push to main), only when the lab or the corpus changes, and macOS
+# (billed x10) only by hand.
 on:
-  push:
   pull_request:
+    paths: ["runner/**", "contracts/**", "spec/**", ".github/workflows/lab-tests.yml"]
+  workflow_dispatch:
+    inputs:
+      macos:
+        description: "also run on macOS (billed x10)"
+        type: boolean
+        default: false
+
+concurrency:
+  group: lab-tests-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
   test:
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, macos-15]
+        os: ${{ fromJSON(inputs.macos && '["ubuntu-24.04", "macos-15"]' || '["ubuntu-24.04"]') }}
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
