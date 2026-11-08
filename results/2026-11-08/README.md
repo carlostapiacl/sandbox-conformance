@@ -38,8 +38,7 @@ Spec version `1.0.0-draft`, profile `strict` (§7). 196 contracts.
 | not applicable | 12 | 12 | 12 | 12 | 12 |
 | inconclusive, invalid-baseline, harness-error | 0 | 0 | 0 | 0 | 0 |
 
-These counts are not a ranking (§8). The full table, escapes by reading and the review notes are
-in [`comparison.md`](comparison.md).
+The full table, escapes by reading and the review notes are in [`comparison.md`](comparison.md).
 
 ## What changed, and why
 

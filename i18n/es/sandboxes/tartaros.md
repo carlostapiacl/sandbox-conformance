@@ -13,7 +13,7 @@ red, límites de cgroup y un proxy de egress para allow-lists de dominios.
 - Medido: **0.1.0-alpha.24**, compilado desde el commit con tag `060c3fc7`
   (`github.com/carlostapiacl/tartaros`, Apache-2.0) en una imagen fijada `rust:1.99.1`
   ([`runner/Dockerfile`](../runner/Dockerfile)), así que el binario medido es el código del
-  tag (el paquete de npm también trae un binario estático para Linux, que acá no se usa).
+  tag (el paquete de npm también trae un binario estático para Linux, que aquí no se usa).
 - Adapter: [`runner/adapters/tartaros.py`](../runner/adapters/tartaros.py). Traduce la
   policy a flags y ejecuta `tartaros run --strict <flags> -- /bin/sh -c <cmd>`.
   `--strict` hace que una garantía que el host no puede instalar aborte el run en vez de
