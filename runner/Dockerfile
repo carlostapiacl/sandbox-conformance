@@ -23,3 +23,5 @@ RUN cd /tmp && curl -fsSLO https://github.com/nolabs-ai/nono/releases/download/v
     && tar -xzf nono-v0.81.0-x86_64-unknown-linux-gnu.tar.gz \
     && find /tmp -name nono -type f -exec install -m755 {} /usr/local/bin/nono \; && rm -rf /tmp/*
 COPY --from=tartaros /tartaros /usr/local/bin/tartaros
+# The commit it was built from, recorded by its adapter (same as the checkout above).
+ENV SC_TARTAROS_COMMIT=060c3fc7c54f5566eadd5c135e7eaf2fb3e6abbb
