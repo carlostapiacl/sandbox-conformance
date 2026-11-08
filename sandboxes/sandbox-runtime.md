@@ -40,6 +40,13 @@ The adapter passes paths exactly as the contract spells them, with trailing
 slashes, brackets, `..` and symlinks left in. How a sandbox reads those
 spellings is part of what is under test.
 
+## 0.0.81 again (2026-11-08 run)
+
+0.0.81 is still the latest release on npm. The [2026-11-08 run](../results/2026-11-08/README.md) measured it again so
+that all five sandboxes share one runner commit and corpus v1.1: every contract measured on
+2026-10-21 gives the same result, and the eight added since are all contained (six
+masked-credential contracts, two from Deno's tests). 141 contained, 14 escaped.
+
 ## Results of 0.0.81 (2026-10-21 run)
 
 Same host, kernel, runner and contracts as the re-measure of 0.0.79 that the

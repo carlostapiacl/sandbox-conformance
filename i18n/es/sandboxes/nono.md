@@ -7,8 +7,10 @@ filesystem y, desde la ABI 4, TCP, con un filtro seccomp para la red,
 Medí la versión 0.80.0 desde el asset del release
 `nono-v0.80.0-x86_64-unknown-linux-gnu.tar.gz`, después de verificarlo contra el
 SHA256SUMS del release. El commit de origen es
-`8bb041356d48f771a221e58c98d9b1ff442e76fe` (tag v0.80.0), y la licencia es
-Apache-2.0. El adapter es [`runner/adapters/nono.py`](../runner/adapters/nono.py).
+`8bb041356d48f771a221e58c98d9b1ff442e76fe` (tag v0.80.0). El 2026-11-08 medí 0.81.0
+de la misma forma (commit `b2d859deeb7a65f9ca5b334eb8726637ba76c866`, tag v0.81.0). La
+licencia es Apache-2.0. Qué resultados cambiaron en qué versión:
+[`results/versions.md`](../results/versions.md). El adapter es [`runner/adapters/nono.py`](../runner/adapters/nono.py).
 Escribe un profile y ejecuta
 `nono -s run --no-diagnostics --no-rollback --no-audit --profile <file> -- sh -c <cmd>`.
 
@@ -43,6 +45,14 @@ secreto queda protegido porque nadie le dio acceso. Con esa configuración la ma
 secretos nunca se podrían leer. La `[policy]` de los contracts no describe
 esa configuración, así que no la medí en este run. Una versión de los
 contracts de read-deny escrita para ese modelo me permitiría medirla.
+
+## Resultados de 0.81.0 (run del 2026-11-08) {#results-of-0810-2026-11-08-run}
+
+Ningún resultado cambió respecto de 0.80.0: el [run](../results/2026-11-08/README.md) primero volvió a medir 0.80.0 en
+el mismo host, runner y contracts, y las dos versiones dan el mismo resultado en los 196
+contracts. Los ocho contracts que se sumaron al corpus desde el 2026-10-21 son
+`unsupported` (nono no tiene credenciales enmascaradas ni puede expresar un deny). Todo lo
+de abajo vale para 0.81.0.
 
 ## Medido en el modelo propio de nono (run by-omission) {#measured-in-nonos-own-model-by-omission-run}
 

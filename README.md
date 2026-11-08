@@ -105,6 +105,11 @@ The [2026-10-26 run](results/2026-10-26-tartaros-alpha16/README.md) measures Tar
 0.1.0-alpha.16 and sandbox-runtime 0.0.81 on six new masked-credential contracts: both
 contain all six on Linux.
 
+The [2026-11-08 run](results/2026-11-08/README.md) measures all five at their latest
+releases on the whole corpus v1.1: TartarOS 0.1.0-alpha.24, Codex CLI 0.167.0 and nono
+0.81.0 are new, sandbox-runtime 0.0.81 and landrun 0.1.17 unchanged. The previous versions
+were re-measured first and reproduced on every contract; no new version changes a result.
+
 Next: macOS runs and [more corpora](corpus-roadmap.md) harvested from other sandboxes' test suites.
 
 The results and what they mean are written up at [carlostapia.cl](https://carlostapia.cl/notes/sandbox-escapes-no-rule-broken/).

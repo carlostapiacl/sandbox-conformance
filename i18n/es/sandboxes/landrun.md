@@ -32,6 +32,10 @@ En este host (Landlock ABI 4) el scoping de abstract sockets y de señales de la
 v6) no está disponible, así que esas garantías no se aplican; sus reglas de red cubren
 solo TCP, así que UDP, netlink y las demás familias de sockets no se bloquean.
 
+Medido otra vez el 2026-11-08 (mismo release, [run](../results/2026-11-08/README.md)): todos los resultados anteriores
+se repiten, y los ocho contracts que se sumaron al corpus desde entonces son `unsupported`
+(sin credenciales enmascaradas ni deny).
+
 ## Resultados (2026-10-15, Linux 6.8, [run de cuatro sandboxes](../results/2026-10-15-four-sandboxes/README.md)) {#results-2026-10-15-linux-68-four-sandbox-run}
 
 > **Medido de nuevo el 2026-10-17** en el read model granted ([run](../results/2026-10-17-landrun/README.md)): 22 contracts que estaban en `unsupported` ahora se miden (17 contained, 4 escaped, 1 vacuous).
