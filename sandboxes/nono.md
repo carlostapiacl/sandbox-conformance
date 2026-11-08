@@ -48,6 +48,10 @@ contracts written for that model would let me measure it.
 
 ## Results of 0.81.0 (2026-11-08 run)
 
+With its opt-in namespaces (`--isolate`, new in 0.81.0), which the adapter now uses, one result
+changes: `ipc-abstract-unix-socket` is contained ([run](../results/2026-11-08-nono-isolate/README.md)). The rest of this section is the
+run without them.
+
 No result changed from 0.80.0: the [run](../results/2026-11-08/README.md) re-measured 0.80.0 on the same host,
 runner and contracts first, and both versions give the same result on all 196 contracts.
 The eight contracts added to the corpus since 2026-10-21 are `unsupported` (nono has no

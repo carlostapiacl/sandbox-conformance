@@ -48,6 +48,10 @@ contracts de read-deny escrita para ese modelo me permitiría medirla.
 
 ## Resultados de 0.81.0 (run del 2026-11-08) {#results-of-0810-2026-11-08-run}
 
+Con sus namespaces opcionales (`--isolate`, nuevos en 0.81.0), que el adapter ahora usa, cambia un
+resultado: `ipc-abstract-unix-socket` queda contained ([run](../results/2026-11-08-nono-isolate/README.md)). El resto de esta sección es el
+run sin ellos.
+
 Ningún resultado cambió respecto de 0.80.0: el [run](../results/2026-11-08/README.md) primero volvió a medir 0.80.0 en
 el mismo host, runner y contracts, y las dos versiones dan el mismo resultado en los 196
 contracts. Los ocho contracts que se sumaron al corpus desde el 2026-10-21 son
