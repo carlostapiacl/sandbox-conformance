@@ -1,0 +1,149 @@
+{
+  "_about": "Readings carried over from the 2026-11-08 run where the result and the contract file are identical; ipc-abstract-unix-socket is now contained and has none.",
+  "nono": {
+    "filesystem-chmod-outside": [
+      "confirmed",
+      "Measured with a read grant on the test tree (the neutral read-everything baseline). Landlock does not mediate chmod/utime/xattr, so a readable file's metadata can be changed. Under nono's own idiom (no grant at all) the file would be unreachable."
+    ],
+    "filesystem-utime-outside": [
+      "confirmed",
+      "As filesystem-chmod-outside."
+    ],
+    "filesystem-xattr-outside": [
+      "confirmed",
+      "As filesystem-chmod-outside."
+    ],
+    "fs-writable-root-symlink-out": [
+      "confirmed",
+      "A writable root that is itself a symlink pointing outside the other roots was followed, so its target became writable. The contract pins a policy decision (refuse such a root); the sandbox does not make it."
+    ],
+    "fs-writable-root-symlink-parent": [
+      "confirmed",
+      "A writable root that is itself a symlink pointing outside the other roots was followed, so its target became writable. The contract pins a policy decision (refuse such a root); the sandbox does not make it."
+    ],
+    "ipc-unix-socket-in-denied-dir-by-omission": [
+      "documented",
+      "Landlock does not mediate connect() to a pathname unix socket, so a socket in an ungranted directory stays reachable. This is the gap the original contract already documents; it holds in the granted model too."
+    ],
+    "isolation-clone-newns-denied": [
+      "design",
+      "nono creates no PID namespace and does not claim this isolation (nested user namespaces, capabilities as root, other processes' /proc)."
+    ],
+    "isolation-no-effective-caps": [
+      "design",
+      "nono creates no PID namespace and does not claim this isolation (nested user namespaces, capabilities as root, other processes' /proc)."
+    ],
+    "isolation-no-nested-userns": [
+      "design",
+      "nono creates no PID namespace and does not claim this isolation (nested user namespaces, capabilities as root, other processes' /proc)."
+    ],
+    "isolation-process-info-foreign": [
+      "design",
+      "nono creates no PID namespace and does not claim this isolation (nested user namespaces, capabilities as root, other processes' /proc)."
+    ],
+    "isolation-signal-host-process": [
+      "platform-dependent",
+      "Signal scoping needs Landlock ABI 6 (kernel 6.12+); this host has ABI 4."
+    ],
+    "isolation-supervisor-proc-mem-denied": [
+      "design",
+      "nono creates no PID namespace and does not claim this isolation (nested user namespaces, capabilities as root, other processes' /proc)."
+    ],
+    "lifecycle-background-reaped-on-exit": [
+      "confirmed",
+      "A background child outlived the sandboxed command and wrote the marker."
+    ],
+    "lifecycle-no-host-artifacts": [
+      "design",
+      ".mcp.json is not among the files nono protects."
+    ],
+    "lifecycle-signal-teardown": [
+      "confirmed",
+      "SIGTERM to the launcher ended it (143), but the sandboxed tree survived and wrote the marker."
+    ],
+    "read-allow-symlink-into-deny-by-omission": [
+      "design",
+      "The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. srt grants the link name only and contains it; codex refuses to build the sandbox."
+    ],
+    "read-allow-symlink-no-reopen-by-omission": [
+      "design",
+      "The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. srt grants the link name only and contains it; codex refuses to build the sandbox."
+    ],
+    "seccomp-clone-newuser-denied": [
+      "design",
+      "nono creates no PID namespace and does not claim this isolation (nested user namespaces, capabilities as root, other processes' /proc)."
+    ],
+    "secrets-read-allow-symlink-into-deny-by-omission": [
+      "design",
+      "The granted read path is itself a symlink into the protected area. nono resolves grants through symlinks (documented in its Path Resolution), so granting the link grants its target and the secret is read. srt grants the link name only and contains it; codex refuses to build the sandbox."
+    ],
+    "trust-handoff-claude-agents": [
+      "design",
+      "inside a writable root nono does not protect trust-handoff files (.git/hooks, .git/config, .claude/, editor dirs, rc files); a capability sandbox grants the root as a whole."
+    ],
+    "trust-handoff-editor-dirs": [
+      "design",
+      "inside a writable root nono does not protect trust-handoff files (.git/hooks, .git/config, .claude/, editor dirs, rc files); a capability sandbox grants the root as a whole."
+    ],
+    "trust-handoff-git-config": [
+      "design",
+      "inside a writable root nono does not protect trust-handoff files (.git/hooks, .git/config, .claude/, editor dirs, rc files); a capability sandbox grants the root as a whole."
+    ],
+    "trust-handoff-git-config-move-aside": [
+      "design",
+      "inside a writable root nono does not protect trust-handoff files (.git/hooks, .git/config, .claude/, editor dirs, rc files); a capability sandbox grants the root as a whole."
+    ],
+    "trust-handoff-git-dir-replace": [
+      "design",
+      "inside a writable root nono does not protect trust-handoff files (.git/hooks, .git/config, .claude/, editor dirs, rc files); a capability sandbox grants the root as a whole."
+    ],
+    "trust-handoff-git-exchange-rename": [
+      "design",
+      "inside a writable root nono does not protect trust-handoff files (.git/hooks, .git/config, .claude/, editor dirs, rc files); a capability sandbox grants the root as a whole."
+    ],
+    "trust-handoff-gitdir-pointer": [
+      "design",
+      "inside a writable root nono does not protect trust-handoff files (.git/hooks, .git/config, .claude/, editor dirs, rc files); a capability sandbox grants the root as a whole."
+    ],
+    "trust-handoff-gitignored-repo": [
+      "design",
+      "inside a writable root nono does not protect trust-handoff files (.git/hooks, .git/config, .claude/, editor dirs, rc files); a capability sandbox grants the root as a whole."
+    ],
+    "trust-handoff-gitmodules": [
+      "design",
+      "inside a writable root nono does not protect trust-handoff files (.git/hooks, .git/config, .claude/, editor dirs, rc files); a capability sandbox grants the root as a whole."
+    ],
+    "trust-handoff-hooks-dir-absent": [
+      "design",
+      "inside a writable root nono does not protect trust-handoff files (.git/hooks, .git/config, .claude/, editor dirs, rc files); a capability sandbox grants the root as a whole."
+    ],
+    "trust-handoff-repo-created-in-run": [
+      "design",
+      "inside a writable root nono does not protect trust-handoff files (.git/hooks, .git/config, .claude/, editor dirs, rc files); a capability sandbox grants the root as a whole."
+    ],
+    "trust-handoff-root-inside-hooks": [
+      "design",
+      "inside a writable root nono does not protect trust-handoff files (.git/hooks, .git/config, .claude/, editor dirs, rc files); a capability sandbox grants the root as a whole."
+    ],
+    "trust-handoff-shell-rc": [
+      "design",
+      "inside a writable root nono does not protect trust-handoff files (.git/hooks, .git/config, .claude/, editor dirs, rc files); a capability sandbox grants the root as a whole."
+    ],
+    "trust-handoff-symlinked-claude-dir": [
+      "design",
+      "inside a writable root nono does not protect trust-handoff files (.git/hooks, .git/config, .claude/, editor dirs, rc files); a capability sandbox grants the root as a whole."
+    ],
+    "trust-handoff-tool-rc": [
+      "design",
+      "inside a writable root nono does not protect trust-handoff files (.git/hooks, .git/config, .claude/, editor dirs, rc files); a capability sandbox grants the root as a whole."
+    ],
+    "trust-handoff-unreadable-at-compile": [
+      "design",
+      "inside a writable root nono does not protect trust-handoff files (.git/hooks, .git/config, .claude/, editor dirs, rc files); a capability sandbox grants the root as a whole."
+    ],
+    "trust-handoff-worktree-gitfile": [
+      "design",
+      "inside a writable root nono does not protect trust-handoff files (.git/hooks, .git/config, .claude/, editor dirs, rc files); a capability sandbox grants the root as a whole."
+    ]
+  }
+}

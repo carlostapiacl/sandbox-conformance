@@ -10,6 +10,9 @@ INSIDE a grant is something Landlock cannot express (nono refuses to start
 rather than ignore it), so such fields are recorded as capability gaps. nono's
 own idiom (deny by omission: grant only the workspace) is not what the
 neutral policy describes and was not measured here.
+
+From 0.81.0 the run also gets nono's opt-in namespaces (`--isolate`, NEP-0004):
+net, ipc and uts, or ipc and uts when the policy grants local ports.
 """
 import json, os, subprocess, uuid, platform
 from common import basis, file_sha256, needs_placeholders, wants_env_scrub
@@ -26,6 +29,29 @@ CORE_ENV = ["PATH", "HOME", "LANG", "TERM"]
 # records "unknown commit" instead of borrowing another release's.
 TAG_COMMIT = {"0.80.0": "8bb041356d48f771a221e58c98d9b1ff442e76fe",
               "0.81.0": "b2d859deeb7a65f9ca5b334eb8726637ba76c866"}
+
+
+_VERSION = None
+
+
+def version():
+    global _VERSION
+    if _VERSION is None:
+        _VERSION = subprocess.run([BIN, "--version"], capture_output=True, text=True).stdout.strip().split()[-1]
+    return _VERSION
+
+
+def isolate(p, v):
+    """The namespaces nono 0.81.0 and later can add (NEP-0004, `--isolate`), as
+    many as the policy allows: `net` leaves only loopback and cannot be combined
+    with a direct port grant, so a policy with `local_ports` gets `ipc,uts`. nono
+    has no PID or mount namespace. None before 0.81.0."""
+    try:
+        if tuple(int(x) for x in v.split(".")[:2]) < (0, 81):
+            return None
+    except ValueError:
+        return None
+    return "ipc,uts" if p.get("local_ports") else "net,ipc,uts"
 
 
 def identity():
@@ -122,6 +148,9 @@ def wrap(policy, m, c, env):
     extra = []
     if policy.get("max_processes"):
         extra += ["--max-processes", str(policy["max_processes"])]
+    ns = isolate(policy, version())
+    if ns:
+        extra += ["--isolate", ns]
     base = [BIN, "-s", "run", "--no-diagnostics", "--no-rollback", "--no-audit", "--profile", cfg] + extra
     return {"argv": lambda cmd: base + ["--", "/bin/sh", "-c", cmd], "env": env, "config": cfg}
 
