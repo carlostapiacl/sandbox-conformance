@@ -7,8 +7,10 @@ filesystem and, from ABI 4, TCP, with a seccomp filter for networking,
 I measured version 0.80.0 from the release asset
 `nono-v0.80.0-x86_64-unknown-linux-gnu.tar.gz`, after checking it against the
 release's SHA256SUMS. The source commit is
-`8bb041356d48f771a221e58c98d9b1ff442e76fe` (tag v0.80.0), and the license is
-Apache-2.0. The adapter is [`runner/adapters/nono.py`](../runner/adapters/nono.py).
+`8bb041356d48f771a221e58c98d9b1ff442e76fe` (tag v0.80.0). On 2026-11-08 I measured
+0.81.0 the same way (commit `b2d859deeb7a65f9ca5b334eb8726637ba76c866`, tag v0.81.0).
+The license is Apache-2.0. Which results changed in which version:
+[`results/versions.md`](../results/versions.md). The adapter is [`runner/adapters/nono.py`](../runner/adapters/nono.py).
 It writes a profile and runs
 `nono -s run --no-diagnostics --no-rollback --no-audit --profile <file> -- sh -c <cmd>`.
 
@@ -43,6 +45,13 @@ secret stays protected because nobody granted it. In that setup most of these
 secrets would never be readable. The contracts' `[policy]` does not describe
 that setup, so I did not measure it in this run. A version of the read-deny
 contracts written for that model would let me measure it.
+
+## Results of 0.81.0 (2026-11-08 run)
+
+No result changed from 0.80.0: the [run](../results/2026-11-08/README.md) re-measured 0.80.0 on the same host,
+runner and contracts first, and both versions give the same result on all 196 contracts.
+The eight contracts added to the corpus since 2026-10-21 are `unsupported` (nono has no
+masked credentials and cannot state a deny). Everything below holds for 0.81.0.
 
 ## Measured in nono's own model (by-omission run)
 

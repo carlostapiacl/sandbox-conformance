@@ -8,7 +8,8 @@ red está restringida.
 Medí codex-cli 0.162.1 (`@openai/codex`), compilado desde el commit
 `092d3acd6bec3e3a14bdc7e7a2810ab628ab759d` (tag rust-v0.162.1), y el
 2026-10-21 codex-cli 0.163.0 (commit `83086188ae0614bd882818ff1aa23f3194962012`,
-tag rust-v0.163.0), con licencia Apache-2.0. Qué resultados cambiaron en qué
+tag rust-v0.163.0), y el 2026-11-08 codex-cli 0.167.0 (commit
+`086ccc833bc9cf01024ad2dd6af7dbd421b6bf9a`, tag rust-v0.167.0), con licencia Apache-2.0. Qué resultados cambiaron en qué
 versión: [`results/versions.md`](../results/versions.md). Llamé directamente a su binario nativo `x86_64-unknown-linux-musl`
 en vez del launcher de npm. Ese launcher es un script de Node, y un contract
 que define `NODE_OPTIONS` en el entorno rompería el launcher antes de que el
@@ -39,6 +40,15 @@ Algunos campos no tienen equivalente en codex:
 - `materialize_absent_handoff`.
 - `[broker]`.
 - Un log propio que el agente podría intentar manipular.
+
+## Resultados de 0.167.0 (run del 2026-11-08) {#results-of-01670-2026-11-08-run}
+
+Ningún resultado cambió respecto de 0.163.0: el [run](../results/2026-11-08/README.md) primero volvió a medir 0.163.0
+en el mismo host, runner y contracts, y las dos versiones dan el mismo resultado en los 196
+contracts. Frente al run del 2026-10-21, los conteos se mueven solo por los contracts que se
+sumaron al corpus desde entonces: los dos de los tests de Deno quedan contained, y los seis
+de credenciales enmascaradas son `unsupported` (codex no tiene credenciales enmascaradas).
+Todo lo de abajo vale para 0.167.0.
 
 ## Resultados de 0.163.0 (run del 2026-10-21) {#results-of-01630-2026-10-21-run}
 

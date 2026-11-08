@@ -19,7 +19,8 @@ BIN = "/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linu
 # The commit each measured release was built from (its tag). A version not listed
 # records "unknown commit" instead of borrowing another release's.
 TAG_COMMIT = {"0.162.1": "092d3acd6bec3e3a14bdc7e7a2810ab628ab759d",
-              "0.163.0": "83086188ae0614bd882818ff1aa23f3194962012"}
+              "0.163.0": "83086188ae0614bd882818ff1aa23f3194962012",
+              "0.167.0": "086ccc833bc9cf01024ad2dd6af7dbd421b6bf9a"}
 
 
 def identity():

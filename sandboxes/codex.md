@@ -8,7 +8,8 @@ network is restricted.
 I measured codex-cli 0.162.1 (`@openai/codex`), built from commit
 `092d3acd6bec3e3a14bdc7e7a2810ab628ab759d` (tag rust-v0.162.1), and on
 2026-10-21 codex-cli 0.163.0 (commit `83086188ae0614bd882818ff1aa23f3194962012`,
-tag rust-v0.163.0), licensed Apache-2.0. Which results changed in which
+tag rust-v0.163.0), and on 2026-11-08 codex-cli 0.167.0 (commit
+`086ccc833bc9cf01024ad2dd6af7dbd421b6bf9a`, tag rust-v0.167.0), licensed Apache-2.0. Which results changed in which
 version: [`results/versions.md`](../results/versions.md). I called its native `x86_64-unknown-linux-musl` binary directly
 instead of the npm launcher. That launcher is a Node script, and a contract
 that sets `NODE_OPTIONS` in the environment would break the launcher before the
@@ -39,6 +40,15 @@ Some fields have no equivalent in codex:
 - `materialize_absent_handoff`.
 - `[broker]`.
 - A log of its own that the agent could try to tamper with.
+
+## Results of 0.167.0 (2026-11-08 run)
+
+No result changed from 0.163.0: the [run](../results/2026-11-08/README.md) re-measured 0.163.0 on the same
+host, runner and contracts first, and both versions give the same result on all 196
+contracts. Against the 2026-10-21 run, the counts move only by the contracts added to the
+corpus since: the two from Deno's tests are contained, and the six masked-credential
+contracts are `unsupported` (codex has no masked credentials). Everything below holds for
+0.167.0.
 
 ## Results of 0.163.0 (2026-10-21 run)
 

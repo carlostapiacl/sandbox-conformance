@@ -40,6 +40,14 @@ El adapter pasa las rutas tal como las escribe el contract, con barras finales,
 corchetes, `..` y symlinks incluidos. Cómo lee un sandbox esas formas de
 escribirlas es parte de lo que se prueba.
 
+## 0.0.81 otra vez (run del 2026-11-08) {#0081-again-2026-11-08-run}
+
+0.0.81 sigue siendo el último release en npm. El [run del 2026-11-08](../results/2026-11-08/README.md) lo volvió a medir
+para que los cinco sandboxes compartan un commit del runner y el corpus v1.1: cada contract
+medido el 2026-10-21 da el mismo resultado, y los ocho que se sumaron desde entonces quedan
+todos contained (seis de credenciales enmascaradas, dos de los tests de Deno). 141
+contained, 14 escaped.
+
 ## Resultados de 0.0.81 (run del 2026-10-21) {#results-of-0081-2026-10-21-run}
 
 Mismo host, kernel, runner y contracts que la nueva medición de 0.0.79 con la

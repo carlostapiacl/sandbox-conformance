@@ -10,9 +10,10 @@ red, límites de cgroup y un proxy de egress para allow-lists de dominios.
 > adapter se escribió antes de su primera medición, pasa por la misma revisión que
 > los demás, y cada archivo de resultados lo dice (`conflict_of_interest`).
 
-- Medido: **0.1.0-alpha.16**, compilado desde el commit con tag `f245b8fd`
+- Medido: **0.1.0-alpha.24**, compilado desde el commit con tag `060c3fc7`
   (`github.com/carlostapiacl/tartaros`, Apache-2.0) en una imagen fijada `rust:1.99.1`
-  ([`runner/Dockerfile`](../runner/Dockerfile)); no hay binario de release para Linux.
+  ([`runner/Dockerfile`](../runner/Dockerfile)), así que el binario medido es el código del
+  tag (el paquete de npm también trae un binario estático para Linux, que aquí no se usa).
 - Adapter: [`runner/adapters/tartaros.py`](../runner/adapters/tartaros.py). Traduce la
   policy a flags y ejecuta `tartaros run --strict <flags> -- /bin/sh -c <cmd>`.
   `--strict` hace que una garantía que el host no puede instalar aborte el run en vez de
@@ -60,6 +61,7 @@ publicara nada. Sus hallazgos y lo que pasó con ellos:
 
 ## Resultados {#resultados}
 
+- 0.1.0-alpha.24: [2026-11-08](../results/2026-11-08/README.md), los cinco sandboxes en su último release. Ningún resultado cambió respecto de alpha.16 (194 contracts comparados, alpha.16 medido otra vez primero); los dos contracts de los tests de Deno quedan contained.
 - 0.1.0-alpha.16: [2026-10-26-tartaros-alpha16](../results/2026-10-26-tartaros-alpha16/README.md), con los contracts de credenciales enmascaradas medidos.
 - 0.1.0-alpha.11: [2026-10-22-tartaros-alpha11](../results/2026-10-22-tartaros-alpha11/README.md), con los contracts del broker medidos.
 - 0.1.0-alpha.10: [2026-10-22-tartaros](../results/2026-10-22-tartaros/README.md), la primera medición.

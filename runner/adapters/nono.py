@@ -24,7 +24,8 @@ CORE_ENV = ["PATH", "HOME", "LANG", "TERM"]
 
 # The commit each measured release was built from (its tag). A version not listed
 # records "unknown commit" instead of borrowing another release's.
-TAG_COMMIT = {"0.80.0": "8bb041356d48f771a221e58c98d9b1ff442e76fe"}
+TAG_COMMIT = {"0.80.0": "8bb041356d48f771a221e58c98d9b1ff442e76fe",
+              "0.81.0": "b2d859deeb7a65f9ca5b334eb8726637ba76c866"}
 
 
 def identity():

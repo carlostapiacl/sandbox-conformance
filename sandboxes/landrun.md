@@ -32,6 +32,10 @@ On this host (Landlock ABI 4) landrun's abstract-socket and signal scoping (ABI
 v6) is unavailable, so those guarantees are not enforced; its network rules cover
 TCP only, so UDP, netlink and other socket families are not blocked.
 
+Measured again on 2026-11-08 (same release, [run](../results/2026-11-08/README.md)): every earlier result is the
+same, and the eight contracts added to the corpus since are `unsupported` (no masked
+credentials, no deny).
+
 ## Results (2026-10-15, Linux 6.8, [four-sandbox run](../results/2026-10-15-four-sandboxes/README.md))
 
 > **Re-measured on 2026-10-17** in the granted read model ([run](../results/2026-10-17-landrun/README.md)): 22 contracts that were `unsupported` are now measured (17 contained, 4 escaped, 1 vacuous).
