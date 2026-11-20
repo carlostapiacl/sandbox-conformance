@@ -34,3 +34,4 @@ recorded. Re-measuring on a newer version is a new run.
 |---|---|---|---|
 | [1.0](v1.0.json) | 2026-10-26 | 194 | the first version: the contracts of every run up to 2026-10-26, with the six masked-credential contracts. The runs before it ran contracts that have changed since and are listed as *pre-1.0* |
 | [1.1](v1.1.json) | 2026-10-26 | 196 | two contracts from Deno's permission tests: a read-deny reached through `/proc/self/root`, and a write-denied directory that must survive `rm -rf` of its parent |
+| [1.2](v1.2.json) | 2026-11-20 | 198 | two lifecycle contracts from sandbox-runtime's ghost-dotfile test and its issue #139: what a sandbox puts at an absent protected path must not outlive a launcher ended by SIGTERM, and must not show in the agent's `git status` during the run |

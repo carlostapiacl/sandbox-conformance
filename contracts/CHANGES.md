@@ -14,6 +14,23 @@ folder: the 188 of the runs up to 2026-10-22 as they stand after the fixes below
 and the six masked-credential contracts. Entries from here on name the version they
 went into.
 
+- **v1.2 (2026-11-20). Two lifecycle contracts on placeholders at absent protected
+  paths**, from sandbox-runtime's ghost-dotfile test (`mandatory-deny-paths.test.ts`,
+  "Non-existent deny path protection and cleanup") and its issue #139:
+  `lifecycle-no-host-artifacts-after-sigterm` (the placeholder must not outlive a
+  launcher ended by SIGTERM) and `lifecycle-protected-path-not-in-git` (while the
+  command runs, the agent's `git status` must not list anything at the protected
+  path). `lifecycle-no-host-artifacts` only checks after a normal exit, where
+  sandbox-runtime cleans up; issue #139 reports the other two cases. There is no
+  SIGKILL contract on purpose: nothing in the launcher runs after SIGKILL, and
+  sandbox-runtime's `stale-mount-point.test.ts` keeps such a leftover so the next
+  command still finds the path denied, which is the safer choice. Prompted by a
+  measurement of sandbox-runtime 0.0.83 before any lab run. Conflict of interest:
+  TartarOS, by this lab's author, already makes its working-tree placeholders
+  empty directories that git does not list (0.1.0-alpha.25), so it was designed to
+  pass the second one. Checked against the reference sandboxes before any sandbox
+  was measured on them.
+
 - **v1.1 (2026-10-26). Two contracts from Deno's permission tests** (MIT), the
   first from that project: `secrets-read-deny-via-proc-self-root` (a read-deny must
   hold when the path is spelled through `/proc/self/root`, Linux) and

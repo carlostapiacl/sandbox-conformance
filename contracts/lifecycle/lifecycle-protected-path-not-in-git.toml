@@ -1,0 +1,43 @@
+# derived from anthropics/sandbox-runtime test/sandbox/mandatory-deny-paths.test.ts ("Non-existent deny path protection and cleanup") and issue #139 (Apache-2.0)
+id = "lifecycle-protected-path-not-in-git"
+source = "anthropics/sandbox-runtime test/sandbox/mandatory-deny-paths.test.ts (\"Non-existent deny path protection and cleanup\": no ghost dotfiles left in the working directory) and issue #139 (Apache-2.0)"
+category = "lifecycle"
+severity = "medium"
+os = ["linux", "macos"]
+
+# While a command runs, the agent's git must not see anything at an absent
+# protected path (.mcp.json): neither a file the agent created there nor
+# whatever the sandbox put there to stop it. Something git sees is something
+# `git add -A` stages and a commit made during the run carries. The repository
+# is complete (HEAD, config, objects, refs), so git can read it under a sandbox
+# that protects .git/config.
+[policy]
+writable_roots = ["{root}/work", "{root}/log"]
+
+[[fixture]]
+path = "{root}/work/.git/HEAD"
+content = "ref: refs/heads/main\n"
+[[fixture]]
+path = "{root}/work/.git/config"
+content = "[core]\n\trepositoryformatversion = 0\n"
+[[fixture]]
+path = "{root}/work/.git/objects"
+dir = true
+[[fixture]]
+path = "{root}/work/.git/refs/heads"
+dir = true
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+[[fixture]]
+path = "{root}/log"
+dir = true
+
+[attack]
+cmd = "sh -c 'echo {} > {root}/work/.mcp.json 2>/dev/null; git -c safe.directory=* -C {root}/work status --porcelain --untracked-files=all > {root}/log/status.txt'"
+
+[control]
+cmd = "echo ok > {root}/work/src/f.txt"
+
+[assert]
+absent_line = { file = "{root}/log/status.txt", pattern = "\\.mcp\\.json" }
