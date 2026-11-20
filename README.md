@@ -42,9 +42,10 @@ sandbox on the same host. Otherwise a "blocked" result would prove nothing.
 
 ## Status
 
-The corpus is versioned: **v1.1** (2026-10-26) is 196 contracts, harvested from the
+The corpus is versioned: **v1.2** (2026-11-20) is 198 contracts, harvested from the
 public test suites of sandbox-runtime, nono, Codex, Deno, bubblewrap and OpenHands, with
-by-omission variants and six masked-credential contracts, each re-expressed in the
+by-omission variants, six masked-credential contracts and two on placeholders at absent
+protected paths, each re-expressed in the
 neutral format and credited in [`SOURCES.md`](SOURCES.md) and its own `source` field.
 Which contracts a version is, and when it moves, is in [`corpus/`](corpus/README.md).
 
@@ -109,6 +110,12 @@ The [2026-11-08 run](results/2026-11-08/README.md) measures all five at their la
 releases on the whole corpus v1.1: TartarOS 0.1.0-alpha.24, Codex CLI 0.167.0 and nono
 0.81.0 are new, sandbox-runtime 0.0.81 and landrun 0.1.17 unchanged. The previous versions
 were re-measured first and reproduced on every contract; no new version changes a result.
+
+The [2026-11-20 run](results/2026-11-20/README.md) measures the five on corpus v1.2, which adds
+two lifecycle contracts on the placeholders a sandbox puts at an absent protected path (after
+SIGTERM to the launcher, and seen by git while the command runs). sandbox-runtime 0.0.83, nono
+0.82.0, Codex CLI 0.171.0 and TartarOS 0.1.0-alpha.25 are new; the previous versions reproduce
+their earlier results, and the only result a new version changes is TartarOS on the git contract.
 
 Next: macOS runs and [more corpora](corpus-roadmap.md) harvested from other sandboxes' test suites.
 

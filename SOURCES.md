@@ -80,6 +80,8 @@ Total: 196 contracts, 22 of them by-omission variants of another contract (count
 - `lifecycle/lifecycle-background-reaped-on-exit` — anthropics/sandbox-runtime test/sandbox/integration.test.ts and pid-namespace-isolation.test.ts (Apache-2.0)
 - `lifecycle/lifecycle-exit-status-forwarded` — anthropics/sandbox-runtime test/sandbox/pid-namespace-isolation.test.ts and integration.test.ts (Apache-2.0)
 - `lifecycle/lifecycle-no-host-artifacts` — anthropics/sandbox-runtime test/sandbox/mandatory-deny-paths.test.ts (Apache-2.0)
+- `lifecycle/lifecycle-no-host-artifacts-after-sigterm` — anthropics/sandbox-runtime test/sandbox/mandatory-deny-paths.test.ts ("Non-existent deny path protection and cleanup") and issue #139 (Apache-2.0)
+- `lifecycle/lifecycle-protected-path-not-in-git` — anthropics/sandbox-runtime test/sandbox/mandatory-deny-paths.test.ts ("Non-existent deny path protection and cleanup") and issue #139 (Apache-2.0)
 - `network/network-broker-allowlist-lookalike` — anthropics/sandbox-runtime test/sandbox/domain-pattern.test.ts and test/sandbox/canonical-host-routing.test.ts (Apache-2.0)
 - `network/network-broker-host-header-spoof` — anthropics/sandbox-runtime test/sandbox/request-filter.test.ts (Apache-2.0)
 - `network/network-broker-internal-ip-spellings` — anthropics/sandbox-runtime test/sandbox/canonical-host-routing.test.ts (Apache-2.0)

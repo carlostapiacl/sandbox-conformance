@@ -10,7 +10,7 @@ red, límites de cgroup y un proxy de egress para allow-lists de dominios.
 > adapter se escribió antes de su primera medición, pasa por la misma revisión que
 > los demás, y cada archivo de resultados lo dice (`conflict_of_interest`).
 
-- Medido: **0.1.0-alpha.24**, compilado desde el commit con tag `060c3fc7`
+- Medido: **0.1.0-alpha.25**, compilado desde el commit con tag `28a153fe`
   (`github.com/carlostapiacl/tartaros`, Apache-2.0) en una imagen fijada `rust:1.99.1`
   ([`runner/Dockerfile`](../runner/Dockerfile)), así que el binario medido es el código del
   tag (el paquete de npm también trae un binario estático para Linux, que aquí no se usa).
@@ -61,6 +61,7 @@ publicara nada. Sus hallazgos y lo que pasó con ellos:
 
 ## Resultados {#resultados}
 
+- 0.1.0-alpha.25: [2026-11-20](../results/2026-11-20/README.md), corpus v1.2. Un resultado cambió respecto de alpha.24 (198 contracts comparados, alpha.24 medido otra vez primero): `lifecycle-protected-path-not-in-git` pasa de escaped a contained, porque alpha.25 hace de sus placeholders en el working tree directorios vacíos, que git no lista. Ese contract se escribió sabiéndolo (conflicto de interés, [`contracts/CHANGES.md`](../contracts/CHANGES.md)). `lifecycle-no-host-artifacts-after-sigterm` queda contained en las dos.
 - 0.1.0-alpha.24: [2026-11-08](../results/2026-11-08/README.md), los cinco sandboxes en su último release. Ningún resultado cambió respecto de alpha.16 (194 contracts comparados, alpha.16 medido otra vez primero); los dos contracts de los tests de Deno quedan contained.
 - 0.1.0-alpha.16: [2026-10-26-tartaros-alpha16](../results/2026-10-26-tartaros-alpha16/README.md), con los contracts de credenciales enmascaradas medidos.
 - 0.1.0-alpha.11: [2026-10-22-tartaros-alpha11](../results/2026-10-22-tartaros-alpha11/README.md), con los contracts del broker medidos.

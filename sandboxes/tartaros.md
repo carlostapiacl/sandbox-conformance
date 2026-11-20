@@ -10,7 +10,7 @@ namespace, cgroup limits and an egress proxy for domain allow-lists.
 > adapter was written before its first measurement, goes through the same review as
 > the others, and every result file says so (`conflict_of_interest`).
 
-- Measured: **0.1.0-alpha.24**, built from the tagged commit `060c3fc7`
+- Measured: **0.1.0-alpha.25**, built from the tagged commit `28a153fe`
   (`github.com/carlostapiacl/tartaros`, Apache-2.0) in a pinned `rust:1.99.1` image
   ([`runner/Dockerfile`](../runner/Dockerfile)), so the binary measured is the tag's source
   (the npm package also ships a static Linux binary, not used here).
@@ -61,6 +61,7 @@ was published. Its findings and what became of them:
 
 ## Results
 
+- 0.1.0-alpha.25: [2026-11-20](../results/2026-11-20/README.md), corpus v1.2. One result changed from alpha.24 (198 contracts compared, alpha.24 re-measured first): `lifecycle-protected-path-not-in-git` goes from escaped to contained, because alpha.25 makes its working-tree placeholders empty directories, which git does not list. That contract was written knowing this (conflict of interest, [`contracts/CHANGES.md`](../contracts/CHANGES.md)). `lifecycle-no-host-artifacts-after-sigterm` is contained in both.
 - 0.1.0-alpha.24: [2026-11-08](../results/2026-11-08/README.md), the five sandboxes at their latest releases. No result changed from alpha.16 (194 contracts compared, alpha.16 re-measured first); the two contracts from Deno's tests are contained.
 - 0.1.0-alpha.16: [2026-10-26-tartaros-alpha16](../results/2026-10-26-tartaros-alpha16/README.md), the masked-credential contracts measured.
 - 0.1.0-alpha.11: [2026-10-22-tartaros-alpha11](../results/2026-10-22-tartaros-alpha11/README.md), the broker contracts measured.

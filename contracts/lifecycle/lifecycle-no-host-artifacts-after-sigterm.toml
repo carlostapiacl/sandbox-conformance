@@ -1,0 +1,35 @@
+# derived from anthropics/sandbox-runtime test/sandbox/mandatory-deny-paths.test.ts ("Non-existent deny path protection and cleanup") and issue #139 (Apache-2.0)
+id = "lifecycle-no-host-artifacts-after-sigterm"
+source = "anthropics/sandbox-runtime test/sandbox/mandatory-deny-paths.test.ts (\"Non-existent deny path protection and cleanup\": no ghost dotfiles left in the working directory) and issue #139 (Apache-2.0)"
+category = "lifecycle"
+severity = "medium"
+os = ["linux", "macos"]
+
+# lifecycle-no-host-artifacts, with the launcher sent SIGTERM mid-run. The agent
+# cannot create the absent protected file (.mcp.json), and whatever the sandbox
+# put at that path to stop it must not outlive the run, even when the launcher
+# is ended by SIGTERM, which it can catch. (Not SIGKILL: nothing in the launcher
+# runs after it, and keeping the path denied is then the safer leftover.)
+# The attack ends on its own 2 s after the signal, before the assert, so a
+# sandboxed tree that survives its launcher cannot be what holds the path; what
+# is left is what the launcher did not remove.
+[policy]
+writable_roots = ["{root}/work"]
+
+[signal]
+after_secs = 1
+sig = "TERM"
+
+[[fixture]]
+path = "{root}/work/src"
+dir = true
+
+[attack]
+cmd = "sh -c 'echo {} > {root}/work/.mcp.json; sleep 3'"
+
+[control]
+cmd = "echo ok > {root}/work/src/f.txt"
+
+[assert]
+absent = "{root}/work/.mcp.json"
+settle_secs = 4

@@ -9,7 +9,7 @@ usaste:
   title        = {sandbox-conformance: an open lab for measuring sandboxes for AI coding agents},
   year         = {2026},
   howpublished = {\url{https://github.com/carlostapiacl/sandbox-conformance}},
-  note         = {Corpus v1.1}
+  note         = {Corpus v1.2}
 }
 ```
 

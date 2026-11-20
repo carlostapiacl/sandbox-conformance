@@ -9,7 +9,8 @@ I measured codex-cli 0.162.1 (`@openai/codex`), built from commit
 `092d3acd6bec3e3a14bdc7e7a2810ab628ab759d` (tag rust-v0.162.1), and on
 2026-10-21 codex-cli 0.163.0 (commit `83086188ae0614bd882818ff1aa23f3194962012`,
 tag rust-v0.163.0), and on 2026-11-08 codex-cli 0.167.0 (commit
-`086ccc833bc9cf01024ad2dd6af7dbd421b6bf9a`, tag rust-v0.167.0), licensed Apache-2.0. Which results changed in which
+`086ccc833bc9cf01024ad2dd6af7dbd421b6bf9a`, tag rust-v0.167.0), and on 2026-11-20 codex-cli 0.171.0
+(commit `ccf9be8cc458bd6b8336fe84d68d8893f2691a5e`, tag rust-v0.171.0), licensed Apache-2.0. Which results changed in which
 version: [`results/versions.md`](../results/versions.md). I called its native `x86_64-unknown-linux-musl` binary directly
 instead of the npm launcher. That launcher is a Node script, and a contract
 that sets `NODE_OPTIONS` in the environment would break the launcher before the
@@ -40,6 +41,13 @@ Some fields have no equivalent in codex:
 - `materialize_absent_handoff`.
 - `[broker]`.
 - A log of its own that the agent could try to tamper with.
+
+## Results of 0.171.0 (2026-11-20 run)
+
+No result changed from 0.167.0: the [run](../results/2026-11-20/README.md) re-measured 0.167.0 on the
+same host and corpus v1.2 first, and both versions give the same result on all 198 contracts. The
+two lifecycle contracts corpus v1.2 adds escape, as `lifecycle-no-host-artifacts` does: `.mcp.json`
+is not on codex's list of protected files. Everything below holds for 0.171.0.
 
 ## Results of 0.167.0 (2026-11-08 run)
 

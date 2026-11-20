@@ -7,7 +7,7 @@ plantar un git hook. Este lab convierte cada una de esas afirmaciones en un **co
 cualquiera puede correr, lo corre contra cada sandbox con el mismo procedimiento y publica
 el resultado con la evidencia de cada caso.
 
-**Corpus v1.1**: 196 contracts, reexpresados a partir de las suites de tests públicas de
+**Corpus v1.2**: 198 contracts, reexpresados a partir de las suites de tests públicas de
 sandbox-runtime, nono, Codex, Deno, bubblewrap y OpenHands, cada uno con el crédito a su
 fuente. Medidos hasta ahora: sandbox-runtime, nono, Codex CLI, landrun y TartarOS, en Linux.
 

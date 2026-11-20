@@ -15,7 +15,8 @@ CFG = "/var/lib/sc/cfg"
 # The commit each measured release was built from (its tag). A version not listed
 # records "unknown commit" instead of borrowing another release's.
 TAG_COMMIT = {"0.0.79": "d9aac2098351ca17f3743fbaf6ecbd0051b7e00e",
-              "0.0.81": "c40cf14a65d025e3cd27f071f13a73c12b3b1f92"}
+              "0.0.81": "c40cf14a65d025e3cd27f071f13a73c12b3b1f92",
+              "0.0.83": "0bbebed0aa9a8e628dc4df8bc30293550a1988eb"}
 
 
 def identity():
