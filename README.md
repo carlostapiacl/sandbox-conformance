@@ -2,121 +2,109 @@
 
 An open lab for measuring sandboxes for AI coding agents.
 
-Every sandbox makes claims: "the agent can't read your keys", "it can't reach the
-network", "it can't plant a git hook". This repository turns those claims into
-**contracts anyone can run**, and keeps the results of running them against each
-sandbox, so you can compare them on the same tests, with the evidence attached.
+Every sandbox for coding agents makes claims: the agent can't read your keys, can't reach the
+network, can't plant a git hook. I turn each claim into a **contract** anyone can run, run every
+contract against every sandbox through the same procedure, and publish the result with the
+evidence of each case.
 
-It is not tied to any one sandbox. Add a contract, measure your sandbox, publish
-the result.
+**Documentation:** [carlostapiacl.github.io/sandbox-conformance/docs](https://carlostapiacl.github.io/sandbox-conformance/docs/)
+(quickstart, concepts, how-to guides, methodology, every run and the contract catalog), also
+[in Spanish](https://carlostapiacl.github.io/sandbox-conformance/docs/es/).
 
-**Documentation:** [carlostapiacl.github.io/sandbox-conformance/docs](https://carlostapiacl.github.io/sandbox-conformance/docs/):
-quickstart, concepts, how-to guides, methodology, every run and the contract catalog.
-In Spanish at [/docs/es](https://carlostapiacl.github.io/sandbox-conformance/docs/es/): the
-translations are in `docs-es/` and `i18n/es/` (glossary in `i18n/es/GLOSARIO.md`), and a page
-whose English original changed since it was translated says so until it is re-translated and
-stamped (`python3 i18n/es/stamp.py`).
+## How a contract works
+
+A contract is a TOML file with three parts:
+
+- **attack**: something the agent must not be able to do;
+- **control**: legitimate work that must keep working, so a sandbox that blocks everything
+  does not pass;
+- **effect**: what is checked on disk or on the wire afterwards (the file is unchanged, the
+  secret never left).
+
+Each contract runs twice on the same host: first without a sandbox, where the attack must
+work, then inside the sandbox. An attack that fails even without a sandbox proves nothing and is
+reported as `vacuous`. What each result means is defined in [`spec/verdicts.md`](spec/verdicts.md),
+and the file format in [`spec/format.md`](spec/format.md).
+
+The contracts are re-expressed from the public test suites of the sandboxes themselves
+(sandbox-runtime, nono, Codex, Deno, bubblewrap, OpenHands), so each one tests a guarantee some
+project already claims. Every file credits its source ([`SOURCES.md`](SOURCES.md)).
+
+## Latest results
+
+Run of [2026-11-20](results/2026-11-20/README.md), corpus v1.2 (198 contracts), Linux 6.8:
+
+| sandbox | version | contained | escaped | unsupported |
+|---|---|---:|---:|---:|
+| [sandbox-runtime](sandboxes/sandbox-runtime.md) | 0.0.83 | 142 | 15 | 18 |
+| [nono](sandboxes/nono.md) | 0.82.0 | 51 | 38 | 83 |
+| [Codex CLI](sandboxes/codex.md) | 0.171.0 | 97 | 26 | 24 |
+| [landrun](sandboxes/landrun.md) | 0.1.17 | 41 | 44 | 91 |
+| [TartarOS](sandboxes/tartaros.md) | 0.1.0-alpha.25 | 172 | 3 | 0 |
+
+`unsupported` means the sandbox has no way to express that rule: a missing feature, not an
+escape. Every escape has a reading (a confirmed breach, documented, a design choice, or an
+assumption of the contract that doesn't hold for that sandbox) in the run's
+[`comparison.md`](results/2026-11-20/comparison.md). Every run is in [`results/`](results/README.md),
+and what changed from one version of a sandbox to the next in
+[`results/versions.md`](results/versions.md).
 
 ## What's here
 
 | folder | what |
 |---|---|
-| `contracts/` | the tests, one TOML file each, grouped by topic, each crediting its source |
+| `contracts/` | the contracts, one TOML file each, grouped by topic |
 | `corpus/` | the corpus versions: the exact contract files of each, by hash |
-| `spec/` | the [contract format](spec/format.md), explained for people who want to write one, and [what a result means](spec/verdicts.md) (draft) |
+| `spec/` | the contract format and the meaning of each result |
+| `runner/` | the engine, one adapter per sandbox, the lab image and the reference sandboxes |
 | `sandboxes/` | one page per sandbox: how a contract maps to its configuration, and its results by version |
-| `results/` | published runs with their raw evidence, and the generated comparison table |
+| `results/` | the published runs, with the raw evidence of every case |
 
-## What a contract is
+## Running it
 
-Three parts, so a result is never just "it returned an error":
+```sh
+python3 -m unittest discover -s runner/tests   # the lab against its reference sandboxes, any machine
+python3 runner/corpus.py check                 # contracts/ is exactly the latest corpus version
+```
 
-- **attack**: something the agent must not be able to do;
-- **control**: legitimate work that must keep working (a sandbox that blocks
-  everything fails here);
-- **effect**: what is checked on disk or on the wire afterwards (the file is
-  unchanged, the secret never appeared).
+Measuring a sandbox needs Docker on a disposable Linux host with Landlock; the
+[quickstart](https://carlostapiacl.github.io/sandbox-conformance/docs/get-started/quickstart/) has
+the steps. Adding a sandbox is one adapter module in `runner/adapters/`.
 
-Before a contract counts against a sandbox, its attack must work **without** a
-sandbox on the same host. Otherwise a "blocked" result would prove nothing.
+## How the lab has changed
 
-## Status
+- **2026-10-15.** First runs: sandbox-runtime, nono and Codex CLI, then landrun as a fourth
+  column, and a by-omission run that measures capability sandboxes in their own model.
+- **2026-10-16.** Results judged by a written spec. The lab tests itself against reference
+  sandboxes whose behaviour is known (one allows everything, one denies everything), so a bug
+  in the lab shows up before it reaches a result.
+- **2026-10-21.** Before a new release is measured, the one it replaces is measured again on the
+  same host and has to reproduce its published result (also on 2026-11-08 and 2026-11-20).
+- **2026-10-22.** TartarOS added. Contracts on credential brokers run their baseline against a
+  reference broker with no defences, the same for every sandbox.
+- **2026-10-26.** The corpus is versioned (v1.0, v1.1) and every result records the version it
+  ran on. A witness host lets contracts check that a masked credential never reaches the wire.
+- **2026-11-08.** All five sandboxes on one runner commit, at their latest releases.
+- **2026-11-20.** Corpus v1.2: two contracts on what a sandbox leaves at a protected path that
+  doesn't exist yet, after SIGTERM and as seen by git.
 
-The corpus is versioned: **v1.2** (2026-11-20) is 198 contracts, harvested from the
-public test suites of sandbox-runtime, nono, Codex, Deno, bubblewrap and OpenHands, with
-by-omission variants, six masked-credential contracts and two on placeholders at absent
-protected paths, each re-expressed in the
-neutral format and credited in [`SOURCES.md`](SOURCES.md) and its own `source` field.
-Which contracts a version is, and when it moves, is in [`corpus/`](corpus/README.md).
+Every change to a published contract is recorded with its reason in
+[`contracts/CHANGES.md`](contracts/CHANGES.md), so a fix can be told from a change made to suit a
+result.
 
-Maintained by the author of TartarOS. TartarOS is where I try each escape the lab
-finds, to see whether it can be mitigated, so it is built against these contracts and
-its column should be read that way. That is also why the contracts come from the other
-projects' test suites. TartarOS is measured like the others since the
-[2026-10-22 run](results/2026-10-22-tartaros/README.md), and its
-[page](sandboxes/tartaros.md) and result file record the conflict of interest.
+## Conflict of interest
 
-Contracts and adapters are welcome: see [`CONTRIBUTING.md`](CONTRIBUTING.md).
+I maintain TartarOS, one of the sandboxes measured. It is where I try to mitigate each escape the
+lab finds, so it is built against these contracts and its column should be read that way. That is
+also why the contracts come from the other projects' test suites, and why its adapter goes through
+the same review as the others. Every TartarOS result file records the conflict.
 
-Reports I sent to each vendor's security program, as of 2026-10-27:
+## Contributing
 
-| sandbox | reported | still open |
-|---|---:|---:|
-| sandbox-runtime | 4 | 1 |
-| codex | 2 | 1 |
-| nono | 0 | 0 |
-| landrun | 0 | 0 |
+Contracts and adapters are welcome: see [`CONTRIBUTING.md`](CONTRIBUTING.md). How a finding
+about a measured sandbox is disclosed: [`SECURITY.md`](SECURITY.md).
 
-The details of an open report are not published until the vendor fixes it
-([`SECURITY.md`](SECURITY.md)).
+The results and what they mean are written up at
+[carlostapia.cl](https://carlostapia.cl/notes/sandbox-escapes-no-rule-broken/).
 
-First results in: [`results/2026-10-15/`](results/2026-10-15/README.md) measures
-sandbox-runtime 0.0.79, nono 0.80.0 and Codex CLI 0.162.1 on Linux (kernel 6.8),
-with the [runner and adapters](runner/README.md) that produced them and a page per
-sandbox in [`sandboxes/`](sandboxes/README.md).
-
-A fourth sandbox, [landrun](sandboxes/landrun.md) (pure Landlock, MIT), is now
-measured alongside the three in a [four-column run](results/2026-10-15-four-sandboxes/README.md).
-Adding a sandbox is one adapter module in `runner/adapters/`; the engine and the
-contracts are untouched.
-
-The [by-omission run](results/2026-10-15-by-omission/README.md) re-measures the
-read-deny contracts in a capability sandbox's own model (grant the workspace,
-omit the secret), so nono is measured where the neutral model only returned
-`unsupported`.
-
-The [2026-10-16 run](results/2026-10-16/README.md) is the first judged by
-[`spec/verdicts.md`](spec/verdicts.md). The old runner reproduces the 2026-10-15
-results on a fresh host; the new one changes five, each traced to a cause. The lab
-tests itself against [reference sandboxes](runner/reference/README.md) whose behaviour
-is known (`python3 -m unittest discover -s runner/tests`).
-
-The [2026-10-21 run](results/2026-10-21/README.md) measures the latest releases:
-sandbox-runtime 0.0.81 and Codex CLI 0.163.0 (nono and landrun unchanged). The
-previous versions were re-measured first and reproduced. Which results changed in which
-version is in [`results/versions.md`](results/versions.md).
-
-The [2026-10-22 run](results/2026-10-22-tartaros/README.md) adds TartarOS 0.1.0-alpha.10,
-on the same host, contracts and lab tools as the 2026-10-21 run. The
-[alpha.11 run](results/2026-10-22-tartaros-alpha11/README.md) the same day measures the
-`[broker]` contracts for the first time: their baseline now runs against a
-[reference broker](spec/format.md#the-broker-table) with no defences, the same for every
-sandbox.
-The [2026-10-26 run](results/2026-10-26-tartaros-alpha16/README.md) measures TartarOS
-0.1.0-alpha.16 and sandbox-runtime 0.0.81 on six new masked-credential contracts: both
-contain all six on Linux.
-
-The [2026-11-08 run](results/2026-11-08/README.md) measures all five at their latest
-releases on the whole corpus v1.1: TartarOS 0.1.0-alpha.24, Codex CLI 0.167.0 and nono
-0.81.0 are new, sandbox-runtime 0.0.81 and landrun 0.1.17 unchanged. The previous versions
-were re-measured first and reproduced on every contract; no new version changes a result.
-
-The [2026-11-20 run](results/2026-11-20/README.md) measures the five on corpus v1.2, which adds
-two lifecycle contracts on the placeholders a sandbox puts at an absent protected path (after
-SIGTERM to the launcher, and seen by git while the command runs). sandbox-runtime 0.0.83, nono
-0.82.0, Codex CLI 0.171.0 and TartarOS 0.1.0-alpha.25 are new; the previous versions reproduce
-their earlier results, and the only result a new version changes is TartarOS on the git contract.
-
-Next: macOS runs and [more corpora](corpus-roadmap.md) harvested from other sandboxes' test suites.
-
-The results and what they mean are written up at [carlostapia.cl](https://carlostapia.cl/notes/sandbox-escapes-no-rule-broken/).
+Apache-2.0.
