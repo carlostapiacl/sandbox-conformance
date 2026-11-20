@@ -14,14 +14,14 @@ WASM runtime whose test asserts an error code or exit status, not a host effect;
 **vm** = a micro-VM / VM where only a sub-layer (jailer, seccomp) fits; **ast** =
 an in-process language restriction with no disk/wire effect.
 
-## Harvested (corpus v1.1: 196 contracts)
+## Harvested (corpus v1.2: 198 contracts)
 
 Counts include the by-omission variants, under the source of the contract they vary.
 [`SOURCES.md`](SOURCES.md) lists every contract.
 
 | source | license | contracts | notes |
 |---|---|---|---|
-| [anthropics/sandbox-runtime](https://github.com/anthropics/sandbox-runtime) | Apache-2.0 | 135 | `test/sandbox/*` |
+| [anthropics/sandbox-runtime](https://github.com/anthropics/sandbox-runtime) | Apache-2.0 | 137 | `test/sandbox/*` and issue #139 |
 | [nolabs-ai/nono](https://github.com/nolabs-ai/nono) | Apache-2.0 | 38 | Rust tests + integration shell |
 | [openai/codex](https://github.com/openai/codex) | Apache-2.0 | 18 | `codex-rs/linux-sandbox`, sandboxing tests |
 | [denoland/deno](https://github.com/denoland/deno) | MIT | 2 | `tests/specs/permission/`; the rest test Deno's own runtime APIs (imports, Node compatibility, prompts), not a guarantee an OS sandbox gives |

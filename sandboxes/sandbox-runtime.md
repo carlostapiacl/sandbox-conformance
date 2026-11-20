@@ -170,7 +170,7 @@ with a `run --write DIR` command line, which srt does not have.
 ## Upstream status
 
 Checked on 2026-10-15 against srt's public pull requests and commits, and
-again on 2026-10-21. Most of what the 0.0.79 run found on configured rules was
+again on 2026-10-21 and 2026-11-20 (the open rows are still open). Most of what the 0.0.79 run found on configured rules was
 already fixed on `main` when I measured it. Those fixes shipped in v0.0.80, and
 the 2026-10-21 run measured them in 0.0.81.
 
@@ -185,6 +185,7 @@ the 2026-10-21 run measured them in 0.0.81.
 | protected names scanned from the working directory | open | [#518](https://github.com/anthropics/sandbox-runtime/pull/518), [#569](https://github.com/anthropics/sandbox-runtime/pull/569) |
 | nested repositories, gitdir pointers, worktree gitfiles | open | [#569](https://github.com/anthropics/sandbox-runtime/pull/569) |
 | symlinked `.claude` directory | open | [#531](https://github.com/anthropics/sandbox-runtime/pull/531) |
+| placeholder at an absent protected path listed by git while a command runs (2026-11-20 run) | open; documented in srt's README | [#139](https://github.com/anthropics/sandbox-runtime/issues/139), [#227](https://github.com/anthropics/sandbox-runtime/pull/227) |
 
 The full table, with the contracts behind each row, is at the end of
 [`comparison.md`](../results/2026-10-15/comparison.md).
