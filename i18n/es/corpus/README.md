@@ -34,3 +34,4 @@ registró. Volver a medir en una versión más nueva es un run nuevo.
 |---|---|---|---|
 | [1.0](v1.0.json) | 2026-10-26 | 194 | la primera versión: los contracts de todos los runs hasta el 2026-10-26, con los seis contracts de credenciales enmascaradas. Los runs anteriores corrieron contracts que cambiaron desde entonces y aparecen como *pre-1.0* |
 | [1.1](v1.1.json) | 2026-10-26 | 196 | dos contracts de los tests de permisos de Deno: un read-deny al que se llega por `/proc/self/root`, y un directorio con write-deny que tiene que sobrevivir a un `rm -rf` de su directorio padre |
+| [1.2](v1.2.json) | 2026-11-20 | 198 | dos contracts de ciclo de vida a partir del test de dotfiles fantasma de sandbox-runtime y su issue #139: lo que un sandbox pone en una ruta protegida que no existe no tiene que sobrevivir a un launcher terminado por SIGTERM, ni aparecer en el `git status` del agente durante el run |

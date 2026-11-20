@@ -8,7 +8,8 @@ I measured version 0.80.0 from the release asset
 `nono-v0.80.0-x86_64-unknown-linux-gnu.tar.gz`, after checking it against the
 release's SHA256SUMS. The source commit is
 `8bb041356d48f771a221e58c98d9b1ff442e76fe` (tag v0.80.0). On 2026-11-08 I measured
-0.81.0 the same way (commit `b2d859deeb7a65f9ca5b334eb8726637ba76c866`, tag v0.81.0).
+0.81.0 the same way (commit `b2d859deeb7a65f9ca5b334eb8726637ba76c866`, tag v0.81.0), and on
+2026-11-20 0.82.0 (commit `f1e0a7ac2cf44709a2982c07b5ca1273e0d5a9ba`, tag v0.82.0).
 The license is Apache-2.0. Which results changed in which version:
 [`results/versions.md`](../results/versions.md). The adapter is [`runner/adapters/nono.py`](../runner/adapters/nono.py).
 It writes a profile and runs
@@ -45,6 +46,14 @@ secret stays protected because nobody granted it. In that setup most of these
 secrets would never be readable. The contracts' `[policy]` does not describe
 that setup, so I did not measure it in this run. A version of the read-deny
 contracts written for that model would let me measure it.
+
+## Results of 0.82.0 (2026-11-20 run)
+
+No result changed from 0.81.0 with its namespaces: the [run](../results/2026-11-20/README.md)
+re-measured 0.81.0 on the same host and corpus v1.2 first, and both versions give the same result
+on all 198 contracts. The two lifecycle contracts corpus v1.2 adds escape, as
+`lifecycle-no-host-artifacts` does: `.mcp.json` is not among the files nono protects. 51 contained,
+38 escaped.
 
 ## Results of 0.81.0 (2026-11-08 run)
 

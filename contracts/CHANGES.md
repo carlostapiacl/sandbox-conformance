@@ -21,11 +21,19 @@ went into.
   launcher ended by SIGTERM) and `lifecycle-protected-path-not-in-git` (while the
   command runs, the agent's `git status` must not list anything at the protected
   path). `lifecycle-no-host-artifacts` only checks after a normal exit, where
-  sandbox-runtime cleans up; issue #139 reports the other two cases. There is no
-  SIGKILL contract on purpose: nothing in the launcher runs after SIGKILL, and
-  sandbox-runtime's `stale-mount-point.test.ts` keeps such a leftover so the next
-  command still finds the path denied, which is the safer choice. Prompted by a
-  measurement of sandbox-runtime 0.0.83 before any lab run. Conflict of interest:
+  sandbox-runtime cleans up. There is no SIGKILL contract on purpose: nothing in
+  the launcher runs after SIGKILL, and sandbox-runtime's `stale-mount-point.test.ts`
+  keeps such a leftover so the next command still finds the path denied, which is
+  the safer choice (its README says so too). Prompted by a measurement of
+  sandbox-runtime 0.0.83 outside the lab, which was wrong on one point: its
+  "SIGTERM" case also sent SIGKILL (the `pkill` pattern matched the launcher), so it
+  showed a leftover after SIGTERM that the lab does not reproduce. sandbox-runtime
+  cleans up after SIGTERM; the contract stays as a regression check for every
+  sandbox. The first draft of the git contract had no `.git/config` fixture: under
+  sandbox-runtime git then stopped on the placeholder at `.git/config` and the
+  attack failed for that reason, a contained that proved nothing. The fixture was
+  added, and the reference sandboxes checked again, before any result was
+  published; v1.2 has only the fixed file. Conflict of interest:
   TartarOS, by this lab's author, already makes its working-tree placeholders
   empty directories that git does not list (0.1.0-alpha.25), so it was designed to
   pass the second one. Checked against the reference sandboxes before any sandbox

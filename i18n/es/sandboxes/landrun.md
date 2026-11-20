@@ -32,6 +32,10 @@ En este host (Landlock ABI 4) el scoping de abstract sockets y de señales de la
 v6) no está disponible, así que esas garantías no se aplican; sus reglas de red cubren
 solo TCP, así que UDP, netlink y las demás familias de sockets no se bloquean.
 
+Medido otra vez el 2026-11-20 (mismo release, [run](../results/2026-11-20/README.md)): todos los
+resultados anteriores se repiten, y los dos contracts de ciclo de vida del corpus v1.2 escapan (no
+protege `.mcp.json` por nombre, igual que en `lifecycle-no-host-artifacts`).
+
 Medido otra vez el 2026-11-08 (mismo release, [run](../results/2026-11-08/README.md)): todos los resultados anteriores
 se repiten, y los ocho contracts que se sumaron al corpus desde entonces son `unsupported`
 (sin credenciales enmascaradas ni deny).

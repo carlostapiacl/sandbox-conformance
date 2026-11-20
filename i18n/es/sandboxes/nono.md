@@ -8,7 +8,8 @@ Medí la versión 0.80.0 desde el asset del release
 `nono-v0.80.0-x86_64-unknown-linux-gnu.tar.gz`, después de verificarlo contra el
 SHA256SUMS del release. El commit de origen es
 `8bb041356d48f771a221e58c98d9b1ff442e76fe` (tag v0.80.0). El 2026-11-08 medí 0.81.0
-de la misma forma (commit `b2d859deeb7a65f9ca5b334eb8726637ba76c866`, tag v0.81.0). La
+de la misma forma (commit `b2d859deeb7a65f9ca5b334eb8726637ba76c866`, tag v0.81.0), y el
+2026-11-20 0.82.0 (commit `f1e0a7ac2cf44709a2982c07b5ca1273e0d5a9ba`, tag v0.82.0). La
 licencia es Apache-2.0. Qué resultados cambiaron en qué versión:
 [`results/versions.md`](../results/versions.md). El adapter es [`runner/adapters/nono.py`](../runner/adapters/nono.py).
 Escribe un profile y ejecuta
@@ -45,6 +46,14 @@ secreto queda protegido porque nadie le dio acceso. Con esa configuración la ma
 secretos nunca se podrían leer. La `[policy]` de los contracts no describe
 esa configuración, así que no la medí en este run. Una versión de los
 contracts de read-deny escrita para ese modelo me permitiría medirla.
+
+## Resultados de 0.82.0 (run del 2026-11-20) {#results-of-0820-2026-11-20-run}
+
+Ningún resultado cambió respecto de 0.81.0 con sus namespaces: el
+[run](../results/2026-11-20/README.md) primero volvió a medir 0.81.0 en el mismo host y con el corpus
+v1.2, y las dos versiones dan el mismo resultado en los 198 contracts. Los dos contracts de ciclo de
+vida que suma el corpus v1.2 escapan, igual que `lifecycle-no-host-artifacts`: `.mcp.json` no está
+entre los archivos que nono protege. 51 contained, 38 escaped.
 
 ## Resultados de 0.81.0 (run del 2026-11-08) {#results-of-0810-2026-11-08-run}
 

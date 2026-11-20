@@ -8,7 +8,8 @@ be reached.
 I measured version 0.0.79 (`@anthropic-ai/sandbox-runtime`), built from
 commit `d9aac2098351ca17f3743fbaf6ecbd0051b7e00e` (tag v0.0.79), and on
 2026-10-21 version 0.0.81 (commit `c40cf14a65d025e3cd27f071f13a73c12b3b1f92`,
-tag v0.0.81), licensed Apache-2.0. Which results changed in which version:
+tag v0.0.81), and on 2026-11-20 version 0.0.83 (commit
+`0bbebed0aa9a8e628dc4df8bc30293550a1988eb`, tag v0.0.83), licensed Apache-2.0. Which results changed in which version:
 [`results/versions.md`](../results/versions.md). The adapter is
 [`runner/adapters/sandbox_runtime.py`](../runner/adapters/sandbox_runtime.py).
 It writes a settings file and runs `srt --settings <file> -c <cmd>`.
@@ -39,6 +40,16 @@ Some fields have no equivalent in srt:
 The adapter passes paths exactly as the contract spells them, with trailing
 slashes, brackets, `..` and symlinks left in. How a sandbox reads those
 spellings is part of what is under test.
+
+## Results of 0.0.83 (2026-11-20 run)
+
+No result changed from 0.0.81: the [run](../results/2026-11-20/README.md) re-measured 0.0.81 on the
+same host and corpus v1.2 first, and both versions give the same result on all 198 contracts. Of
+the two contracts corpus v1.2 adds, `lifecycle-no-host-artifacts-after-sigterm` is contained (the
+placeholder at an absent protected path is removed when the launcher is ended by SIGTERM) and
+`lifecycle-protected-path-not-in-git` escapes: while a command runs, git lists that placeholder as
+an untracked file. srt's README states that these mount points are visible on the host while a
+command runs (reading `documented`). 142 contained, 15 escaped.
 
 ## 0.0.81 again (2026-11-08 run)
 

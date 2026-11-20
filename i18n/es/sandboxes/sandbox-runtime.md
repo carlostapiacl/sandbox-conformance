@@ -8,7 +8,8 @@ dominios se puede llegar.
 Medí la versión 0.0.79 (`@anthropic-ai/sandbox-runtime`), compilada desde el
 commit `d9aac2098351ca17f3743fbaf6ecbd0051b7e00e` (tag v0.0.79), y el
 2026-10-21 la versión 0.0.81 (commit `c40cf14a65d025e3cd27f071f13a73c12b3b1f92`,
-tag v0.0.81), con licencia Apache-2.0. Qué resultados cambiaron en qué versión:
+tag v0.0.81), y el 2026-11-20 la versión 0.0.83 (commit
+`0bbebed0aa9a8e628dc4df8bc30293550a1988eb`, tag v0.0.83), con licencia Apache-2.0. Qué resultados cambiaron en qué versión:
 [`results/versions.md`](../results/versions.md). El adapter es
 [`runner/adapters/sandbox_runtime.py`](../runner/adapters/sandbox_runtime.py).
 Escribe un archivo de configuración y ejecuta `srt --settings <file> -c <cmd>`.
@@ -39,6 +40,17 @@ Algunos campos no tienen equivalente en srt:
 El adapter pasa las rutas tal como las escribe el contract, con barras finales,
 corchetes, `..` y symlinks incluidos. Cómo lee un sandbox esas formas de
 escribirlas es parte de lo que se prueba.
+
+## Resultados de 0.0.83 (run del 2026-11-20) {#results-of-0083-2026-11-20-run}
+
+Ningún resultado cambió respecto de 0.0.81: el [run](../results/2026-11-20/README.md) primero volvió a
+medir 0.0.81 en el mismo host y con el corpus v1.2, y las dos versiones dan el mismo resultado en
+los 198 contracts. De los dos contracts que suma el corpus v1.2,
+`lifecycle-no-host-artifacts-after-sigterm` queda contained (el placeholder en una ruta protegida
+que no existe se borra cuando el launcher termina por SIGTERM) y
+`lifecycle-protected-path-not-in-git` escapa: mientras corre un comando, git lista ese placeholder
+como archivo sin seguimiento. El README de srt dice que esos puntos de montaje se ven en el host
+mientras corre un comando (lectura `documented`). 142 contained, 15 escaped.
 
 ## 0.0.81 otra vez (run del 2026-11-08) {#0081-again-2026-11-08-run}
 
