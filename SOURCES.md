@@ -7,14 +7,14 @@ tested*, credited below and in each file's `source` field.
 
 | project | license | contracts |
 |---|---|---|
-| [anthropics/sandbox-runtime](https://github.com/anthropics/sandbox-runtime) | Apache-2.0 | 135 |
+| [anthropics/sandbox-runtime](https://github.com/anthropics/sandbox-runtime) | Apache-2.0 | 137 |
 | [nolabs-ai/nono](https://github.com/nolabs-ai/nono) | Apache-2.0 | 38 |
 | [openai/codex](https://github.com/openai/codex) | Apache-2.0 | 18 |
 | [containers/bubblewrap](https://github.com/containers/bubblewrap) | LGPL-2.1+ (guarantee only, no code) | 1 |
 | [OpenHands/software-agent-sdk](https://github.com/OpenHands/software-agent-sdk) | MIT | 2 |
 | [denoland/deno](https://github.com/denoland/deno) | MIT | 2 |
 
-Total: 196 contracts, 22 of them by-omission variants of another contract (counted under its source). The lab is maintained by the author of TartarOS, one of the sandboxes measured; that is why the contracts come from the other projects' test suites ([methodology](https://carlostapiacl.github.io/sandbox-conformance/docs/methodology/#conflict-of-interest)).
+Total: 198 contracts, 22 of them by-omission variants of another contract (counted under its source). The lab is maintained by the author of TartarOS, one of the sandboxes measured; that is why the contracts come from the other projects' test suites ([methodology](https://carlostapiacl.github.io/sandbox-conformance/docs/methodology/#conflict-of-interest)).
 
 ## Per contract
 

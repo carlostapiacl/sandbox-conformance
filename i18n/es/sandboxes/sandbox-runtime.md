@@ -172,7 +172,7 @@ con una línea de comandos `run --write DIR`, que srt no tiene.
 ## Estado upstream {#upstream-status}
 
 Revisado el 2026-10-15 contra los pull requests y commits públicos de srt, y
-de nuevo el 2026-10-21. Casi todo lo que el run de 0.0.79 encontró en reglas
+de nuevo el 2026-10-21 y el 2026-11-20 (las filas abiertas siguen abiertas). Casi todo lo que el run de 0.0.79 encontró en reglas
 configuradas ya estaba arreglado en `main` cuando lo medí. Esos arreglos salieron en v0.0.80, y
 el run del 2026-10-21 los midió en 0.0.81.
 
@@ -187,6 +187,7 @@ el run del 2026-10-21 los midió en 0.0.81.
 | nombres protegidos escaneados desde el directorio de trabajo | abierto | [#518](https://github.com/anthropics/sandbox-runtime/pull/518), [#569](https://github.com/anthropics/sandbox-runtime/pull/569) |
 | repositorios anidados, punteros gitdir, gitfiles de worktree | abierto | [#569](https://github.com/anthropics/sandbox-runtime/pull/569) |
 | directorio `.claude` que es symlink | abierto | [#531](https://github.com/anthropics/sandbox-runtime/pull/531) |
+| git lista el placeholder de una ruta protegida que no existe mientras corre un comando (run del 2026-11-20) | abierto; documentado en el README de srt | [#139](https://github.com/anthropics/sandbox-runtime/issues/139), [#227](https://github.com/anthropics/sandbox-runtime/pull/227) |
 
 La tabla completa, con los contracts detrás de cada fila, está al final de
 [`comparison.md`](../results/2026-10-15/comparison.md).
