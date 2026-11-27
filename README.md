@@ -97,7 +97,8 @@ result.
 I maintain TartarOS, one of the sandboxes measured. It is where I try to mitigate each escape the
 lab finds, so it is built against these contracts and its column should be read that way. That is
 also why the contracts come from the other projects' test suites, and why its adapter goes through
-the same review as the others. Every TartarOS result file records the conflict.
+the same review as the others. Every TartarOS result file records the conflict. The contracts written or changed at the same time as a TartarOS feature are marked in every
+comparison (° and †) and listed in [`SOURCES.md`](SOURCES.md#written-alongside-tartaros).
 
 ## Contributing
 

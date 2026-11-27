@@ -1,0 +1,828 @@
+{
+ "credentials-broker-auth-required": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "credentials-broker-injected-header-not-overridable": {
+  "source_project": "anthropics/sandbox-runtime",
+  "why": "Its assert was added on 2026-10-22, when TartarOS got its broker; the attack and control are the frozen ones.",
+  "with_tartaros": "changed-alongside"
+ },
+ "credentials-broker-method-denied": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "credentials-broker-no-redirect-follow": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "credentials-broker-prefix-scope": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "credentials-broker-token-not-forwarded": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "credentials-masked-env-agent-holds-sentinel": {
+  "source_project": "anthropics/sandbox-runtime",
+  "why": "Written the same day as TartarOS's masked credentials (0.1.0-alpha.16, 2026-10-26).",
+  "with_tartaros": "written-alongside"
+ },
+ "credentials-masked-env-body-scoped": {
+  "source_project": "anthropics/sandbox-runtime",
+  "why": "Written the same day as TartarOS's masked credentials (0.1.0-alpha.16, 2026-10-26).",
+  "with_tartaros": "written-alongside"
+ },
+ "credentials-masked-env-no-laundering": {
+  "source_project": "anthropics/sandbox-runtime",
+  "why": "Written the same day as TartarOS's masked credentials (0.1.0-alpha.16, 2026-10-26).",
+  "with_tartaros": "written-alongside"
+ },
+ "credentials-masked-env-not-in-process-records": {
+  "source_project": "anthropics/sandbox-runtime",
+  "why": "Written the same day as TartarOS's masked credentials (0.1.0-alpha.16, 2026-10-26).",
+  "with_tartaros": "written-alongside"
+ },
+ "credentials-masked-env-not-sent-to-other-host": {
+  "source_project": "anthropics/sandbox-runtime",
+  "why": "Written the same day as TartarOS's masked credentials (0.1.0-alpha.16, 2026-10-26).",
+  "with_tartaros": "written-alongside"
+ },
+ "credentials-masked-env-plain-http-not-swapped": {
+  "source_project": "anthropics/sandbox-runtime",
+  "why": "Written the same day as TartarOS's masked credentials (0.1.0-alpha.16, 2026-10-26).",
+  "with_tartaros": "written-alongside"
+ },
+ "filesystem-chmod-outside": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "filesystem-command-cwd-not-writable": {
+  "source_project": "openai/codex",
+  "with_tartaros": "no"
+ },
+ "filesystem-deny-ancestor-rename": {
+  "source_project": "openai/codex",
+  "with_tartaros": "no"
+ },
+ "filesystem-rename-into-territory": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "filesystem-rename-out-of-territory": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "filesystem-rm-under-read-deny-ancestor": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "filesystem-rm-under-read-deny-ancestor-by-omission": {
+  "by_omission_of": "filesystem-rm-under-read-deny-ancestor",
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "filesystem-single-file-grant": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "filesystem-tmp-shm-not-shared": {
+  "source_project": "openai/codex",
+  "with_tartaros": "no"
+ },
+ "filesystem-truncate-outside": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "filesystem-unlink-outside": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "filesystem-utime-outside": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "filesystem-writable-root-move-across-roots": {
+  "source_project": "openai/codex",
+  "with_tartaros": "no"
+ },
+ "filesystem-writable-root-replace": {
+  "source_project": "openai/codex",
+  "with_tartaros": "no"
+ },
+ "filesystem-write-deny-absent-path": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "filesystem-write-deny-rename-bypass": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "filesystem-write-deny-survives-recursive-remove": {
+  "source_project": "denoland/deno",
+  "with_tartaros": "no"
+ },
+ "filesystem-write-deny-symlink-alias": {
+  "source_project": "openai/codex",
+  "with_tartaros": "no"
+ },
+ "filesystem-write-deny-truncate-unlink": {
+  "source_project": "openai/codex",
+  "with_tartaros": "no"
+ },
+ "filesystem-write-deny-unlink-recreate": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "filesystem-write-deny-via-symlink-spelling": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "filesystem-write-reallow-inside-deny": {
+  "source_project": "openai/codex",
+  "with_tartaros": "no"
+ },
+ "filesystem-write-reallow-inside-deny-by-omission": {
+  "by_omission_of": "filesystem-write-reallow-inside-deny",
+  "source_project": "openai/codex",
+  "with_tartaros": "no"
+ },
+ "filesystem-write-system-paths": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "filesystem-xattr-outside": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "fs-dangling-symlink-create-outside": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "fs-dotdot-absent-root": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "fs-hardlink-create-write-out": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "fs-hardlink-widen-write": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "fs-symlink-dangling-create": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "fs-symlink-file-out-agent-made": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "fs-symlink-rename-out": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "fs-traversal-write-escape-dotdot": {
+  "source_project": "OpenHands/software-agent-sdk",
+  "with_tartaros": "no"
+ },
+ "fs-writable-root-symlink-out": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "fs-writable-root-symlink-parent": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "ipc-abstract-unix-socket": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "ipc-unix-bind-denied": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "ipc-unix-socket-alias": {
+  "source_project": "openai/codex",
+  "with_tartaros": "no"
+ },
+ "ipc-unix-socket-allowlist": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "ipc-unix-socket-in-denied-dir": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "ipc-unix-socket-in-denied-dir-by-omission": {
+  "by_omission_of": "ipc-unix-socket-in-denied-dir",
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "isolation-apple-events-denied": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "isolation-clone-newns-denied": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "isolation-gpu-node-denied": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "isolation-nested-relaunch-no-widen": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "isolation-no-capabilities": {
+  "source_project": "openai/codex",
+  "with_tartaros": "no"
+ },
+ "isolation-no-effective-caps": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "isolation-no-nested-userns": {
+  "source_project": "containers/bubblewrap",
+  "with_tartaros": "no"
+ },
+ "isolation-no-new-privs": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "isolation-pid1-reaper-filtered": {
+  "source_project": "openai/codex",
+  "with_tartaros": "no"
+ },
+ "isolation-proc-mem-launcher-denied": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "isolation-proc-sys-write-denied": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "isolation-process-info-environ": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "isolation-process-info-foreign": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "isolation-ptrace-launcher-denied": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "isolation-root-mount-bypass-denied": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "isolation-root-mount-bypass-denied-by-omission": {
+  "by_omission_of": "isolation-root-mount-bypass-denied",
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "isolation-seccomp-io-uring-denied": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "isolation-signal-host-process": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "isolation-supervisor-proc-mem-denied": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "isolation-vsock-socket-denied": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "lifecycle-background-reaped-on-exit": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "lifecycle-effect-log-tamper": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "lifecycle-exit-status-forwarded": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "lifecycle-no-host-artifacts": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "lifecycle-no-host-artifacts-after-sigterm": {
+  "source_project": "anthropics/sandbox-runtime",
+  "why": "Written with the one above, while working on TartarOS's placeholders; 0.1.0-alpha.24 already passed it (corpus v1.2, 2026-11-20).",
+  "with_tartaros": "written-alongside"
+ },
+ "lifecycle-protected-path-not-in-git": {
+  "source_project": "anthropics/sandbox-runtime",
+  "why": "TartarOS 0.1.0-alpha.25 makes its placeholders directories git does not list, and was designed to pass it (corpus v1.2, 2026-11-20).",
+  "with_tartaros": "written-alongside"
+ },
+ "lifecycle-signal-teardown": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "network-broker-allowlist-lookalike": {
+  "source_project": "anthropics/sandbox-runtime",
+  "why": "Its assert was added on 2026-10-22, when TartarOS got its broker; the attack and control are the frozen ones.",
+  "with_tartaros": "changed-alongside"
+ },
+ "network-broker-host-header-spoof": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "network-broker-internal-ip-spellings": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "network-broker-no-request-smuggling": {
+  "source_project": "anthropics/sandbox-runtime",
+  "why": "Its assert was added on 2026-10-22, when TartarOS got its broker; the attack and control are the frozen ones.",
+  "with_tartaros": "changed-alongside"
+ },
+ "network-broker-path-dot-segments": {
+  "source_project": "anthropics/sandbox-runtime",
+  "why": "Its assert was added on 2026-10-22, when TartarOS got its broker; the attack and control are the frozen ones.",
+  "with_tartaros": "changed-alongside"
+ },
+ "network-broker-ssrf-internal": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "network-broker-survives-malformed-client": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "network-domain-allowlist-direct-bypass": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "network-egress-public-denied": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "network-icmp-denied": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "network-local-bind-denied": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "network-other-socket-families-denied": {
+  "source_project": "openai/codex",
+  "with_tartaros": "no"
+ },
+ "network-proxy-env-present": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "network-socket-domain-high-bits": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "network-tcp-external-denied": {
+  "source_project": "openai/codex",
+  "with_tartaros": "no"
+ },
+ "network-vsock-denied": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-allow-inside-deny-writable-ancestor": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-allow-symlink-into-deny": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-allow-symlink-into-deny-by-omission": {
+  "by_omission_of": "read-allow-symlink-into-deny",
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-allow-symlink-no-reopen": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-allow-symlink-no-reopen-by-omission": {
+  "by_omission_of": "read-allow-symlink-no-reopen",
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-allow-trailing-slash-nested-deny": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-allow-writable-carveout-trailing-slash": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-allow-writable-carveout-trailing-slash-by-omission": {
+  "by_omission_of": "read-allow-writable-carveout-trailing-slash",
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-deny-alt-spelling": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-deny-alt-spelling-by-omission": {
+  "by_omission_of": "read-deny-alt-spelling",
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-deny-around-nested-root": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-deny-around-nested-root-by-omission": {
+  "by_omission_of": "read-deny-around-nested-root",
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-deny-backslash-name": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-deny-backslash-name-by-omission": {
+  "by_omission_of": "read-deny-backslash-name",
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-deny-bracket-dir": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-deny-bracket-dir-by-omission": {
+  "by_omission_of": "read-deny-bracket-dir",
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-deny-given-via-symlink": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-deny-given-via-symlink-by-omission": {
+  "by_omission_of": "read-deny-given-via-symlink",
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-deny-link-dotdot": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-deny-link-dotdot-by-omission": {
+  "by_omission_of": "read-deny-link-dotdot",
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-deny-not-reopened-by-nested-writable": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-deny-not-reopened-by-nested-writable-by-omission": {
+  "by_omission_of": "read-deny-not-reopened-by-nested-writable",
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-deny-root-carve-out": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-deny-symlink-entry": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-deny-symlinked-dir": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-deny-trailing-slash-nested-write-deny": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "read-deny-under-write-deny": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "resources-cgroup-escape": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "seccomp-clone-newuser-denied": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "seccomp-io-uring-denied": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "seccomp-new-mount-api-denied": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "secrets-env-loader-injection-inherit": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "secrets-env-loader-injection-scrub": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "secrets-env-passthrough-selective": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "secrets-env-scrub-common-tokens": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "secrets-glob-deny-created-after-start": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "secrets-glob-deny-rename-out": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "secrets-glob-read-deny": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "secrets-home-credentials-in-writable": {
+  "source_project": "openai/codex",
+  "with_tartaros": "no"
+ },
+ "secrets-host-process-environ": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "secrets-proc-host-process-links": {
+  "source_project": "openai/codex",
+  "with_tartaros": "no"
+ },
+ "secrets-read-allow-symlink-hop-no-widen": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "secrets-read-allow-symlink-hop-no-widen-by-omission": {
+  "by_omission_of": "secrets-read-allow-symlink-hop-no-widen",
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "secrets-read-allow-symlink-into-deny": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "secrets-read-allow-symlink-into-deny-by-omission": {
+  "by_omission_of": "secrets-read-allow-symlink-into-deny",
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-after-chmod": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-also-write-denied": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-case-fold": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-clonefile": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-dir-listing": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-dir-listing-by-omission": {
+  "by_omission_of": "secrets-read-deny-dir-listing",
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-firmlink": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-on-symlinked-path": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-on-symlinked-path-by-omission": {
+  "by_omission_of": "secrets-read-deny-on-symlinked-path",
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-path-special-chars": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-path-special-chars-by-omission": {
+  "by_omission_of": "secrets-read-deny-path-special-chars",
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-prefix-collision": {
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-prefix-collision-by-omission": {
+  "by_omission_of": "secrets-read-deny-prefix-collision",
+  "source_project": "nolabs-ai/nono",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-rename-out": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-single-file": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-single-file-by-omission": {
+  "by_omission_of": "secrets-read-deny-single-file",
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-symlinked-entry": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-symlinked-entry-by-omission": {
+  "by_omission_of": "secrets-read-deny-symlinked-entry",
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-under-write-denied-ancestor": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "secrets-read-deny-via-proc-self-root": {
+  "source_project": "denoland/deno",
+  "with_tartaros": "no"
+ },
+ "secrets-traversal-read-escape-dotdot": {
+  "source_project": "OpenHands/software-agent-sdk",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-bracketed-root": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-claude-agents": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-claude-symlink-cycle": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-editor-dirs": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-git-config": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-git-config-move-aside": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-git-dir-replace": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-git-exchange-rename": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-gitdir-pointer": {
+  "source_project": "openai/codex",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-gitignored-repo": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-gitmodules": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-hooks-dir-absent": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-repo-created-in-run": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-root-inside-hooks": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-shell-rc": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-symlink-absent-parent": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-symlinked-claude-dir": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-tool-rc": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-unreadable-at-compile": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "trust-handoff-worktree-gitfile": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "usability-dev-nodes-and-ipc": {
+  "source_project": "openai/codex",
+  "with_tartaros": "no"
+ },
+ "write-deny-absent-deep": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "write-deny-backslash-absent": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "write-deny-covers-nested-root": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "write-deny-cut-short-hop": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "write-deny-dangling-link-target": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "write-deny-equals-root": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "write-deny-existing-file-chmod": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "write-deny-glob-chars-dir": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "write-deny-link-dotdot": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "write-deny-noncanonical-absent": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "write-deny-symlinked-parent": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "write-deny-through-policy-symlink": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "write-deny-trailing-slash": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "write-deny-under-dotdot-root": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ },
+ "write-deny-unsearchable-dir": {
+  "source_project": "anthropics/sandbox-runtime",
+  "with_tartaros": "no"
+ }
+}

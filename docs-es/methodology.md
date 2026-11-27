@@ -55,6 +55,9 @@ mitigar; el lab es el que dice si se logró. Para evitar que eso influya en los 
   un contract queda registrado con su razón en el [changelog](changelog/contracts.md) y mueve
   la [versión del corpus](concepts/corpus-versions.md), así que un contract cambiado después
   de un resultado queda a la vista;
+- los contracts escritos o cambiados al mismo tiempo que una función de TartarOS van marcados
+  en cada comparación (° escrito junto con ella, † assert cambiado junto con ella) y listados,
+  uno por uno, en `corpus/provenance.json`;
 - los resultados y la página de TartarOS declaran el conflicto, y sus archivos de resultados llevan
   `conflict_of_interest`.
 

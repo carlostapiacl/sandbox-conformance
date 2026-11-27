@@ -7,14 +7,16 @@ Each run adds the sandboxes it measured; a later run does not replace an
 earlier one's columns (a sandbox measured in two of them takes the later).
 
 The page shows the same results and the same marks as that run's comparison.md:
-`*` built-in guarantee, and the review marks (‡, §) from its review.json. Review
+`*` built-in guarantee, the review marks (‡, §) from its review.json, and after a
+contract the TartarOS marks (°, †) from corpus/provenance.json. Review
 notes travel with the cell. Nothing here is typed by hand, so the page cannot
 drift from the run it shows.
 """
 import json, os, re, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from report import DEFAULT_BASIS, MARK, ORDER
+from report import DEFAULT_BASIS, MARK, ORDER, WITH_TARTAROS
+import provenance
 
 KIND = {"sandbox-runtime": "bubblewrap + seccomp + proxy", "nono": "Landlock + proxy + supervisor",
         "codex": "bubblewrap + seccomp", "landrun": "pure Landlock",
@@ -40,6 +42,7 @@ def build(*run_dirs):
     for n in names:
         for c in runs[n]["contracts"]:
             first.setdefault(c["id"], c)
+    prov = provenance.load()
     rows, marked = [], {n: {} for n in names}
     for i in sorted(first, key=lambda i: (first[i]["category"], i)):
         row = {"id": i, "cat": first[i]["category"], "sev": first[i]["severity"], "r": {}}
@@ -60,6 +63,8 @@ def build(*run_dirs):
                     marked[n][c["result"]] = marked[n].get(c["result"], 0) + 1
             if mark:
                 m[n] = mark
+        if WITH_TARTAROS.get(prov.get(i, {}).get("with_tartaros")):
+            row["t"] = WITH_TARTAROS[prov[i]["with_tartaros"]]
         if m:
             row["m"] = m
         if notes:
