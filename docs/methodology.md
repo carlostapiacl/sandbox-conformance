@@ -53,6 +53,9 @@ the results:
   contract is logged with its reason in the [changelog](changelog/contracts.md) and moves
   the [corpus version](concepts/corpus-versions.md), so a contract changed after a result
   shows up;
+- the contracts written or changed at the same time as a TartarOS feature are marked in
+  every comparison (° written alongside, † assert changed alongside) and listed, contract by
+  contract, in `corpus/provenance.json`;
 - TartarOS's results and page state the conflict, and its result files carry
   `conflict_of_interest`.
 

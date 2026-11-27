@@ -10,6 +10,7 @@ import json, os, shutil, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import corpus  # noqa: E402
+import provenance  # noqa: E402
 
 ORDER = ["sandbox-runtime", "nono", "codex", "landrun", "tartaros"]  # preferred column order; any other <name>.json is appended
 # Review kinds that put a mark after a result (see the legend in comparison.md).
@@ -19,6 +20,8 @@ RESULTS = ["contained", "escaped", "control-broke", "inconclusive", "unsupported
            "not-applicable", "invalid-contract", "invalid-baseline", "harness-error"]
 V1_ONLY = {"inconclusive", "invalid-baseline", "harness-error"}  # listed only when a run has them
 DEFAULT_BASIS = ("default", "built-in")  # v1 / v0 spelling of spec/verdicts.md §5
+# Marks after a contract id: how its writing relates to TartarOS (corpus/provenance.json).
+WITH_TARTAROS = {"written-alongside": "°", "changed-alongside": "†"}
 
 
 def slim(r):
@@ -92,6 +95,9 @@ def main(src, dst):
          "An escape marked this way is a difference of defaults, not a configured rule that failed.",
          "- `‡`: the contract counts this as an attack, but given how the sandbox is built it is not a breach. The notes below say why.",
          "- `§`: the result depends on a newer kernel than this host's (Landlock ABI 6).", "",
+         "Marks after a contract (the lab and TartarOS have the same author; `corpus/provenance.json`):", "",
+         "- `°`: written at the same time as the TartarOS feature it tests, so TartarOS was built to pass it.",
+         "- `†`: its assert was changed when TartarOS got the same feature; the attack and control are the frozen ones.", "",
          "## Totals", "", "| result | " + " | ".join(runs) + " |", "|---|" + "---|" * len(runs)]
     for res in shown:
         L.append(f"| {res} | " + " | ".join(str(d["counts"].get(res, 0)) for d in runs.values()) + " |")
@@ -114,6 +120,7 @@ def main(src, dst):
         for k in order:
             L.append(f"| {k} | " + " | ".join(str(tally[n][k]) for n in runs) + " |")
         L.append("| **escaped** | " + " | ".join(str(sum(tally[n].values())) for n in runs) + " |")
+    prov = provenance.load()
     L += ["", "## Per contract", "", "| contract | category | " + " | ".join(runs) + " |", "|---|---|" + "---|" * len(runs)]
     for i in ids:
         cells, cat = [], ""
@@ -132,7 +139,8 @@ def main(src, dst):
             cells.append(v)
         if all(c == "n/a" for c in cells):
             continue
-        L.append(f"| `{i}` | {cat} | " + " | ".join(cells) + " |")
+        mark = WITH_TARTAROS.get(prov.get(i, {}).get("with_tartaros"), "")
+        L.append(f"| `{i}`{mark} | {cat} | " + " | ".join(cells) + " |")
     na = [i for i in ids if all(by[n].get(i, {}).get("result") == "not-applicable" for n in runs)]
     L += ["", f"Not applicable on this host for every sandbox ({len(na)}): " + ", ".join(f"`{i}`" for i in na) + "."]
     L += ["", "## Review notes", "",

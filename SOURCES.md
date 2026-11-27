@@ -16,6 +16,21 @@ tested*, credited below and in each file's `source` field.
 
 Total: 198 contracts, 22 of them by-omission variants of another contract (counted under its source). The lab is maintained by the author of TartarOS, one of the sandboxes measured; that is why the contracts come from the other projects' test suites ([methodology](https://carlostapiacl.github.io/sandbox-conformance/docs/methodology/#conflict-of-interest)).
 
+## Written alongside TartarOS
+
+The lab and TartarOS have the same author, and TartarOS grew out of the lab. Every contract
+re-expresses another project's test, but some were written, or changed, at the same time as the
+TartarOS feature they test. [`corpus/provenance.json`](corpus/provenance.json) says so for every
+contract (`with_tartaros`), and the comparison of each run marks them after the contract id.
+
+| relation | contracts | which |
+|---|---|---|
+| `no`: in the corpus frozen at `corpus-2026-10-16`, before TartarOS was first measured (2026-10-22), or added later with no TartarOS feature behind it (the two from Deno) | 186 | the rest |
+| `written-alongside` (°): written with the TartarOS feature it tests, so TartarOS was built to pass it | 8 | the six `credentials-masked-env-*` (TartarOS's masked credentials, 2026-10-26); `lifecycle-protected-path-not-in-git` and `lifecycle-no-host-artifacts-after-sigterm` (its placeholders, 2026-11-20) |
+| `changed-alongside` (†): frozen, but its assert was added when TartarOS got a broker; attack and control unchanged | 4 | `network-broker-no-request-smuggling`, `network-broker-path-dot-segments`, `credentials-broker-injected-header-not-overridable`, `network-broker-allowlist-lookalike` (2026-10-22) |
+
+Why each one changed is in [`contracts/CHANGES.md`](contracts/CHANGES.md).
+
 ## Per contract
 
 ### sandbox-runtime

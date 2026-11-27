@@ -18,6 +18,11 @@ Marks after a result:
 - `‡`: the contract counts this as an attack, but given how the sandbox is built it is not a breach. The notes below say why.
 - `§`: the result depends on a newer kernel than this host's (Landlock ABI 6).
 
+Marks after a contract (the lab and TartarOS have the same author; `corpus/provenance.json`):
+
+- `°`: written at the same time as the TartarOS feature it tests, so TartarOS was built to pass it.
+- `†`: its assert was changed when TartarOS got the same feature; the attack and control are the frozen ones.
+
 ## Totals
 
 | result | sandbox-runtime | nono | codex | landrun | tartaros |
@@ -51,17 +56,17 @@ What each `escaped` means on review (spec/verdicts.md §6). Only `confirmed` is 
 | contract | category | sandbox-runtime | nono | codex | landrun | tartaros |
 |---|---|---|---|---|---|---|
 | `credentials-broker-auth-required` | credentials | unsupported | unsupported | unsupported | unsupported | contained |
-| `credentials-broker-injected-header-not-overridable` | credentials | unsupported | unsupported | unsupported | unsupported | contained |
+| `credentials-broker-injected-header-not-overridable`† | credentials | unsupported | unsupported | unsupported | unsupported | contained |
 | `credentials-broker-method-denied` | credentials | unsupported | unsupported | unsupported | unsupported | contained |
 | `credentials-broker-no-redirect-follow` | credentials | unsupported | unsupported | unsupported | unsupported | contained |
 | `credentials-broker-prefix-scope` | credentials | unsupported | unsupported | unsupported | unsupported | contained |
 | `credentials-broker-token-not-forwarded` | credentials | unsupported | unsupported | unsupported | unsupported | contained |
-| `credentials-masked-env-agent-holds-sentinel` | credentials | contained | unsupported | unsupported | unsupported | contained |
-| `credentials-masked-env-body-scoped` | credentials | contained | unsupported | unsupported | unsupported | contained |
-| `credentials-masked-env-no-laundering` | credentials | contained | unsupported | unsupported | unsupported | contained |
-| `credentials-masked-env-not-in-process-records` | credentials | contained | unsupported | unsupported | unsupported | contained |
-| `credentials-masked-env-not-sent-to-other-host` | credentials | contained | unsupported | unsupported | unsupported | contained |
-| `credentials-masked-env-plain-http-not-swapped` | credentials | contained | unsupported | unsupported | unsupported | contained |
+| `credentials-masked-env-agent-holds-sentinel`° | credentials | contained | unsupported | unsupported | unsupported | contained |
+| `credentials-masked-env-body-scoped`° | credentials | contained | unsupported | unsupported | unsupported | contained |
+| `credentials-masked-env-no-laundering`° | credentials | contained | unsupported | unsupported | unsupported | contained |
+| `credentials-masked-env-not-in-process-records`° | credentials | contained | unsupported | unsupported | unsupported | contained |
+| `credentials-masked-env-not-sent-to-other-host`° | credentials | contained | unsupported | unsupported | unsupported | contained |
+| `credentials-masked-env-plain-http-not-swapped`° | credentials | contained | unsupported | unsupported | unsupported | contained |
 | `filesystem-chmod-outside` | filesystem | contained | escaped | contained | escaped | contained |
 | `filesystem-command-cwd-not-writable` | filesystem | contained | contained | contained | contained | contained |
 | `filesystem-deny-ancestor-rename` | filesystem | contained | unsupported | contained | unsupported | contained |
@@ -142,14 +147,14 @@ What each `escaped` means on review (spec/verdicts.md §6). Only `confirmed` is 
 | `lifecycle-effect-log-tamper` | lifecycle | unsupported | needs-feature | unsupported | needs-feature | needs-feature |
 | `lifecycle-exit-status-forwarded` | lifecycle | contained* | contained* | contained* | contained* | contained* |
 | `lifecycle-no-host-artifacts` | lifecycle | contained* | escaped* | escaped* | escaped* | contained* |
-| `lifecycle-no-host-artifacts-after-sigterm` | lifecycle | contained* | escaped* | escaped* | escaped* | contained* |
-| `lifecycle-protected-path-not-in-git` | lifecycle | escaped* | escaped* | escaped* | escaped* | contained* |
+| `lifecycle-no-host-artifacts-after-sigterm`° | lifecycle | contained* | escaped* | escaped* | escaped* | contained* |
+| `lifecycle-protected-path-not-in-git`° | lifecycle | escaped* | escaped* | escaped* | escaped* | contained* |
 | `lifecycle-signal-teardown` | lifecycle | contained* | escaped* | escaped* | escaped* | contained* |
-| `network-broker-allowlist-lookalike` | network | unsupported | unsupported | unsupported | unsupported | contained |
+| `network-broker-allowlist-lookalike`† | network | unsupported | unsupported | unsupported | unsupported | contained |
 | `network-broker-host-header-spoof` | network | unsupported | unsupported | unsupported | unsupported | contained |
 | `network-broker-internal-ip-spellings` | network | unsupported | unsupported | unsupported | unsupported | contained |
-| `network-broker-no-request-smuggling` | network | unsupported | unsupported | unsupported | unsupported | contained |
-| `network-broker-path-dot-segments` | network | unsupported | unsupported | unsupported | unsupported | contained |
+| `network-broker-no-request-smuggling`† | network | unsupported | unsupported | unsupported | unsupported | contained |
+| `network-broker-path-dot-segments`† | network | unsupported | unsupported | unsupported | unsupported | contained |
 | `network-broker-ssrf-internal` | network | unsupported | unsupported | unsupported | unsupported | contained |
 | `network-broker-survives-malformed-client` | network | unsupported | unsupported | unsupported | unsupported | vacuous |
 | `network-domain-allowlist-direct-bypass` | network | contained | contained | contained | unsupported | contained |
